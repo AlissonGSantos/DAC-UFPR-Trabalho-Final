@@ -1,0 +1,56 @@
+name: "Bug Report"
+title: "BUG - <brief description>"
+description: "Report of question content (invalid, incorrect, etc.)"
+labels: ["bug"]
+projects: ["AlissonGSantos/projects/1"]
+body:
+  - type: input
+    attributes:
+      label: "What is the bug?"
+      description: "Briefly describe the problem."
+      placeholder: "Error when adding item to cart"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: "Expected result?"
+      description: "Describe what you expected to happen."
+      placeholder: "The item should be added to the cart without errors."
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: "What is the severity of the bug?"
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Steps to reproduce (use markdown list format, starting each line with -)"
+      description: "Provide a step-by-step guide to reproduce the issue."
+      placeholder: |
+        - Go to the product page
+        - Click 'Add to cart' on a product
+        - Observe the error message
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: "What device are you using?"
+      description: "Model, operating system, browser"
+      placeholder: "Windows 10, Chrome 89, etc."
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: "Relevant log output"
+      description: "Please paste any relevant log output. This will be automatically formatted into code, so no need for backticks."
+      render: shell
+  - type: textarea
+    attributes:
+      label: "Screenshots (if applicable)"
+      description: "Attach screenshots that illustrate the problem."
