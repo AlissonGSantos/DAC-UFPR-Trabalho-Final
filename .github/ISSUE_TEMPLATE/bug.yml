@@ -1,7 +1,7 @@
 name: "Bug Report"
 title: "BUG - <brief description>"
 description: "Report of question content (invalid, incorrect, etc.)"
-labels: ["bug"]
+labels: ["bug", "request"]
 projects: ["AlissonGSantos/projects/1"]
 body:
   - type: input

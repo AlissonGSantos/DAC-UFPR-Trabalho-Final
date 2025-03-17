@@ -1,7 +1,7 @@
 name: New Task
 title: <brief description of the task>
 description: "Requirement to be implemented"
-labels: ["task"]
+labels: ["request"]
 projects: ["AlissonGSantos/projects/1"]
 body:
   - type: markdown
