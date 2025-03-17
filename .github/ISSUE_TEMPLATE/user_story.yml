@@ -1,0 +1,62 @@
+name: New User Story
+title: <brief description of the requirement>
+description: "Requirement to be implemented (Feature, User Story)"
+labels: ["task"]
+projects: ["AlissonGSantos/projects/1"]
+body:
+  - type: markdown
+    attributes:
+      value: "## The requirements are the weekly activities of each team member"
+  - type: input
+    attributes:
+      label: As a
+      description: Who benefits from the requirement
+      placeholder: a customer, an employee, etc.
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: I want
+      description: Objective of the requirement
+      placeholder: to access my profile, to view a service, etc.
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: So that
+      description: Outcome of the requirement
+      placeholder: to organize my information, to manage progress, etc.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: "Feature description"
+      description: "Provide a brief description of what will be implemented."
+      placeholder: "Example: Implement a dark mode option in the settings menu to enhance user experience at night."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Step-by-step flow"
+      description: "Use markdown list format to describe the step-by-step user flow in this feature."
+      placeholder: |
+        - User opens the app and navigates to the settings page.
+        - Clicks on "Enable Dark Mode" toggle.
+        - The app switches to dark mode instantly.
+        - User receives a confirmation message.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: "Notes"
+      description: "Other useful information, business rules, related requirements, links to the wiki, etc."
+      placeholder: |
+        - This feature should be available only for logged-in users.
+        - The implementation must follow the existing design system.
+        - API endpoint to be used: `/api/v1/dark-mode`
+        - Related documentation: [Feature Spec Wiki](https://example.com/wiki)
+    validations:
+      required: false
+
+
+    

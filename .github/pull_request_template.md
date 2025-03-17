@@ -1,25 +1,22 @@
-# Novo Pull Request
-> Escreva uma breve descrição do que você fez
+# New Pull Request
+- [ ] Bug fixing
+- [ ] New features
+- [ ] Documentation update
 
-- [ ] Requisito funcional
-- [ ] Requisito não funcional
-- [ ] Testes unitários
-- [ ] Correção de bugs
-- [ ] Documentação
+## What did you do?
+> Provide a general summary of your changes (Preferably with Copilot)
 
-## O que você fez?
-> Liste as mudanças implementadas
-- abc...
-
-## Número da issue referenciada
-> [!tip]
-> Use as palavras chave `closes`, `resolves`, `fix` para automaticamente linkar a issue com o pull request. Use `#` antes do número para autocompletar.
-- abc...
+## Issue ticket number (if exists)
+> Reference to open issue
+- 
 
 ## Checklist:
 
-- [ ] Meu código segue as normas de estilo deste projeto
-- [ ] Realizei uma auto-revisão do meu código
-- [ ] Comentei meu código, principalmente em áreas difíceis de entender
+- [ ] My code follows the style guidelines of this project
+- [ ] I have performed a self-review of my code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] Will this be part of a product update?
+  > If yes, please write one phrase about this update.
 
-## Screenshots (se necessário):
+## Screenshots (if appropriate):

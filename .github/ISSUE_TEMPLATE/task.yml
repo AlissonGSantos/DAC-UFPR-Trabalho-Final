@@ -1,0 +1,33 @@
+name: New Task
+title: <brief description of the task>
+description: "Requirement to be implemented"
+labels: ["task"]
+projects: ["AlissonGSantos/projects/1"]
+body:
+  - type: markdown
+    attributes:
+      value: "### The requirements are the weekly activities of each team member"
+  - type: textarea
+    attributes:
+      label: "Feature description"
+      description: "Provide a brief description of what will be implemented."
+      placeholder: "Example: Implement a dark mode option in the settings menu to enhance user experience at night."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "What needs to be done"
+      description: "(use markdown list format, starting each line with -)"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Notes"
+      description: "Other useful information, business rules, related requirements, links to the wiki, etc."
+      placeholder: |
+        - This feature should be available only for logged-in users.
+        - The implementation must follow the existing design system.
+        - API endpoint to be used: `/api/v1/dark-mode`
+        - Related documentation: [Feature Spec Wiki](https://example.com/wiki)
+    validations:
+      required: false
