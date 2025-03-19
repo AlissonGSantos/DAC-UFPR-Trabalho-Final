@@ -2,6 +2,7 @@
 - [ ] Bug fixing
 - [ ] New features
 - [ ] Documentation update
+- [ ] Project configuration
 
 ## What did you do?
 > Provide a general summary of your changes (Preferably with Copilot)
