@@ -125,6 +125,10 @@ jobs:
           cd backend/${{ matrix.project }}
           mvn clean install
 
-      - name: Build da imagem Docker
-        run: |
-          docker build -f backend/Dockerfile -t ${{ matrix.project }}:${{ steps.pom_version.outputs.version }} backend/${{ matrix.project }}
+      - name: Build da imagem docker
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          context: backend/${{ matrix.project }}
+          file: backend/Dockerfile
+          tags: "${{ matrix.project }}:${{ steps.pom_version.outputs.version }}"
