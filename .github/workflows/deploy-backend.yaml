@@ -1,0 +1,108 @@
+name: Build and deploy Backend services
+
+on:
+  push:
+    branches: ["development"]
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
+    inputs:
+      autenticacao:
+        description: 'Serviço de autenticação'
+        required: false
+        default: true
+        type: boolean
+      cliente:
+        description: 'Serviço de clientes'
+        required: false
+        default: true
+        type: boolean
+      funcionario:
+        description: 'Serviço de funcionários'
+        required: false
+        default: true
+        type: boolean
+      reserva:
+        description: 'Serviço de reservas'
+        required: false
+        default: true
+        type: boolean
+      voo:
+        description: 'Serviço de voos'
+        required: false
+        default: true
+        type: boolean
+  
+jobs:
+  detect-projects:
+    name: Identificando projetos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verificando inputs
+        id: selected_services
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          SELECTED=""
+          if [ "${{ github.event.inputs.autenticacao }}" == "true" ]; then
+            SELECTED="${SELECTED} autenticacao-service,"
+          fi
+          if [ "${{ github.event.inputs.cliente }}" == "true" ]; then
+            SELECTED="${SELECTED} cliente-service,"
+          fi
+          if [ "${{ github.event.inputs.funcionario }}" == "true" ]; then
+            SELECTED="${SELECTED} funcionario-service,"
+          fi
+          if [ "${{ github.event.inputs.reserva }}" == "true" ]; then
+            SELECTED="${SELECTED} reserva-service,"
+          fi
+          if [ "${{ github.event.inputs.voo }}" == "true" ]; then
+            SELECTED="${SELECTED} voo-service,"
+          fi
+          SELECTED="[${SELECTED%,}]"
+          echo "Projetos selecionados: $SELECTED"
+          echo "::set-output name=projects::$SELECTED"
+        
+      - name: Recuperando arquivos modificados
+        id: modified_files
+        if: github.event_name == 'push'
+        run: |
+          MODIFIED_FILES=$(git diff --name-only HEAD^ HEAD)
+          echo "Arquivos modificados: $MODIFIED_FILES"
+          echo "::set-output name=files::$MODIFIED_FILES"
+        
+      - name: Recuperando projetos modificados
+        id: modified_projects
+        if: github.event_name == 'push'
+        run: |
+          PROJECTS=$(echo "$MODIFIED_FILES" | grep '^backend/' | cut -d'/' -f2 | sort | uniq)
+          PROJECTS=$(echo "[\"$(echo '${PROJECTS}' | tr ' ' '\",\"')\"]")
+          echo "Projetos modificados: $PROJECTS"
+          echo "::set-output name=projects::$PROJECTS"
+
+      - name: Criando matriz de projetos
+        id: set_matrix_projects
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "::set-output name=matrix_projects::${{ steps.selected_services.outputs.projects }}"
+          else
+            echo "::set-output name=matrix_projects::${{ steps.modified_projects.outputs.projects }}"
+          fi
+
+  build:
+    name: Realizando build dos projetos
+    needs: detect-projects
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: ${{ fromJson(needs.detect-projects.outputs.matrix_projects) }}
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Teste do workflow
+        run: echo "buildando projeto ${{ matrix.project }}"
+
+        
