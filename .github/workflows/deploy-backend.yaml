@@ -61,9 +61,9 @@ jobs:
           if [ "${{ github.event.inputs.voo }}" == "true" ]; then
             SELECTED="${SELECTED} voo-service,"
           fi
-          SELECTED="[${SELECTED%,}]"
+          SELECTED="[${ %SELECTED%,}]"
           echo "Projetos selecionados: $SELECTED"
-          echo "::set-output name=projects::$SELECTED"
+          echo "{projects}={$SELECTED} >> $GITHUB_OUTPUT"
         
       - name: Recuperando arquivos modificados
         id: modified_files
@@ -71,7 +71,7 @@ jobs:
         run: |
           MODIFIED_FILES=$(git diff --name-only HEAD^ HEAD)
           echo "Arquivos modificados: $MODIFIED_FILES"
-          echo "::set-output name=files::$MODIFIED_FILES"
+          echo "{files}={$MODIFIED_FILES} >> $GITHUB_OUTPUT"
         
       - name: Recuperando projetos modificados
         id: modified_projects
@@ -80,15 +80,15 @@ jobs:
           PROJECTS=$(echo "$MODIFIED_FILES" | grep '^backend/' | cut -d'/' -f2 | sort | uniq)
           PROJECTS=$(echo "[\"$(echo '${PROJECTS}' | tr ' ' '\",\"')\"]")
           echo "Projetos modificados: $PROJECTS"
-          echo "::set-output name=projects::$PROJECTS"
+          echo "{projects}={$PROJECTS} >> $GITHUB_OUTPUT"
 
       - name: Criando matriz de projetos
         id: set_matrix_projects
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "::set-output name=matrix_projects::${{ steps.selected_services.outputs.projects }}"
+            echo "{matrix_projects}={${{ steps.selected_services.outputs.projects }}} >> $GITHUB_OUTPUT"
           else
-            echo "::set-output name=matrix_projects::${{ steps.modified_projects.outputs.projects }}"
+            echo "{matrix_projects}={${{ steps.modified_projects.outputs.projects }}} >> $GITHUB_OUTPUT"
           fi
 
   build:
