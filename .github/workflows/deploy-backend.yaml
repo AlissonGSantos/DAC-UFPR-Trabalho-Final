@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Verificando inputs
         id: selected_services
@@ -100,7 +100,7 @@ jobs:
         project: ${{ fromJson(needs.detect-projects.outputs.matrix_projects) }}
     steps: 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Teste do workflow
         run: echo "buildando projeto ${{ matrix.project }}"
