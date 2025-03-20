@@ -7,9 +7,11 @@
 ## What did you do?
 > Provide a general summary of your changes (Preferably with Copilot)
 
-## Issue ticket number (if exists)
+## Issue ticket number
 > Reference to open issue
-- 
+  - Closes #X (for direct fixes)
+  - Related to #Y (for tangential connections)
+
 
 ## Checklist:
 
@@ -17,7 +19,6 @@
 - [ ] I have performed a self-review of my code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
-- [ ] Will this be part of a product update?
-  > If yes, please write one phrase about this update.
+
 
 ## Screenshots (if appropriate):
