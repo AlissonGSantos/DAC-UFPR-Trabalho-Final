@@ -1,0 +1,10 @@
+GRANT ALL PRIVILEGES ON SCHEMA emiratads_cliente TO emiratads_cliente_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN  SCHEMA emiratads_cliente TO emiratads_cliente_user;
+GRANT ALL PRIVILEGES ON SCHEMA emiratads_funcionario TO emiratads_funcionario_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN  SCHEMA emiratads_funcionario TO emiratads_funcionario_user;
+GRANT ALL PRIVILEGES ON SCHEMA emiratads_voo TO emiratads_voo_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN  SCHEMA emiratads_voo TO emiratads_voo_user;
+GRANT ALL PRIVILEGES ON SCHEMA emiratads_reserva_transaction TO emiratads_reserva_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN  SCHEMA emiratads_reserva_transaction TO emiratads_reserva_user;
+GRANT ALL PRIVILEGES ON SCHEMA emiratads_reserva_access TO emiratads_reserva_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA emiratads_reserva_access TO emiratads_reserva_user;
