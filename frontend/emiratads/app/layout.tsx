@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "./components/Navbar/Navbar";
 
 export const metadata: Metadata = {
   title: "EmiraTADS Airlines",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        {children}  
+        <Navbar>
+          {children}  
+        </Navbar>
       </body>
     </html>
   );
