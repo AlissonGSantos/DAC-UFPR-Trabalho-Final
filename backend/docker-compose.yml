@@ -16,9 +16,7 @@ services:
       - autenticacaoservice
 
   funcionarioservice:
-    build:
-      context: ./funcionario-service
-      dockerfile: ../Dockerfile
+    image: salgado2004/dac-ufpr-emiratads-funcionario-service
     ports:
       - "8083:8080"
     depends_on:

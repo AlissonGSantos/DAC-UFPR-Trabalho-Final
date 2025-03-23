@@ -1,4 +1,4 @@
-name: Build and deploy Backend services
+name: Build and Deploy Backend Services
 
 on:
   push:
@@ -37,6 +37,8 @@ jobs:
   detect-projects:
     name: Identificando projetos
     runs-on: ubuntu-latest
+    outputs:
+      matrix_projects: ${{ steps.set_matrix_projects.outputs.matrix_projects }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,23 +49,23 @@ jobs:
         run: |
           SELECTED=""
           if [ "${{ github.event.inputs.autenticacao }}" == "true" ]; then
-            SELECTED="${SELECTED} autenticacao-service,"
+            SELECTED="${SELECTED} autenticacao-service"
           fi
           if [ "${{ github.event.inputs.cliente }}" == "true" ]; then
-            SELECTED="${SELECTED} cliente-service,"
+            SELECTED="${SELECTED} cliente-service"
           fi
           if [ "${{ github.event.inputs.funcionario }}" == "true" ]; then
-            SELECTED="${SELECTED} funcionario-service,"
+            SELECTED="${SELECTED} funcionario-service"
           fi
           if [ "${{ github.event.inputs.reserva }}" == "true" ]; then
-            SELECTED="${SELECTED} reserva-service,"
+            SELECTED="${SELECTED} reserva-service"
           fi
           if [ "${{ github.event.inputs.voo }}" == "true" ]; then
-            SELECTED="${SELECTED} voo-service,"
+            SELECTED="${SELECTED} voo-service"
           fi
-          SELECTED="[${ %SELECTED%,}]"
+            SELECTED=$(echo "${SELECTED}" | cut -c2-)
           echo "Projetos selecionados: $SELECTED"
-          echo "{projects}={$SELECTED} >> $GITHUB_OUTPUT"
+          echo "projects=$SELECTED" >> $GITHUB_OUTPUT
         
       - name: Recuperando arquivos modificados
         id: modified_files
@@ -77,19 +79,22 @@ jobs:
         id: modified_projects
         if: github.event_name == 'push'
         run: |
-          PROJECTS=$(echo "$MODIFIED_FILES" | grep '^backend/' | cut -d'/' -f2 | sort | uniq)
-          PROJECTS=$(echo "[\"$(echo '${PROJECTS}' | tr ' ' '\",\"')\"]")
+          PROJECTS=$(echo "$MODIFIED_FILES" | grep '^backend/' | cut -d'/' -f2 | sort | uniq | tr '\n' ' ' | sed 's/ $//')
           echo "Projetos modificados: $PROJECTS"
-          echo "{projects}={$PROJECTS} >> $GITHUB_OUTPUT"
+          echo "projects=[\"$(echo $PROJECTS | sed 's/ /\",\"/g')\"]" >> $GITHUB_OUTPUT
 
       - name: Criando matriz de projetos
         id: set_matrix_projects
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "{matrix_projects}={${{ steps.selected_services.outputs.projects }}} >> $GITHUB_OUTPUT"
+            MATRIX_PROJECTS=$(echo "${{ steps.selected_services.outputs.projects }}" | sed 's/ /\",\"/g')
+            MATRIX_PROJECTS=$(echo "[\"${MATRIX_PROJECTS}\"]")
           else
-            echo "{matrix_projects}={${{ steps.modified_projects.outputs.projects }}} >> $GITHUB_OUTPUT"
+            MATRIX_PROJECTS=$(echo "${{ steps.modified_projects.outputs.projects }}" | sed 's/ /\",\"/g')
+            MATRIX_PROJECTS=$(echo "[\"${MATRIX_PROJECTS}\"]")
           fi
+          echo "Projetos para build: $MATRIX_PROJECTS"
+          echo "matrix_projects=$MATRIX_PROJECTS" >> $GITHUB_OUTPUT
 
   build:
     name: Realizando build dos projetos
@@ -102,7 +107,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Teste do workflow
-        run: echo "buildando projeto ${{ matrix.project }}"
+      - name: Configurando java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-        
+      - name: 'Recupera versão do projeto'
+        id: pom_version
+        run: |
+          version=$(cat backend/${{ matrix.project }}/pom.xml | grep -oPm1 "(?<=<version>)[^<]+")
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Build do projeto
+        run: |
+          echo "Processo de build para o projeto ${{ matrix.project }}:${{ steps.pom_version.outputs.version }}"
+          cd backend/${{ matrix.project }}
+          mvn clean install
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build da imagem docker
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: backend/${{ matrix.project }}
+          file: backend/Dockerfile
+          tags: "${{ vars.DOCKERHUB_REPOSITORY }}-${{ matrix.project }}:${{ steps.pom_version.outputs.version }},${{ vars.DOCKERHUB_REPOSITORY }}-${{ matrix.project }}:latest"
