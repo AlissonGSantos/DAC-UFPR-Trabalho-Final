@@ -2,16 +2,27 @@ package br.ufpr.dac.funcionario_service.service
 
 import br.ufpr.dac.funcionario_service.domain.Funcionario
 import br.ufpr.dac.funcionario_service.repository.IFuncionarioRepository
+import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioInputDTO
+import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioOutputDTO
 import org.springframework.stereotype.Service
-import org.springframework.validation.Errors
-import org.springframework.validation.ValidationUtils
-import org.springframework.validation.Validator
 
 @Service
 class FuncionarioService(private val repository: IFuncionarioRepository) {
 
-    fun getAllFuncionarios(): List<Funcionario> {
-        return repository.findAll()
+    fun getAllFuncionarios(): List<FuncionarioOutputDTO> {
+        return repository.findAll().map { FuncionarioOutputDTO(it) }
+    }
+
+    fun updateFuncionario(funcionarioDTO: FuncionarioInputDTO) {
+        val funcionario = repository.findById(funcionarioDTO.codigo)
+            .orElseThrow { IllegalArgumentException("Funcionário não encontrado com o ID: ${funcionarioDTO.codigo}") }
+
+        funcionario.nome = funcionarioDTO.nome
+        funcionario.email = funcionarioDTO.email
+        funcionario.telefone = funcionarioDTO.telefone
+        funcionario.cpf = funcionarioDTO.cpf
+
+        repository.save(funcionario)
     }
 
     fun saveFuncionario(funcionario: Funcionario): Funcionario {
