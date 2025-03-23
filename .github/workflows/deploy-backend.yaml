@@ -71,28 +71,28 @@ jobs:
         id: modified_files
         if: github.event_name == 'push'
         run: |
-          MODIFIED_FILES=$(git diff --name-only HEAD^ HEAD)
+          MODIFIED_FILES=$(git diff --name-only HEAD~1 HEAD --)
           echo "Arquivos modificados: $MODIFIED_FILES"
-          echo "{files}={$MODIFIED_FILES} >> $GITHUB_OUTPUT"
+          echo "files=$MODIFIED_FILES" >> $GITHUB_OUTPUT
         
       - name: Recuperando projetos modificados
         id: modified_projects
         if: github.event_name == 'push'
         run: |
+          MODIFIED_FILES="${{ steps.modified_files.outputs.files }}"
           PROJECTS=$(echo "$MODIFIED_FILES" | grep '^backend/' | cut -d'/' -f2 | sort | uniq | tr '\n' ' ' | sed 's/ $//')
           echo "Projetos modificados: $PROJECTS"
-          echo "projects=[\"$(echo $PROJECTS | sed 's/ /\",\"/g')\"]" >> $GITHUB_OUTPUT
+          echo "projects=$PROJECTS" >> $GITHUB_OUTPUT
 
       - name: Criando matriz de projetos
         id: set_matrix_projects
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             MATRIX_PROJECTS=$(echo "${{ steps.selected_services.outputs.projects }}" | sed 's/ /\",\"/g')
-            MATRIX_PROJECTS=$(echo "[\"${MATRIX_PROJECTS}\"]")
           else
             MATRIX_PROJECTS=$(echo "${{ steps.modified_projects.outputs.projects }}" | sed 's/ /\",\"/g')
-            MATRIX_PROJECTS=$(echo "[\"${MATRIX_PROJECTS}\"]")
           fi
+          MATRIX_PROJECTS=$(echo "[\"${MATRIX_PROJECTS}\"]")
           echo "Projetos para build: $MATRIX_PROJECTS"
           echo "matrix_projects=$MATRIX_PROJECTS" >> $GITHUB_OUTPUT
 
