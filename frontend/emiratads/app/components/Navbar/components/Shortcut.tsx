@@ -7,8 +7,8 @@ interface ShortcutProps{
 
 const Shortcut: React.FC<ShortcutProps> = ({name,link}) => {
   return (
-    <li key={name} className="inline-block mx-2">
-        <a href={link} className="text-white hover:text-sky-300">{name}</a>
+    <li key={name} className="flex w-full justify-center items-center hover:bg-sky-800 p-1">
+        <a href={link} className="text-white text-lg w-full text-center p-2">{name}</a>
     </li>
   )
 }
