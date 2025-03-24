@@ -1,5 +1,5 @@
 # Imagem base do Java para a aplicação
-FROM openjdk:17-alpine
+FROM --platform=linux/amd64 openjdk:17-alpine
 
 WORKDIR /app
 

@@ -1,5 +1,6 @@
 services:
   autenticacaoservice:
+    platform: linux/amd64
     build:
       context: ./autenticacao-service
       dockerfile: ../Dockerfile
