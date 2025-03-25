@@ -42,6 +42,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Verificando inputs
         id: selected_services
@@ -71,7 +73,7 @@ jobs:
         id: modified_files
         if: github.event_name == 'push'
         run: |
-          MODIFIED_FILES=$(git diff --name-only HEAD~1 HEAD --)
+          MODIFIED_FILES=$(git diff --name-only HEAD^ HEAD --)
           echo "Arquivos modificados: $MODIFIED_FILES"
           echo "files=$MODIFIED_FILES" >> $GITHUB_OUTPUT
         
