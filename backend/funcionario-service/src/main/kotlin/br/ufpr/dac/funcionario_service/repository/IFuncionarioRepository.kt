@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface IFuncionarioRepository : JpaRepository<Funcionario, Long> {
-
+    fun findByAtivoTrue(): List<Funcionario>
 }

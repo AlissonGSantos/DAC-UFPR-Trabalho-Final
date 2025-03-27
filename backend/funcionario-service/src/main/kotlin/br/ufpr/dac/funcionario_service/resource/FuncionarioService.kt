@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 class FuncionarioService(private val repository: IFuncionarioRepository) {
 
     fun getAllFuncionarios(): List<FuncionarioOutputDTO> {
-        return repository.findAll().map { FuncionarioOutputDTO(it) }
+        return repository.findByAtivoTrue().map { FuncionarioOutputDTO(it) }
     }
 
     fun updateFuncionario(codigo: Long, funcionarioDTO: FuncionarioInputDTO): Funcionario {
