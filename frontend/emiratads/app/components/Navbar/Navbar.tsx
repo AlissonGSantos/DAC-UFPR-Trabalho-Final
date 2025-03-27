@@ -30,8 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
             </div>
           )}
         </nav>
-        <div className="flex">
-          {/* SIDEBAR */}
+        <div className="flex flex-1">
           <div
             className={`fixed h-full bg-sky-700 ${
               isOpen ? "w-full lg:w-64" : "max-w-none"
@@ -45,9 +44,8 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
               ))}
             </div>
           </div>
-          {/* Conteúdo principal com margem condicional para empurrar à direita */}
           <main
-            className={`p-4 transition-all duration-300 ease-in-out ${
+            className={`transition-all duration-300 ease-in-out ${
               isOpen ? "lg:ml-64" : "lg:ml-0"
             }`}
           >
