@@ -12,6 +12,7 @@ CREATE TABLE emiratads_funcionario.funcionario (
     nome varchar(50) NOT NULL,
     email varchar(30) NOT NULL,
     telefone varchar(14),
+    ativo boolean NOT NULL DEFAULT true,
     CONSTRAINT funcionario_pkey PRIMARY KEY (codigo)
 );
 
@@ -40,6 +41,7 @@ CREATE TABLE emiratads_cliente.endereco (
     rua varchar(30) NOT NULL,
     numero varchar(10) NOT NULL,
     complemento varchar(10),
+    ativo boolean NOT NULL DEFAULT true,
     CONSTRAINT endereco_pkey PRIMARY KEY (codigo)
 );
 
@@ -50,6 +52,7 @@ CREATE TABLE emiratads_cliente.cliente (
     email varchar(30) NOT NULL,
     saldo_milhas numeric(10, 2) NOT NULL,
     endereco_codigo int4 NOT NULL,
+    ativo boolean NOT NULL DEFAULT true,
     CONSTRAINT cliente_pkey PRIMARY KEY (codigo),
     CONSTRAINT cliente_unique_cpf UNIQUE (cpf),
     CONSTRAINT cliente_endereco_fk FOREIGN KEY (endereco_codigo) REFERENCES emiratads_cliente.endereco(codigo)
