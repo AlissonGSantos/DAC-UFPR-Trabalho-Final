@@ -27,4 +27,12 @@ class FuncionarioService(private val repository: IFuncionarioRepository) {
     fun saveFuncionario(funcionario: FuncionarioInputDTO): Funcionario {
         return repository.save(funcionario.toFuncionario())
     }
+
+    fun deactivateFuncionario(codigo: Long): Funcionario {
+        val funcionario = repository.findById(codigo)
+            .orElseThrow { IllegalArgumentException("Funcionário não encontrado com o ID: $codigo") }
+
+        funcionario.ativo = false
+        return repository.save(funcionario)
+    }
 }

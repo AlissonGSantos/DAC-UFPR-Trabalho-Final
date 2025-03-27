@@ -22,6 +22,6 @@ data class FuncionarioInputDTO(
     val telefone: String
 ) {
     fun toFuncionario(): Funcionario {
-        return Funcionario(cpf = cpf, nome = nome, email = email, telefone = telefone)
+        return Funcionario(cpf = cpf, nome = nome, email = email, telefone = telefone, ativo = true)
     }
 }

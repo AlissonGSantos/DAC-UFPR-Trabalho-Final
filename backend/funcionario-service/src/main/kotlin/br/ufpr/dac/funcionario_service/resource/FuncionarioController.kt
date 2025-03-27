@@ -7,6 +7,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
 
 @RestController
 @RequestMapping("/funcionarios")
@@ -37,6 +38,12 @@ class FuncionarioController(private val service: FuncionarioService) {
             // Caso de erro de CPF inválido
             throw IllegalArgumentException(e.message)
         }
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteFuncionario(@PathVariable id: Long): ResponseEntity<FuncionarioOutputDTO> {
+        val deactivatedFuncionario = service.deactivateFuncionario(id)
+        return ResponseEntity.ok(FuncionarioOutputDTO(deactivatedFuncionario))
     }
 }
 

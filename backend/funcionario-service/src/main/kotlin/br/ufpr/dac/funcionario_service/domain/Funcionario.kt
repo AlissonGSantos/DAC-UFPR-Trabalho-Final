@@ -12,6 +12,6 @@ class Funcionario(
     val cpf: String,
     var nome: String,
     var email: String,
-    var telefone: String
-    var ativo: String
+    var telefone: String,
+    var ativo: Boolean
 )

@@ -18,6 +18,6 @@ data class FuncionarioOutputDTO(
     )
 
     fun toFuncionario(): Funcionario {
-        return Funcionario(codigo, cpf, nome, email, telefone)
+        return Funcionario(codigo, cpf, nome, email, telefone, ativo = true)
     }
 }
