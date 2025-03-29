@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { RegisterSchema } from "../../schema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import registerServices from "@/app/authentication/services/registerServices";
+import registerServices from "../../../services/registerServices";
 
 type RegisterFormData = z.infer<typeof RegisterSchema>;
 

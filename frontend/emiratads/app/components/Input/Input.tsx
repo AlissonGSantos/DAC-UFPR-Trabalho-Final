@@ -31,22 +31,22 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   error = [],
   extraClasses = "",
-  ...rest // Captura as propriedades do `register`
+  ...rest 
 }) => {
-  const hasError = error?.some((err) => err.hasError); // Verifica se há algum erro
+  const hasError = error?.some((err) => err.hasError);
 
   return (
     <div className="flex flex-col gap-2">
-      {label && <label className="text-sm text-sky-700">{label}</label>}
+      {label && <label className={`text-sm ${hasError ? "text-red-700" : "text-sky-700"}`}>{label}</label>}
       <input
         className={`w-full bg-transparent placeholder:text-slate-400 text-sky-700 text-sm border-2 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none ${
           hasError
-            ? "border-red-700 focus:border-red-500"
-            : "border-sky-700 focus:border-sky-400"
-        } hover:border-sky-300 shadow-sm focus:shadow ${extraClasses}`}
+            ? "border-red-700 focus:border-red-500 hover:border-red-900"
+            : "border-sky-700 focus:border-sky-400 hover:border-sky-300"
+        }  shadow-sm focus:shadow ${extraClasses}`}
         type={type}
         placeholder={placeholder}
-        {...rest} // Repasse todas as propriedades do `register`
+        {...rest}
       />
       {error
         ?.filter((err) => err.hasError)
