@@ -25,22 +25,23 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
           {!isOpen && (
             <div id="shortcuts-session" className="hidden md:flex h-full">
               {shortcuts.map((shortcut, index) => (
-                <Shortcut key={index} {...shortcut} />
+                <Shortcut key={`${shortcut.name}-${index}`} {...shortcut} />
               ))}
             </div>
           )}
         </nav>
-        <div className="flex flex-1">
+        <div className="fixed h-screen">
+          {/* SIDEBAR */}
           <div
-            className={`fixed h-full bg-sky-700 ${
+            className={`fixed h-screen bg-sky-700 ${
               isOpen ? "w-full lg:w-64" : "max-w-none"
             } transform transition-transform duration-300 ease-in-out ${
               isOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
             <div className="flex flex-col items-center gap-4 py-8 h-screen bg-sky-700">
-              {shortcuts.map((shortcut, index) => (
-                <Shortcut key={index} {...shortcut} />
+              {shortcuts.map((shortcut,index) => (
+                <Shortcut key={`${shortcut.name}-${index}`} {...shortcut} />
               ))}
             </div>
           </div>
