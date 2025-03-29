@@ -2,7 +2,7 @@
 import Button from "@/app/components/Button/Button";
 import Input from "@/app/components/Input/Input";
 import React from "react";
-import useRegisterForm from "./useRegisterFrom";
+import useRegisterForm from "./useRegisterForm";
 import { maskCPF } from "@/app/utils/cpfMask";
 import cepMask from "@/app/utils/cepMask";
 
