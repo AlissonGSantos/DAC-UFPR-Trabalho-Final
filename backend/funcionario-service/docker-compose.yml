@@ -13,6 +13,7 @@ services:
       - emiratads-network
 
   funcionarioservice:
+    platform: linux/amd64
     build:
       context: .
       dockerfile: ../Dockerfile

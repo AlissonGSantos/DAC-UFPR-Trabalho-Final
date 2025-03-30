@@ -32,6 +32,11 @@ on:
         required: false
         default: true
         type: boolean
+      sagas:
+        description: 'Serviço orquestração de sagas'
+        required: false
+        default: true
+        type: boolean
   
 jobs:
   detect-projects:
@@ -65,6 +70,9 @@ jobs:
           if [ "${{ github.event.inputs.voo }}" == "true" ]; then
             SELECTED="${SELECTED} voo-service"
           fi
+          if [ "${{ github.event.inputs.sagas }}" == "true" ]; then
+            SELECTED="${SELECTED} saga-orchestration-service"
+          fi
             SELECTED=$(echo "${SELECTED}" | cut -c2-)
           echo "Projetos selecionados: $SELECTED"
           echo "projects=$SELECTED" >> $GITHUB_OUTPUT
@@ -74,6 +82,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           MODIFIED_FILES=$(git diff --name-only HEAD^ HEAD --)
+          MODIFIED_FILES=$(echo "$MODIFIED_FILES" | tr '\n' ' ')
           echo "Arquivos modificados: $MODIFIED_FILES"
           echo "files=$MODIFIED_FILES" >> $GITHUB_OUTPUT
         
@@ -82,7 +91,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           MODIFIED_FILES="${{ steps.modified_files.outputs.files }}"
-          PROJECTS=$(echo "$MODIFIED_FILES" | grep '^backend/' | cut -d'/' -f2 | sort | uniq | tr '\n' ' ' | sed 's/ $//')
+          PROJECTS=$(echo "$MODIFIED_FILES" | grep -Eo 'backend/[^/]+-service/' | cut -d'/' -f2 | sort | uniq  | tr '\n' ' ' | sed 's/ $//')
           echo "Projetos modificados: $PROJECTS"
           echo "projects=$PROJECTS" >> $GITHUB_OUTPUT
 

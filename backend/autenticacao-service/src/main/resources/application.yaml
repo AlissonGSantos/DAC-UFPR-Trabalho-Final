@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: autenticacao-service
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: guest
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
