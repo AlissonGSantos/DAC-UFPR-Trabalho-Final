@@ -45,9 +45,8 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
               ))}
             </div>
           </div>
-          {/* Conteúdo principal com margem condicional para empurrar à direita */}
           <main
-            className={`p-4 transition-all duration-300 ease-in-out ${
+            className={`transition-all duration-300 ease-in-out ${
               isOpen ? "lg:ml-64" : "lg:ml-0"
             }`}
           >
