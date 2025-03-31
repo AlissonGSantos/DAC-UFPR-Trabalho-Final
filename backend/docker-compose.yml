@@ -39,10 +39,11 @@ services:
       dockerfile: ../Dockerfile
     ports:
       - "8081:8080"
-    networks:
-      - emiratads-network
+      - "5005:5005"
     depends_on:
       - rabbitmq
+    networks:
+      - emiratads-network
 
   clienteservice:
     build:

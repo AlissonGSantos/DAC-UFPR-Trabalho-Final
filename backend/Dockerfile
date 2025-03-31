@@ -15,4 +15,4 @@ RUN ARTIFACT_NAME=$(find /app/target -name "*.jar" | head -n 1 | xargs -n 1 base
         exit 1; \
     fi
 
-ENTRYPOINT ["sh", "-c", "java -jar /app/$(find /app -name '*.jar' | head -n 1 | xargs -n 1 basename)"]
+ENTRYPOINT ["sh", "-c", "java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 /app/$(find /app -name '*.jar' | head -n 1 | xargs -n 1 basename)"]

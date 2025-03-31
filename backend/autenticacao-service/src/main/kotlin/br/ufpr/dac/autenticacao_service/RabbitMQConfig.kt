@@ -1,4 +1,4 @@
-package br.ufpr.dac.cliente_service
+package br.ufpr.dac.autenticacao_service
 
 import br.ufpr.dac.autenticacao_service.resource.AutenticacaoListener
 import org.springframework.amqp.core.Binding
@@ -13,7 +13,7 @@ class RabbitMQConfig {
 
     @Bean
     fun autocadastroRequests(): Queue {
-        return Queue("emiratads.autocadastro.requests")
+        return Queue("emiratads.autocadastro.autenticacao")
     }
 
     @Bean

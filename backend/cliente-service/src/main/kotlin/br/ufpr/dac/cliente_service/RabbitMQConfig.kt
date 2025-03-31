@@ -11,10 +11,9 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RabbitMQConfig {
 
-
     @Bean
     fun autocadastroRequests(): Queue {
-        return Queue("emiratads.autocadastro.requests")
+        return Queue("emiratads.autocadastro.cliente")
     }
 
     @Bean
