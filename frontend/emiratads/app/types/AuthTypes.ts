@@ -26,7 +26,7 @@ export type UserAuth = {
 }
 
 export interface LoginRequest{
-    login: string,
+    email: string,
     password: string
 }
 
