@@ -181,6 +181,7 @@ const RegisterForm = () => {
               text={"Cadastrar"}
               extraClass="flex w-full justify-center"
               typeButton="submit"
+              size="SMALL"
             />
           </div>
         </form>
