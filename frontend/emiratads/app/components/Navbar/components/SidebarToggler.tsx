@@ -15,7 +15,7 @@ const SidebarToggler: React.FC<SidebarTogglerProps> = ({ onClick, isToggled }) =
     >
       <div
         className={`w-full h-0.5 bg-white rounded transform transition-all duration-300 ease-in-out ${
-          isToggled ? "rotate-45 translate-y-2" : "rotate-0 translate-y-0"
+          isToggled ? "rotate-45 translate-y-1.5" : "rotate-0 translate-y-0"
         }`}
       ></div>
       <div
@@ -25,7 +25,7 @@ const SidebarToggler: React.FC<SidebarTogglerProps> = ({ onClick, isToggled }) =
       ></div>
       <div
         className={`w-full h-0.5 bg-white rounded transform transition-all duration-300 ease-in-out ${
-          isToggled ? "-rotate-45 -translate-y-1.5" : "rotate-0 translate-y-0"
+          isToggled ? "rotate-135 -translate-y-2" : "rotate-0 translate-y-0"
         }`}
       ></div>
     </button>

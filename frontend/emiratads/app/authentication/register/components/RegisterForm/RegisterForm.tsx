@@ -17,7 +17,7 @@ const RegisterForm = () => {
           className="flex w-full flex-col gap-3"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex gap-4">
+          <div className="flex gap-4 w-full">
             <Input
               type={"text"}
               label={"Nome:"}
@@ -27,6 +27,7 @@ const RegisterForm = () => {
                   ? [{ hasError: true, message: errors.nome.message ?? "" }]
                   : []
               }
+              extraClasses="flex-1"
             />
             <Input
               type={"email"}
@@ -37,6 +38,7 @@ const RegisterForm = () => {
                   ? [{ hasError: true, message: errors.email.message ?? "" }]
                   : []
               }
+              extraClasses="flex-1"
             />
 
             <Input
@@ -52,6 +54,7 @@ const RegisterForm = () => {
                   ? [{ hasError: true, message: errors.cpf.message ?? "" }]
                   : []
               }
+              extraClasses="flex-1"
             />
           </div>
           <div className="flex flex-fill gap-4">
