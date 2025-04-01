@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <AuthContextProvider>
-        <body>
+        <body className="h-screen">
           <ClientNavbarWrapper>{children}</ClientNavbarWrapper>
         </body>
       </AuthContextProvider>
