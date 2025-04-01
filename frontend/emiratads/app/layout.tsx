@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthContextProvider } from "./contexts/auth";
-import ClientNavbarWrapper from "./components/Navbar/components/ClientNavbarWrapper";
+import Navbar from "./components/Navbar/Navbar";
 
 export const metadata: Metadata = {
   title: "EmiraTADS Airlines",
@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="pt-br">
       <AuthContextProvider>
         <body className="h-screen">
-          <ClientNavbarWrapper>{children}</ClientNavbarWrapper>
+          <Navbar>{children}</Navbar>
         </body>
       </AuthContextProvider>
     </html>
