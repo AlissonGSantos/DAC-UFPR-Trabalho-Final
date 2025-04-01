@@ -4,8 +4,8 @@ import RegisterForm from "./components/RegisterForm/RegisterForm";
 
 const Register = () => {
   return (
-    <div className="w-screen">
-      <div className="flex justify-center flex-col mx-auto w-1/2">
+    <div className="w-screen h-screen">
+      <div className="flex justify-center flex-col h-full m-auto w-1/2">
         <div
           className={`my-8 w-full text-3xl ${robotoFont.className} text-sky-800`}
         >
