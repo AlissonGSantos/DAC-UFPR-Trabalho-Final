@@ -2,15 +2,16 @@ package br.ufpr.dac.cliente_service.resource.dto
 
 import br.ufpr.dac.cliente_service.domain.Endereco
 import br.ufpr.dac.cliente_service.domain.Cliente
+import utils.dto.UsuarioOutputDTO
 
-data class ClienteOutputDTO(
+class ClienteOutputDTO (
   val codigo: Long,
-  val cpf: String,
-  val nome: String,
-  val email:String,
+  cpf: String,
+  nome: String,
+  email:String,
   val saldo_milhas: Float,
   val endereco: Endereco
-) {
+) : UsuarioOutputDTO(cpf, nome, email) {
   constructor(cliente: Cliente): this (
     codigo = cliente.codigo,
     cpf = cliente.cpf,
@@ -21,6 +22,6 @@ data class ClienteOutputDTO(
   )
 
   fun toCliente(): Cliente{
-    return Cliente(codigo, cpf, nome, email, saldo_milhas,endereco)
+    return Cliente(codigo, cpf, nome, email, saldo_milhas, endereco)
   }
 }
