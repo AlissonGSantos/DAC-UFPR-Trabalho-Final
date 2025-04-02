@@ -68,7 +68,7 @@ CREATE TABLE emiratads_voo.aeroporto (
 );
 
 CREATE TABLE emiratads_voo.estado_voo (
-    codigo SERIAL PRIMARY KEY,
+    codigo bigserial PRIMARY KEY,
     sigla CHAR(3) NOT NULL,
     descricao VARCHAR(20) NOT NULL
 );
@@ -80,7 +80,7 @@ CREATE TABLE emiratads_voo.voo (
     valor_passagem numeric(10, 2) NOT NULL,
     quantidade_poltronas_total smallint NOT NULL,
     quantidade_poltronas_ocupadas smallint NOT NULL default 0,
-    estado_codigo integer NOT NULL,
+    estado_codigo bigint NOT NULL,
     aeroporto_origem char(3) NOT NULL,
     aeroporto_destino char(3) NOT NULL,
     ativo boolean NOT NULL DEFAULT true,
