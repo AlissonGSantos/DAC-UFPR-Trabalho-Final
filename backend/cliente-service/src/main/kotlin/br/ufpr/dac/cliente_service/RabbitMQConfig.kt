@@ -1,6 +1,7 @@
 package br.ufpr.dac.cliente_service
 
 import br.ufpr.dac.cliente_service.resource.ClienteListener
+import br.ufpr.dac.cliente_service.resource.ClienteService
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class RabbitMQConfig {
+class RabbitMQConfig(private val clienteService: ClienteService) {
 
     @Bean
     fun autocadastroRequests(): Queue {
@@ -21,9 +22,19 @@ class RabbitMQConfig {
         return DirectExchange("emiratads.autocadastro")
     }
 
+    @Bean
+    fun loginClientes(): Queue {
+        return Queue("emiratads.login.cliente")
+    }
 
     @Bean
-    fun binding(
+    fun sagaLogin(): DirectExchange {
+        return DirectExchange("emiratads.login")
+    }
+
+
+    @Bean
+    fun bindingAutocadastro(
         sagaAutocadastro: DirectExchange,
         autocadastroRequests: Queue
     ): Binding {
@@ -33,8 +44,18 @@ class RabbitMQConfig {
     }
 
     @Bean
+    fun bindingLogin(
+        sagaLogin: DirectExchange,
+        loginClientes: Queue
+    ): Binding {
+        return BindingBuilder.bind(loginClientes)
+            .to(sagaLogin)
+            .with("cliente")
+    }
+
+    @Bean
     fun clienteListener(): ClienteListener {
-        return ClienteListener()
+        return ClienteListener(clienteService)
     }
 
 }

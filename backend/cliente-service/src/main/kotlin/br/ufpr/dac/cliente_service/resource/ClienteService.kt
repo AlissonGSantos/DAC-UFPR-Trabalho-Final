@@ -1,9 +1,8 @@
-package br.ufpr.dac.cliente_service.service
+package br.ufpr.dac.cliente_service.resource
 
 import br.ufpr.dac.cliente_service.repository.IClienteRepository
 import utils.dto.ClienteOutputDTO
 import br.ufpr.dac.cliente_service.resource.dto.ClienteInputDTO
-import br.ufpr.dac.cliente_service.domain.Cliente
 import br.ufpr.dac.cliente_service.resource.dto.ClienteMapper
 import org.springframework.stereotype.Service
 

@@ -1,7 +1,6 @@
 package br.ufpr.dac.cliente_service.resource
 
 import org.springframework.http.ResponseEntity
-import br.ufpr.dac.cliente_service.service.ClienteService
 import br.ufpr.dac.cliente_service.resource.dto.ClienteInputDTO
 import utils.dto.ClienteOutputDTO
 import org.springframework.web.bind.annotation.*

@@ -7,4 +7,4 @@ data class ClienteOutputDTO (
   val email:String,
   val saldo_milhas: Float,
   val endereco: EnderecoDTO
-)
+) : UsuarioOutputDTO

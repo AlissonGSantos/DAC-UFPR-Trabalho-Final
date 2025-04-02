@@ -6,4 +6,4 @@ data class FuncionarioOutputDTO(
     val nome: String,
     val email: String,
     val telefone: String
-)
+) : UsuarioOutputDTO

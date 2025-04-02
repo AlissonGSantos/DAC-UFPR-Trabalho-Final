@@ -21,6 +21,10 @@ class RabbitMQConfig {
         return DirectExchange("emiratads.autocadastro")
     }
 
+    @Bean
+    fun sagaLogin(): DirectExchange {
+        return DirectExchange("emiratads.login")
+    }
 
     @Bean
     fun binding(
