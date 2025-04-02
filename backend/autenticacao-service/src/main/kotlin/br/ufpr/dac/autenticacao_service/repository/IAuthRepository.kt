@@ -1,9 +1,13 @@
 package br.ufpr.dac.autenticacao_service.repository
 
 import br.ufpr.dac.autenticacao_service.domain.User
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.mongodb.repository.Query
+import org.springframework.stereotype.Repository
 
-interface IAuthRepository : JpaRepository<User, String> {
-    fun findByLogin(login: String): UserDetails
+@Repository
+interface IAuthRepository : MongoRepository<User, String> {
+
+    @Query("{login: '?0'}")
+    fun findItemByLogin(login : String) : User?
 }

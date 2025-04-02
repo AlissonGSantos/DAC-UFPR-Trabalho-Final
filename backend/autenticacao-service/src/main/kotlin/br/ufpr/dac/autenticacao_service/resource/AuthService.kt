@@ -1,18 +1,15 @@
 package br.ufpr.dac.autenticacao_service.resource
 
+import br.ufpr.dac.autenticacao_service.repository.IAuthRepository
 import br.ufpr.dac.autenticacao_service.resource.dto.loginInputDTO
 import br.ufpr.dac.autenticacao_service.resource.dto.loginOutputDTO
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 @Service
-class AuthService : UserDetailsService {
-    fun login(usuario: loginInputDTO): loginOutputDTO {
+class AuthService(private val repository: IAuthRepository) {
 
-    }
-
-    override fun loadUserByUsername(username: String?): UserDetails {
-        TODO("Not yet implemented")
+    fun login(usuario: loginInputDTO): loginOutputDTO? {
+        val user = repository.findItemByLogin(usuario.login)
+        return user?.let { loginOutputDTO(it) }
     }
 }
