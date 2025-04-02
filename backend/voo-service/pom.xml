@@ -14,7 +14,13 @@
 	<description>Módulo responsável pela manutenção dos voos</description>
 
 	<properties/>
-	<dependencies/>
+	<dependencies>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+	</dependencies>
+
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
