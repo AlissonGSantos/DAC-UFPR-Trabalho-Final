@@ -1,6 +1,7 @@
 package br.ufpr.dac.cliente_service.resource.dto
 
 import br.ufpr.dac.cliente_service.domain.Cliente
+import br.ufpr.dac.cliente_service.domain.Endereco
 import jakarta.validation.constraints.*
 
 data class ClienteInputDTO(
@@ -16,11 +17,11 @@ data class ClienteInputDTO(
   @Email
   val email: String,
 
-  @NotBlank
-  @Pattern(regexp = "\\d{10,11}", message = "O telefone deve ter entre 10 e 11 digitos")
-  val telefone: String
+  val saldo_milhas: Float,
+
+  val endereco: Endereco
 ) {
   fun toCliente(): Cliente {
-    return Cliente(cpf = cpf, nome = nome, email = email, telefone = telefone, ativo = true)
+    return Cliente(cpf = cpf, nome = nome, email = email, saldo_milhas = saldo_milhas, endereco = endereco, codigo = codigo)
   }
 }

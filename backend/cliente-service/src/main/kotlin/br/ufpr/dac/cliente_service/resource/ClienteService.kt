@@ -1,13 +1,17 @@
 package br.ufpr.dac.cliente_service.service
 
 import br.ufpr.dac.cliente_service.repository.IClienteRepository
+import br.ufpr.dac.cliente_service.resource.dto.ClienteOutputDTO
+import br.ufpr.dac.cliente_service.resource.dto.ClienteInputDTO
+import br.ufpr.dac.cliente_service.domain.Cliente
+import org.springframework.stereotype.Service
 
 
 @Service
 class ClienteService(private val repository: IClienteRepository){
 
   fun getAllClientes(): List<ClienteOutputDTO> {
-    return repository.findByAtivoTrue().map {ClienteOutputDTO(it)}
+    return repository.findAll().map {ClienteOutputDTO(it)}
   }
 
   fun updateCliente(codigo: Long, clienteDTO: ClienteInputDTO): Cliente{
@@ -16,7 +20,8 @@ class ClienteService(private val repository: IClienteRepository){
 
     cliente.nome = clienteDTO.nome
     cliente.email = clienteDTO.email
-    cliente.telefone = clienteDTO.telefone
+    cliente.saldo_milhas = clienteDTO.saldo_milhas
+    cliente.endereco = clienteDTO.endereco
 
     return repository.save(cliente)
   }
@@ -27,13 +32,13 @@ class ClienteService(private val repository: IClienteRepository){
 
   fun deactivateCliente(codigo: Long): Cliente {
     val cliente = repository.findById(codigo).orElseThrow{ IllegalArgumentException("Cliente não encontrado com o ID: $codigo") }
-
-    cliente.ativo = false
-    return repository.save(cliente)
+    repository.deleteById(cliente.codigo)
+    return cliente
   }
 
   fun getClienteByID(codigo: Long) : ClienteOutputDTO {
-    return repository.findById(codigo) {ClienteOutputDTO(it)}
+    val cliente = repository.findById(codigo).orElseThrow { IllegalArgumentException("Cliente não encontrado com o ID: $codigo")}
+    return ClienteOutputDTO(cliente)
   }
 
 }
