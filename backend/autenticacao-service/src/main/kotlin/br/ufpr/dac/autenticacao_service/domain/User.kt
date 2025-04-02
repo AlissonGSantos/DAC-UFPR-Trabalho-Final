@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class User(
     @Id
     val login: String,
+    val code: Long,
     val senha: String,
     val role: UserRole
 )

@@ -8,6 +8,4 @@ data class loginOutputDTO(
     val tipo: String,
     val nome: String
     /*val usuario: Usuario*/
-) {
-    constructor(user: User) : this("token", "bearer", user.role.toString(), user.login)
-}
+)
