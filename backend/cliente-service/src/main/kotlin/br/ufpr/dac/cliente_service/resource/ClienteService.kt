@@ -1,9 +1,10 @@
 package br.ufpr.dac.cliente_service.service
 
 import br.ufpr.dac.cliente_service.repository.IClienteRepository
-import br.ufpr.dac.cliente_service.resource.dto.ClienteOutputDTO
+import utils.dto.ClienteOutputDTO
 import br.ufpr.dac.cliente_service.resource.dto.ClienteInputDTO
 import br.ufpr.dac.cliente_service.domain.Cliente
+import br.ufpr.dac.cliente_service.resource.dto.ClienteMapper
 import org.springframework.stereotype.Service
 
 
@@ -11,10 +12,10 @@ import org.springframework.stereotype.Service
 class ClienteService(private val repository: IClienteRepository){
 
   fun getAllClientes(): List<ClienteOutputDTO> {
-    return repository.findAll().map {ClienteOutputDTO(it)}
+    return repository.findAll().map { ClienteMapper.toDTO(it) }
   }
 
-  fun updateCliente(codigo: Long, clienteDTO: ClienteInputDTO): Cliente{
+  fun updateCliente(codigo: Long, clienteDTO: ClienteInputDTO): ClienteOutputDTO {
     val cliente = repository.findById(codigo)
       .orElseThrow{ IllegalArgumentException("Cliente não encontrado com o ID: ${clienteDTO.codigo}")}
 
@@ -23,22 +24,22 @@ class ClienteService(private val repository: IClienteRepository){
     cliente.saldo_milhas = clienteDTO.saldo_milhas
     cliente.endereco = clienteDTO.endereco
 
-    return repository.save(cliente)
+    return ClienteMapper.toDTO(repository.save(cliente))
   }
 
-  fun saveCliente(cliente: ClienteInputDTO): Cliente {
-    return repository.save(cliente.toCliente())
+  fun saveCliente(cliente: ClienteInputDTO): ClienteOutputDTO {
+    return ClienteMapper.toDTO(repository.save(cliente.toCliente()))
   }
 
-  fun deactivateCliente(codigo: Long): Cliente {
+  fun deactivateCliente(codigo: Long): ClienteOutputDTO {
     val cliente = repository.findById(codigo).orElseThrow{ IllegalArgumentException("Cliente não encontrado com o ID: $codigo") }
     repository.deleteById(cliente.codigo)
-    return cliente
+    return ClienteMapper.toDTO(cliente)
   }
 
   fun getClienteByID(codigo: Long) : ClienteOutputDTO {
     val cliente = repository.findById(codigo).orElseThrow { IllegalArgumentException("Cliente não encontrado com o ID: $codigo")}
-    return ClienteOutputDTO(cliente)
+    return ClienteMapper.toDTO(cliente)
   }
 
 }
