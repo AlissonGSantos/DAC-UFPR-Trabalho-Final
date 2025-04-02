@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthContextProvider } from "./contexts/auth";
 import Navbar from "./components/Navbar/Navbar";
 
 export const metadata: Metadata = {
@@ -14,11 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body>
-        <Navbar>
-          {children}  
-        </Navbar>
-      </body>
+      <AuthContextProvider>
+        <body className="h-screen">
+          <Navbar>{children}</Navbar>
+        </body>
+      </AuthContextProvider>
     </html>
   );
 }

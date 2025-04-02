@@ -1,0 +1,28 @@
+services:
+  dbdevelopment:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: senha3
+    volumes:
+      - ../database/sql:/sql
+      - ../database/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    ports:
+      - 5433:5432
+    networks:
+      - emiratads-network
+
+  funcionarioservice:
+    build:
+      context: .
+      dockerfile: ../Dockerfile
+    ports:
+      - "8085:8080"
+    depends_on:
+      - dbdevelopment
+    networks:
+      - emiratads-network
+
+networks:
+  emiratads-network:
+    driver: bridge

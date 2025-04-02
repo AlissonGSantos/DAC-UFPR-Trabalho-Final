@@ -13,44 +13,42 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
   const { isOpen, toggle, shortcuts } = useNavbar();
 
   return (
-    <div className="relative flex">
-      {isOpen && (
-      <div
-        className={`fixed top-0 left-0 w-full lg:w-64 h-full bg-sky-600 z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:static`}
-      >
-        <div className="flex p-4 h-16 bg-sky-700">
-          <SidebarToggler onClick={toggle} />
+    <div className="flex flex-col h-screen">
+      <nav className="bg-sky-700 h-16 flex items-center justify-between px-4">
+        <div className="flex items-center">
+          <SidebarToggler onClick={toggle} isToggled={isOpen} />
+          <h1 className="text-white text-lg mx-6 hidden lg:block">
+            EMIRATADS
+          </h1>
         </div>
-        <h1 className="text-white text-lg my-4 mx-auto w-full text-center">EMIRATADS</h1>
-        <div className="flex flex-col items-center gap-4 py-8 h-screen bg-sky-600">
-          {shortcuts.map((shortcut, index) => (
-            <Shortcut key={index} {...shortcut} />
-          ))}
-        </div>
-      </div>
-)}
-      <div
-        className={`flex-1 transition-transform duration-300`}
-      >
-        <nav className="bg-sky-700 h-16 flex items-center justify-between px-4">
-          {
-          !isOpen && 
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center">
-                <SidebarToggler onClick={toggle} />
-                <h1 className="text-white text-lg mx-6">EMIRATADS</h1>
-              </div>
-           <div id="shortcuts-session" className="hidden md:flex">
-                {shortcuts.map((shortcut, index) => (
-                  <Shortcut key={index} {...shortcut} />
-                ))}
-              </div>
+        {!isOpen && (
+          <div id="shortcuts-session" className="hidden md:flex h-full">
+            {shortcuts.map((shortcut, index) => (
+              <Shortcut key={`${shortcut.name}-${index}`} {...shortcut} />
+            ))}
           </div>
-          }
-        </nav>
-        <main>{children}</main>
+        )}
+      </nav>
+      <div className="relative flex flex-1 overflow-hidden">
+        {/* SIDEBAR sem usar fixed */}
+        <div
+          className={`absolute inset-y-0 left-0 bg-sky-700 transition-transform duration-300 ease-in-out ${
+            isOpen ? "w-full lg:w-64 translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col items-center gap-4 py-8 h-full">
+            {shortcuts.map((shortcut, index) => (
+              <Shortcut key={`${shortcut.name}-${index}`} {...shortcut} />
+            ))}
+          </div>
+        </div>
+        <main
+          className={`transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-scroll flex-1 ${
+            isOpen ? "lg:ml-64" : "lg:ml-0"
+          }`}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );
