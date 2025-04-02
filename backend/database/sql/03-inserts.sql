@@ -21,3 +21,22 @@ INSERT INTO emiratads_cliente.cliente (cpf, nome, email, saldo_milhas, endereco_
     ('34567890123', 'Cliente 3', 'cliente3@example.com', 0.0, 3),
     ('45678901234', 'Cliente 4', 'cliente4@example.com', 0.0, 4),
     ('56789012345', 'Cliente 5', 'cliente5@example.com', 0.0, 5);
+
+-- Inserts para a tabela aeroporto
+INSERT INTO emiratads_voo.aeroporto (codigo, nome, cidade, uf) VALUES
+    ('GRU', 'Aeroporto Internacional de São Paulo/Guarulhos', 'Guarulhos', 'SP'),
+    ('GIG', 'Aeroporto Internacional do Rio de Janeiro/Galeão', 'Rio de Janeiro', 'RJ'),
+    ('CWB', 'Aeroporto Internacional de Curitiba', 'Curitiba', 'PR'),
+    ('POA', 'Aeroporto Internacional Salgado Filho', 'Porto Alegre', 'RS');
+
+-- Inserção dos valores na tabela estado_voo
+INSERT INTO emiratads_voo.estado_voo (sigla, descricao) VALUES
+    ('CON', 'CONFIRMADO'),
+    ('CAN', 'CANCELADO'),
+    ('REA', 'REALIZADO');
+
+-- Inserts para a tabela voo
+INSERT INTO emiratads_voo.voo (codigo, data, valor_passagem, quantidade_poltronas_total, quantidade_poltronas_ocupadas, estado_codigo, aeroporto_origem, aeroporto_destino) VALUES
+    ('TADS0001', '2025-08-10T10:30:00-03:00', 500.00, 150, 0, 1, 'POA', 'CWB'),
+    ('TADS0002', '2025-09-11T09:30:00-03:00', 450.00, 150, 0, 1, 'CWB', 'GIG'),
+    ('TADS0003', '2025-10-12T08:30:00-03:00', 400.00, 150, 0, 1, 'CWB', 'POA');
