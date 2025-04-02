@@ -3,6 +3,7 @@ package br.ufpr.dac.cliente_service.resource.dto
 import br.ufpr.dac.cliente_service.domain.Cliente
 import br.ufpr.dac.cliente_service.domain.Endereco
 import jakarta.validation.constraints.*
+import utils.validators.Cpf
 
 data class ClienteInputDTO(
   val codigo: Long,

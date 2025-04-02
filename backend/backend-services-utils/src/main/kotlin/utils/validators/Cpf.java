@@ -1,4 +1,4 @@
-package br.ufpr.dac.funcionario_service.utils.validators;
+package utils.validators;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
