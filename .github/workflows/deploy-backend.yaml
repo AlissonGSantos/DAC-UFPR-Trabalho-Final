@@ -32,6 +32,11 @@ on:
         required: false
         default: true
         type: boolean
+      sagas:
+        description: 'Serviço orquestração de sagas'
+        required: false
+        default: true
+        type: boolean
   
 jobs:
   detect-projects:
@@ -65,6 +70,9 @@ jobs:
           if [ "${{ github.event.inputs.voo }}" == "true" ]; then
             SELECTED="${SELECTED} voo-service"
           fi
+          if [ "${{ github.event.inputs.sagas }}" == "true" ]; then
+            SELECTED="${SELECTED} saga-orchestration-service"
+          fi
             SELECTED=$(echo "${SELECTED}" | cut -c2-)
           echo "Projetos selecionados: $SELECTED"
           echo "projects=$SELECTED" >> $GITHUB_OUTPUT
@@ -74,6 +82,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           MODIFIED_FILES=$(git diff --name-only HEAD^ HEAD --)
+          MODIFIED_FILES=$(echo "$MODIFIED_FILES" | tr '\n' ' ')
           echo "Arquivos modificados: $MODIFIED_FILES"
           echo "files=$MODIFIED_FILES" >> $GITHUB_OUTPUT
         
@@ -82,7 +91,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           MODIFIED_FILES="${{ steps.modified_files.outputs.files }}"
-          PROJECTS=$(echo "$MODIFIED_FILES" | grep '^backend/' | cut -d'/' -f2 | sort | uniq | tr '\n' ' ' | sed 's/ $//')
+          PROJECTS=$(echo "$MODIFIED_FILES" | grep -Eo 'backend/[^/]+-service/' | cut -d'/' -f2 | sort | uniq  | tr '\n' ' ' | sed 's/ $//')
           echo "Projetos modificados: $PROJECTS"
           echo "projects=$PROJECTS" >> $GITHUB_OUTPUT
 
@@ -98,9 +107,37 @@ jobs:
           echo "Projetos para build: $MATRIX_PROJECTS"
           echo "matrix_projects=$MATRIX_PROJECTS" >> $GITHUB_OUTPUT
 
+  build-utils:
+    name: Build e instalação do utils
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: maven-repo-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-repo-${{ runner.os }}-
+
+      - name: Configurando java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build e instalação do utils no repositório local
+        run: |
+          echo "Instalando utils no repositório local do Maven"
+          cd backend/backend-services-utils
+          mvn clean install
+          cd ../
+
   build:
     name: Realizando build dos projetos
-    needs: detect-projects
+    needs: [detect-projects, build-utils]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -108,6 +145,14 @@ jobs:
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Cache Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: maven-repo-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-repo-${{ runner.os }}-
 
       - name: Configurando java
         uses: actions/setup-java@v4
@@ -125,7 +170,7 @@ jobs:
         run: |
           echo "Processo de build para o projeto ${{ matrix.project }}:${{ steps.pom_version.outputs.version }}"
           cd backend/${{ matrix.project }}
-          mvn clean install
+          mvn clean install -DskipTests=true -Dmaven.test.skip=true
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: saga-orchestration-service
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: guest

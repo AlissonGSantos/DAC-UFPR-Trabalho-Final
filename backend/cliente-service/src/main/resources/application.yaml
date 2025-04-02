@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: cliente-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://dbdevelopment:5432/postgres
+    username: emiratads_cliente_user
+    password: senha1
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: emiratads_cliente
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: guest

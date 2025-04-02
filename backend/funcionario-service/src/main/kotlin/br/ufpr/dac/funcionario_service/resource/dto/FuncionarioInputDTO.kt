@@ -1,8 +1,9 @@
 package br.ufpr.dac.funcionario_service.resource.dto
 
 import br.ufpr.dac.funcionario_service.domain.Funcionario
-import br.ufpr.dac.funcionario_service.utils.validators.Cpf
+
 import jakarta.validation.constraints.*
+import utils.validators.Cpf
 
 data class FuncionarioInputDTO(
     val codigo: Long,
