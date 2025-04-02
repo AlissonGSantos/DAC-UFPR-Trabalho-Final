@@ -37,8 +37,15 @@
             <name>Raul Ferreira Bana</name>
         </developer>
     </developers>
+	<modules>
+		<module>autenticacao-service</module>
+		<module>cliente-service</module>
+		<module>funcionario-service</module>
+		<module>reserva-service</module>
+		<module>voo-service</module>
+	</modules>
 
-    <properties>
+	<properties>
         <java.version>17</java.version>
         <kotlin.version>1.9.25</kotlin.version>
     </properties>
@@ -63,6 +70,12 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>br.ufpr.dac</groupId>
+			<artifactId>backend-services-utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>

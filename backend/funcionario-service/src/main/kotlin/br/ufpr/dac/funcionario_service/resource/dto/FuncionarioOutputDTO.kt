@@ -1,14 +1,15 @@
 package br.ufpr.dac.funcionario_service.resource.dto
 
 import br.ufpr.dac.funcionario_service.domain.Funcionario
+import utils.dto.UsuarioOutputDTO
 
-data class FuncionarioOutputDTO(
+class FuncionarioOutputDTO(
     val codigo: Long,
-    val cpf: String,
-    val nome: String,
-    val email: String,
+    cpf: String,
+    nome: String,
+    email: String,
     val telefone: String
-) {
+) : UsuarioOutputDTO(cpf, nome, email) {
     constructor(funcionario: Funcionario) : this(
         codigo = funcionario.codigo,
         cpf = funcionario.cpf,
