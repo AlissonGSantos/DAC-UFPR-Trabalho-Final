@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface IClienteRepository : JpaRepository<Cliente, Long> {
-
+    fun findByAtivoTrue(): List<Cliente>
+    fun findByCodigoAndAtivoTrue(codigo: Long): Cliente?
 }

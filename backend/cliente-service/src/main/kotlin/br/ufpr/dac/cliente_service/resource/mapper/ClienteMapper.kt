@@ -1,6 +1,7 @@
-package br.ufpr.dac.cliente_service.resource.dto
+package br.ufpr.dac.cliente_service.resource.mapper
 
 import br.ufpr.dac.cliente_service.domain.Cliente
+import utils.dto.ClienteInputDTO
 import utils.dto.ClienteOutputDTO
 
 class ClienteMapper {
@@ -16,14 +17,15 @@ class ClienteMapper {
             )
         }
 
-        fun toDomain(cliente: ClienteOutputDTO): Cliente {
+        fun toDomain(cliente: ClienteInputDTO): Cliente {
             return Cliente(
-                cliente.codigo,
+                cliente.codigo ?: 0L,
                 cliente.cpf,
                 cliente.nome,
                 cliente.email,
                 cliente.saldo_milhas,
-                EnderecoMapper.toDomain(cliente.endereco)
+                EnderecoMapper.toDomain(cliente.endereco),
+                true
             )
         }
     }
