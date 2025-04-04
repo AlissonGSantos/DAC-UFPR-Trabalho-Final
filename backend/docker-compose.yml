@@ -70,12 +70,16 @@ services:
       - emiratads-network
 
   funcionarioservice:
-    image: salgado2004/dac-ufpr-emiratads-funcionario-service
+    build:
+      context: ./funcionario-service
+      dockerfile: ../Dockerfile
     ports:
       - "8083:8080"
+      - "5007:5005"
     depends_on:
       - autenticacaoservice
       - dbdevelopment
+      - rabbitmq
     networks:
       - emiratads-network
 
