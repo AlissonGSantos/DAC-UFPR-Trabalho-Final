@@ -14,7 +14,7 @@ export type ButtonType =
 
 export type ButtonSize = "SMALL" | "MEDIUM" | "LARGE";
 
-interface ButtonProps {
+export interface ButtonProps {
   text: string;
   onClick?: () => void;
   type?: ButtonType;
