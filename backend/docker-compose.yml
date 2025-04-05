@@ -1,14 +1,13 @@
 services:
   dbdevelopment:
-    image: postgres
+    build:
+      context: ./database
+      dockerfile: Dockerfile
     restart: always
     environment:
       POSTGRES_PASSWORD: senha0
-    volumes:
-      - ./database/sql:/sql
-      - ./database/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
-      - 5433:5432
+      - "5433:5432"
     networks:
       - emiratads-network
 
