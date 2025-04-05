@@ -5,14 +5,20 @@ import React from "react";
 import useRegisterForm from "./useRegisterForm";
 import { maskCPF } from "@/app/utils/cpfMask";
 import cepMask from "@/app/utils/cepMask";
+import { robotoFont } from "@/app/assets/fontsSetup";
 
 const RegisterForm = () => {
   const { register, handleSubmit, errors, onSubmit, handleCepBlur } =
     useRegisterForm();
 
   return (
-    <div className="flex w-full justify-center py-8">
-      <div className="flex w-3/4">
+    <div className="flex flex-col w-full justify-center py-8">
+      <h1
+        className={`text-5xl font-semibold ${robotoFont.className} my-12 tracking-widest text-indigo-600 mx-auto`}
+      >
+        CADASTRO
+      </h1>
+      <div className="flex w-3/4 flex-row mx-auto justify-center">
         <form
           className="flex w-full flex-col gap-3"
           onSubmit={handleSubmit(onSubmit)}
