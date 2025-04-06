@@ -1,9 +1,11 @@
 package br.ufpr.dac.autenticacao_service.resource
 
-import br.ufpr.dac.autenticacao_service.domain.UserRole
+import utils.dto.UsuarioRole
 import br.ufpr.dac.autenticacao_service.repository.IAuthRepository
+import br.ufpr.dac.autenticacao_service.resource.dto.UsuarioMapper
 import br.ufpr.dac.autenticacao_service.resource.dto.loginInputDTO
 import br.ufpr.dac.autenticacao_service.resource.dto.loginOutputDTO
+import br.ufpr.dac.autenticacao_service.utils.EmailService
 import br.ufpr.dac.autenticacao_service.utils.PasswordService
 import br.ufpr.dac.autenticacao_service.utils.TokenJWTService
 import br.ufpr.dac.autenticacao_service.utils.exception.IncorrectPasswordException
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import utils.dto.ClienteOutputDTO
 import utils.dto.FuncionarioOutputDTO
+import utils.dto.UsuarioInputDTO
 import utils.dto.UsuarioOutputDTO
 
 @Service
@@ -26,6 +29,7 @@ class AuthService(
     private val repository: IAuthRepository,
     private val template: RabbitTemplate,
     private val passwordService: PasswordService,
+    private val emailService: EmailService,
     @Qualifier("sagaLogin") val exchange: DirectExchange,
     private val tokenJWTService: TokenJWTService
 ) {
@@ -39,7 +43,7 @@ class AuthService(
 
             if (passwordService.verifyPassword(usuario.senha, salt, pass)) {
 
-                val routingKey = if (it.role == UserRole.CLIENTE) {
+                val routingKey = if (it.role == UsuarioRole.CLIENTE) {
                     "cliente"
                 } else {
                     "funcionario"
@@ -61,15 +65,28 @@ class AuthService(
         throw UserNotFoundException("Usuário não encontrado")
     }
 
+    fun cadastro(cadastro : UsuarioInputDTO) {
+        if (cadastro.senha == null){
+            val novaSenha = passwordService.generateRandomPassword()
+            emailService.sendEmail(cadastro.email, novaSenha)
+
+            val salt = passwordService.generateSalt()
+            cadastro.senha = "${passwordService.hashPassword(novaSenha, salt)}:$salt"
+        }
+
+        val user = UsuarioMapper.toDomain(cadastro)
+        repository.save(user)
+    }
+
     private suspend fun asyncSendAndReceive(exchange: String, routingKey: String, message: String): String {
         return withContext(Dispatchers.IO) {
             template.convertSendAndReceive(exchange, routingKey, message) as String
         }
     }
 
-    private fun processDadosUsuario(data: String, role: UserRole): UsuarioOutputDTO {
+    private fun processDadosUsuario(data: String, role: UsuarioRole): UsuarioOutputDTO {
         val gson = Gson()
-        val classe = if (role == UserRole.CLIENTE) {
+        val classe = if (role == UsuarioRole.CLIENTE) {
             ClienteOutputDTO::class.java
         } else {
             FuncionarioOutputDTO::class.java

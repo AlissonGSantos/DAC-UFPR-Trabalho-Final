@@ -55,6 +55,7 @@ CREATE TABLE emiratads_cliente.cliente (
     ativo boolean NOT NULL DEFAULT true,
     CONSTRAINT cliente_pkey PRIMARY KEY (codigo),
     CONSTRAINT cliente_unique_cpf UNIQUE (cpf),
+    CONSTRAINT cliente_unique_email UNIQUE (email),
     CONSTRAINT cliente_endereco_fk FOREIGN KEY (endereco_codigo) REFERENCES emiratads_cliente.endereco(codigo)
 );
 

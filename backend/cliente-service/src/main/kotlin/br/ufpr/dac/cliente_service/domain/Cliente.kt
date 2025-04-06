@@ -12,8 +12,8 @@ data class Cliente (
     var nome: String,
     var email: String,
     var saldo_milhas: Float,
-    @OneToOne
-    @JoinColumn(name = "endereco_codigo")
+    @OneToOne(cascade = [CascadeType.PERSIST])
+    @JoinColumn(name = "endereco_codigo", nullable = false)
     var endereco: Endereco,
     var ativo: Boolean
 )

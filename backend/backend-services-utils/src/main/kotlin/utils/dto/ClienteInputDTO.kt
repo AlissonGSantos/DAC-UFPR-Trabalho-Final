@@ -1,23 +1,25 @@
 package utils.dto
 
+import jakarta.validation.Valid
 import jakarta.validation.constraints.*
 import utils.validators.Cpf
 
 data class ClienteInputDTO(
   val codigo: Long?,
 
-  @NotBlank
+  @field:NotBlank
   val nome: String,
 
-  @Cpf
+  @field:Cpf
   val cpf: String,
 
-  @NotBlank
-  @Email
+  @field:Email
+  @field:NotBlank
   val email: String,
 
   val saldo_milhas: Float,
 
-  @NotNull
+  @field:Valid
+  @field:NotNull
   val endereco: EnderecoDTO
 )
