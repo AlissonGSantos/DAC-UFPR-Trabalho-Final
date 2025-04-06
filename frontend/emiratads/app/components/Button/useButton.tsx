@@ -5,21 +5,19 @@ export const useButton = (type: ButtonType, size: ButtonSize) => {
     const getButtonColor = () => {
         switch (type) {
             case 'PRIMARY':
-                return 'bg-sky-600 hover:bg-sky-500 text-white border-0'
+                return 'bg-indigo-600 hover:bg-indigo-500 text-white border-0'
             case 'SECONDARY':
-                return 'bg-amber-600 hover:bg-amber-500 text-white border-0'
-            case 'TERTIARY':
-                return 'bg-transparent border-2 border-sky-600 text-sky-600 hover:bg-sky-600 hover:text-white'
+                return 'bg-transparent border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white'
             case 'DANGER':
                 return 'bg-red-800 hover:bg-red-700 text-white border-0'
             case 'SUCCESS':
-                return 'bg-emerald-700 hover:bg-emerald-600 text-white border-0'
+                return 'bg-emerald-800 hover:bg-emerald-900 text-white border-0'
             case 'WARNING':
-                return 'bg-yellow-600 hover:bg-yellow-500 text-white border-0'
-            case 'QUATERNARY':
-                return 'bg-gray-600 hover:bg-gray-500 text-white border-0'
+                return 'bg-yellow-600 hover:bg-yellow-700 text-white border-0'
+            case 'TERTIARY':
+                return 'bg-slate-600 hover:bg-slate-500 text-white border-0'
             default:
-                return 'bg-sky-600 hover:bg-sky-500 text-white border-0'
+                return 'bg-indigo-600 hover:bg-indigo-500 text-white border-0'
         }
     }
 
