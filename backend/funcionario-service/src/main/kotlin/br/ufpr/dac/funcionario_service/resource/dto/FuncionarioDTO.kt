@@ -3,15 +3,15 @@ package br.ufpr.dac.funcionario_service.resource.dto
 import br.ufpr.dac.funcionario_service.domain.Funcionario
 
 import jakarta.validation.constraints.*
-import utils.validators.Cpf
+import org.hibernate.validator.constraints.br.CPF
 
-data class FuncionarioInputDTO(
+data class FuncionarioDTO(
     val codigo: Long,
 
     @NotBlank
     val nome: String,
 
-    @Cpf
+    @CPF
     val cpf: String,
 
     @NotBlank
