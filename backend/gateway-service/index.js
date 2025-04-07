@@ -24,7 +24,7 @@ const authServiceProxy = httpProxy('http://localhost:8081', {
     proxyReqPathResolver: (req) => `/v1/auth${req.url}`
   });
   const clienteServiceProxy = httpProxy('http://localhost:8082', {
-    proxyReqPathResolver: (req) => `/v1/cliente${req.url}`
+    proxyReqPathResolver: (req) => `/v1/clientes${req.url}`
   });
   const funcionarioServiceProxy = httpProxy('http://localhost:8083', {
     proxyReqPathResolver: (req) => `/v1/funcionario${req.url}`
@@ -36,11 +36,11 @@ const authServiceProxy = httpProxy('http://localhost:8081', {
     proxyReqPathResolver: (req) => `/v1/voo${req.url}`
   });
   
-  app.use('/auth', authServiceProxy);
-  app.use('/reserva', reservaServiceProxy);
-  app.use('/cliente', clienteServiceProxy);
-  app.use('/voo', vooServiceProxy);
-  app.use('/funcionario', funcionarioServiceProxy);
+  app.use('/v1/auth', authServiceProxy);
+  app.use('/v1/reserva', reservaServiceProxy);
+  app.use('/v1/clientes', clienteServiceProxy);
+  app.use('/v1/voo', vooServiceProxy);
+  app.use('/v1/funcionario', funcionarioServiceProxy);
 
 
 
