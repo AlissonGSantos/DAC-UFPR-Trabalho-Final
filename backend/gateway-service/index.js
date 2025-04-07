@@ -1,7 +1,6 @@
 require("dotenv-safe").config();
 const express = require("express");
 let http = require("http");
-const jwt = require("jsonwebtoken");
 const app = express();
 const helmet = require("helmet");
 const cors = require("cors");
@@ -20,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-const authServiceProxy = httpProxy('http://localhost:8081', {
+  const authServiceProxy = httpProxy('http://localhost:8081', {
     proxyReqPathResolver: (req) => `/v1/auth${req.url}`
   });
   const clienteServiceProxy = httpProxy('http://localhost:8082', {
