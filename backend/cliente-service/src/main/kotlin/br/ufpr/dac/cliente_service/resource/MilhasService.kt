@@ -10,6 +10,7 @@ import br.ufpr.dac.cliente_service.resource.mapper.ClienteMapper
 import br.ufpr.dac.cliente_service.resource.mapper.TransacaoMapper
 import org.springframework.stereotype.Service
 import utils.dto.ClienteOutputDTO
+import utils.exceptions.ResourceNotFoundException
 import java.time.ZonedDateTime
 
 @Service
@@ -39,7 +40,7 @@ class MilhasService(
             return ClienteMapper.toDTO(repository.save(it))
         }
 
-        throw IllegalArgumentException("Cliente não encontrado com o ID: $codigo")
+        throw ResourceNotFoundException("Cliente não encontrado com o ID: $codigo")
     }
 
     fun emitirExtrato(codigo: Long): ExtratoDTO {
@@ -51,6 +52,6 @@ class MilhasService(
             return ExtratoDTO(data.codigo, data.saldo_milhas, transacoes.map { TransacaoMapper.toDTO(it) })
         }
 
-        throw IllegalArgumentException("Cliente não encontrado com o ID: $codigo")
+        throw ResourceNotFoundException("Cliente não encontrado com o ID: $codigo")
     }
 }

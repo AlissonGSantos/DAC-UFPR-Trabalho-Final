@@ -6,10 +6,8 @@ import org.springframework.amqp.core.DirectExchange
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.amqp.rabbit.core.RabbitTemplate
-import utils.dto.ClienteInputDTO
-import utils.dto.ClienteOutputDTO
-import utils.dto.UsuarioInputDTO
-import utils.dto.UsuarioRole
+import utils.GsonProcessor
+import utils.dto.*
 
 @Service
 class AutocadastroSaga(private val template: RabbitTemplate, @Qualifier("sagaAutocadastro") val exchange: DirectExchange) {
@@ -19,7 +17,7 @@ class AutocadastroSaga(private val template: RabbitTemplate, @Qualifier("sagaAut
         val requestCliente = async { asyncSendAndReceive(exchange.name, "cliente", gson.toJson(clienteCadastro)) }
         val responseCliente = requestCliente.await()
 
-        val cliente = gson.fromJson(responseCliente, ClienteOutputDTO::class.java)
+        val cliente = GsonProcessor.parseJson<ClienteOutputDTO>(responseCliente)
         val inputCadastro = UsuarioInputDTO( cliente.codigo, cliente.email, null, UsuarioRole.CLIENTE)
 
         val requestAuth = async { asyncSendAndReceive(exchange.name, "auth", gson.toJson(inputCadastro)) }

@@ -9,7 +9,6 @@ import br.ufpr.dac.autenticacao_service.utils.EmailService
 import br.ufpr.dac.autenticacao_service.utils.PasswordService
 import br.ufpr.dac.autenticacao_service.utils.TokenJWTService
 import br.ufpr.dac.autenticacao_service.utils.exception.IncorrectPasswordException
-import br.ufpr.dac.autenticacao_service.utils.exception.UserNotFoundException
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -23,6 +22,7 @@ import utils.dto.ClienteOutputDTO
 import utils.dto.FuncionarioOutputDTO
 import utils.dto.UsuarioInputDTO
 import utils.dto.UsuarioOutputDTO
+import utils.exceptions.ResourceNotFoundException
 
 @Service
 class AuthService(
@@ -62,7 +62,7 @@ class AuthService(
             throw IncorrectPasswordException("Senha incorreta")
         }
 
-        throw UserNotFoundException("Usuário não encontrado")
+        throw ResourceNotFoundException("Usuário não encontrado")
     }
 
     fun cadastro(cadastro : UsuarioInputDTO) {
