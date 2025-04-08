@@ -21,4 +21,7 @@ export const RegisterFlightSchema = z.object({
   ticketValue: z
   .string()
   .nonempty({ message: 'O valor da passagem é obrigatório'})
+,
+  miles: z
+  .string()
 });
