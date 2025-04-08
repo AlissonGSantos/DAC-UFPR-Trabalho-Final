@@ -1,4 +1,8 @@
-import { robotoFont } from "@/app/assets/fontsSetup";
 import React from "react";
-//import LoginForm from "./components/LoginForm/LoginForm";
+import RegisterFlightForm from "./components/RegisterFlightForm/RegisterFlightForm";
 
+const RegisterFlight = () => {
+  return (<RegisterFlightForm />);
+};
+
+export default RegisterFlight;
