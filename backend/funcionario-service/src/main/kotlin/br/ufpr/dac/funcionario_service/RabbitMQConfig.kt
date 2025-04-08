@@ -1,22 +1,20 @@
-package br.ufpr.dac.cliente_service
+package br.ufpr.dac.funcionario_service
 
+import br.ufpr.dac.funcionario_service.resource.FuncionarioListener
+import br.ufpr.dac.funcionario_service.resource.FuncionarioService
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.core.Queue
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory
-import org.springframework.amqp.rabbit.connection.ConnectionFactory
-import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import utils.dto.RabbitMessageDTO
 
 @Configuration
-class RabbitMQConfig {
+class RabbitMQConfig(private val funcionarioService: FuncionarioService) {
 
     @Bean
     fun autocadastroRequests(): Queue {
-        return Queue("emiratads.autocadastro.cliente")
+        return Queue("emiratads.autocadastro.funcionario")
     }
 
     @Bean
@@ -25,15 +23,14 @@ class RabbitMQConfig {
     }
 
     @Bean
-    fun loginClientes(): Queue {
-        return Queue("emiratads.login.cliente")
+    fun loginFuncionarios(): Queue {
+        return Queue("emiratads.login.funcionario")
     }
 
     @Bean
     fun sagaLogin(): DirectExchange {
         return DirectExchange("emiratads.login")
     }
-
 
     @Bean
     fun bindingAutocadastro(
@@ -42,25 +39,23 @@ class RabbitMQConfig {
     ): Binding {
         return BindingBuilder.bind(autocadastroRequests)
             .to(sagaAutocadastro)
-            .with("cliente")
+            .with("funcionario")
     }
 
     @Bean
     fun bindingLogin(
         sagaLogin: DirectExchange,
-        loginClientes: Queue
+        loginFuncionarios: Queue
     ): Binding {
-        return BindingBuilder.bind(loginClientes)
+        return BindingBuilder.bind(loginFuncionarios)
             .to(sagaLogin)
-            .with("cliente")
+            .with("funcionario")
     }
 
     @Bean
-    fun rabbitListenerContainerFactory(connectionFactory: ConnectionFactory): SimpleRabbitListenerContainerFactory {
-        val factory = SimpleRabbitListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory)
-        factory.setDefaultRequeueRejected(false)
-        return factory
+    fun funcionarioListener(): FuncionarioListener {
+        return FuncionarioListener(funcionarioService)
     }
+
 
 }

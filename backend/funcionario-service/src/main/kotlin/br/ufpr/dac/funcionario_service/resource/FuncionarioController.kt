@@ -2,7 +2,6 @@ package br.ufpr.dac.funcionario_service.resource
 
 import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
-import br.ufpr.dac.funcionario_service.service.FuncionarioService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

@@ -32,6 +32,14 @@ CREATE SEQUENCE emiratads_cliente.endereco_seq
 	CACHE 1
 	NO CYCLE;
 
+CREATE SEQUENCE emiratads_cliente.transacoes_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
 CREATE TABLE emiratads_cliente.endereco (
     codigo bigserial NOT NULL,
     cep varchar(8) NOT NULL,
@@ -55,7 +63,20 @@ CREATE TABLE emiratads_cliente.cliente (
     ativo boolean NOT NULL DEFAULT true,
     CONSTRAINT cliente_pkey PRIMARY KEY (codigo),
     CONSTRAINT cliente_unique_cpf UNIQUE (cpf),
+    CONSTRAINT cliente_unique_email UNIQUE (email),
     CONSTRAINT cliente_endereco_fk FOREIGN KEY (endereco_codigo) REFERENCES emiratads_cliente.endereco(codigo)
+);
+
+CREATE TABLE emiratads_cliente.transacao (
+    codigo bigserial NOT NULL,
+    cliente_codigo bigint NOT NULL,
+    data timestamptz NOT NULL,
+    quantidade_milhas numeric(10, 2) NOT NULL,
+    valor numeric(10, 2) NOT NULL,
+    descricao varchar(20) NOT NULL,
+    tipo varchar(10) NOT NULL,
+    CONSTRAINT transacoes_pkey PRIMARY KEY (codigo),
+    CONSTRAINT cliente_fk FOREIGN KEY (cliente_codigo) REFERENCES emiratads_cliente.cliente(codigo)
 );
 
 CREATE TABLE emiratads_voo.aeroporto (
