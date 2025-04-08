@@ -24,7 +24,7 @@ class GsonProcessor {
         inline fun <reified T> parseJson(json: String): T {
             val type = object : TypeToken<RabbitMessageDTO<T>>() {}.type
             val message: RabbitMessageDTO<T> = gson.fromJson(json, type)
-            if (!message.sucess) {
+            if (!message.success) {
                 message.exception?.let {
                     val exceptionClass =
                         knownExceptions[it] ?: throw ClassNotFoundException("Exceção desconhecida \\o/")

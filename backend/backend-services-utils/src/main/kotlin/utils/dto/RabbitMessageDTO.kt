@@ -1,7 +1,7 @@
 package utils.dto
 
 data class RabbitMessageDTO<T>(
-    val sucess: Boolean,
+    val success: Boolean,
     val data: T?,
     val message: String?,
     val exception: String?
