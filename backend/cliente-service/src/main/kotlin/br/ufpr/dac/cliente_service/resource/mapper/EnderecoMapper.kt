@@ -1,4 +1,4 @@
-package br.ufpr.dac.cliente_service.resource.dto
+package br.ufpr.dac.cliente_service.resource.mapper
 
 import br.ufpr.dac.cliente_service.domain.Endereco
 import utils.dto.EnderecoDTO

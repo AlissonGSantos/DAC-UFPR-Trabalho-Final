@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: funcionario-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://dbdevelopment:5432/postgres
+    username: emiratads_funcionario_user
+    password: senha2
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: emiratads_funcionario
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: guest

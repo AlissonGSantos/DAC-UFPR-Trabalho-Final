@@ -2,43 +2,65 @@ package br.ufpr.dac.cliente_service.resource
 
 import br.ufpr.dac.cliente_service.repository.IClienteRepository
 import utils.dto.ClienteOutputDTO
-import br.ufpr.dac.cliente_service.resource.dto.ClienteInputDTO
-import br.ufpr.dac.cliente_service.resource.dto.ClienteMapper
+import utils.dto.ClienteInputDTO
+import br.ufpr.dac.cliente_service.resource.mapper.ClienteMapper
+import br.ufpr.dac.cliente_service.resource.mapper.EnderecoMapper
+import org.postgresql.util.PSQLException
 import org.springframework.stereotype.Service
+import utils.exceptions.ResourceNotFoundException
+import utils.exceptions.ResourcesConflictException
 
 
 @Service
-class ClienteService(private val repository: IClienteRepository){
+class ClienteService(private val repository: IClienteRepository) {
 
-  fun getAllClientes(): List<ClienteOutputDTO> {
-    return repository.findAll().map { ClienteMapper.toDTO(it) }
-  }
+    fun getAllClientes(): List<ClienteOutputDTO> {
+        return repository.findByAtivoTrue().map { ClienteMapper.toDTO(it) }
+    }
 
-  fun updateCliente(codigo: Long, clienteDTO: ClienteInputDTO): ClienteOutputDTO {
-    val cliente = repository.findById(codigo)
-      .orElseThrow{ IllegalArgumentException("Cliente não encontrado com o ID: ${clienteDTO.codigo}")}
+    fun updateCliente(codigo: Long, clienteDTO: ClienteInputDTO): ClienteOutputDTO {
+        val cliente = repository.findByCodigoAndAtivoTrue(codigo)
 
-    cliente.nome = clienteDTO.nome
-    cliente.email = clienteDTO.email
-    cliente.saldo_milhas = clienteDTO.saldo_milhas
-    cliente.endereco = clienteDTO.endereco
+        cliente?.let {
+            it.nome = clienteDTO.nome
+            it.email = clienteDTO.email
+            it.saldo_milhas = clienteDTO.saldo_milhas
+            it.endereco = EnderecoMapper.toDomain(clienteDTO.endereco)
 
-    return ClienteMapper.toDTO(repository.save(cliente))
-  }
+            return ClienteMapper.toDTO(repository.save(it))
+        }
 
-  fun saveCliente(cliente: ClienteInputDTO): ClienteOutputDTO {
-    return ClienteMapper.toDTO(repository.save(cliente.toCliente()))
-  }
+        throw ResourceNotFoundException("Cliente não encontrado com o ID: ${clienteDTO.codigo}")
+    }
 
-  fun deactivateCliente(codigo: Long): ClienteOutputDTO {
-    val cliente = repository.findById(codigo).orElseThrow{ IllegalArgumentException("Cliente não encontrado com o ID: $codigo") }
-    repository.deleteById(cliente.codigo)
-    return ClienteMapper.toDTO(cliente)
-  }
+    fun saveCliente(cliente: ClienteInputDTO): ClienteOutputDTO {
+        try {
+            val registry = repository.save(ClienteMapper.toDomain(cliente))
+            return ClienteMapper.toDTO(registry)
+        } catch (ex: Exception) {
+            throw ResourcesConflictException("Usuário duplicado")
+        }
+    }
 
-  fun getClienteByID(codigo: Long) : ClienteOutputDTO {
-    val cliente = repository.findById(codigo).orElseThrow { IllegalArgumentException("Cliente não encontrado com o ID: $codigo")}
-    return ClienteMapper.toDTO(cliente)
-  }
+    fun deactivateCliente(codigo: Long): ClienteOutputDTO {
+        val cliente = repository.findByCodigoAndAtivoTrue(codigo)
+
+        cliente?.let {
+            it.ativo = false
+            return ClienteMapper.toDTO(repository.save(it))
+        }
+
+        throw ResourceNotFoundException("Cliente não encontrado com o ID: $codigo")
+    }
+
+    fun getClienteByID(codigo: Long): ClienteOutputDTO {
+        val cliente = repository.findByCodigoAndAtivoTrue(codigo)
+
+        cliente?.let {
+            return ClienteMapper.toDTO(it)
+        }
+
+        throw ResourceNotFoundException("Cliente não encontrado com o ID: $codigo")
+    }
 
 }

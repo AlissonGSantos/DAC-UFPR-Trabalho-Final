@@ -1,16 +1,18 @@
 package br.ufpr.dac.cliente_service
 
-import br.ufpr.dac.cliente_service.resource.ClienteListener
-import br.ufpr.dac.cliente_service.resource.ClienteService
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.core.Queue
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory
+import org.springframework.amqp.rabbit.connection.ConnectionFactory
+import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import utils.dto.RabbitMessageDTO
 
 @Configuration
-class RabbitMQConfig(private val clienteService: ClienteService) {
+class RabbitMQConfig {
 
     @Bean
     fun autocadastroRequests(): Queue {
@@ -54,8 +56,11 @@ class RabbitMQConfig(private val clienteService: ClienteService) {
     }
 
     @Bean
-    fun clienteListener(): ClienteListener {
-        return ClienteListener(clienteService)
+    fun rabbitListenerContainerFactory(connectionFactory: ConnectionFactory): SimpleRabbitListenerContainerFactory {
+        val factory = SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory)
+        factory.setDefaultRequeueRejected(false)
+        return factory
     }
 
 }
