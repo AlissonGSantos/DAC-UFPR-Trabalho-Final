@@ -12,7 +12,6 @@ export const RegisterFlightSchema = z.object({
   dateTimeFlight: z
     .string()
     .nonempty({ message: 'A data e hora são obrigatórias' })
-    .datetime({ message: 'Informe uma data e hora válida'})
 ,
   seatsQuantity: z
     .string()
