@@ -12,7 +12,7 @@ class VooService(private val repository : IVooRepository) {
     }
 
     fun getVooById(id: Long){
-      return repository.findById(id)
+      return repository.findById(id.toString())
     }
 
     fun saveVoo(voo: VooInputDTO): Voo {
@@ -20,11 +20,14 @@ class VooService(private val repository : IVooRepository) {
     }
 
     fun updateVoo(id: Long, vooDTO: VooInputDTO): Voo {
-      val voo = repository.findById(id).orElseThrow{ IllegalArgumentException("Voo não encontrado com o id: ${vooDTO.id}")}
+      var voo = repository.findById(id.toString()).orElseThrow{ IllegalArgumentException("Voo não encontrado com o id: ${vooDTO.id}")}
 
       voo.estado = vooDTO.estado
-      voo.aeroporto_origem = vooDTO.aeroporto_origem
-      voo.aeroporto_destino = vooDTO.aeroporto_destino
-      voo.ativo = vooDTO.ativo
+
+      return repository.save(voo)
+    }
+
+    fun deleteVoo(id: Long) {
+      return repository.deleteById(id.toString())
     }
 }

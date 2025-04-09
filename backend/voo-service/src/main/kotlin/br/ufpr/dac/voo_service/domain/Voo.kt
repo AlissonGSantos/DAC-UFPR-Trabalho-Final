@@ -13,11 +13,11 @@ class Voo (
 
     val valor_passagem: Double,
     val quantidade_poltronas_total: Int,
-    val quantidade_poltronas_ocupadas: Int,
+    var quantidade_poltronas_ocupadas: Int,
 
     @ManyToOne
     @JoinColumn(name = "estado_codigo", referencedColumnName = "codigo")
-    val estado: EstadoVoo,
+    var estado: EstadoVoo,
 
     @ManyToOne
     @JoinColumn(name = "aeroporto_origem", referencedColumnName = "codigo")
