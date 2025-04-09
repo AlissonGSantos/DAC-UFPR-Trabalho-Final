@@ -1,6 +1,8 @@
 import { robotoFont } from "@/app/assets/fontsSetup";
 import React from "react";
 import LoginForm from "./components/LoginForm/LoginForm";
+import Logo from "@/app/assets/images/logos/emiratadsLogo.png";
+import Image from "next/image";
 
 const Login = () => {
   return (
@@ -12,6 +14,7 @@ const Login = () => {
         <div
           className={`flex flex-col bg-indigo min-w-2xl w-full-50 w-full rounded-md p-4 border-2 border-indigo-900`}
         >
+          <Image src={Logo} alt={"emiratads-logo"} width={260} className="mx-auto"/>
           <h1
             className={`text-5xl font-semibold ${robotoFont.className} my-12 tracking-widest text-indigo-600 mx-auto`}
           >

@@ -23,22 +23,25 @@ const useLoginForm = () => {
     },
   });
 
-  const { setIsLogged, setUserData } = useAuthContext();
+  const { login } = useAuthContext();
 
   const onSubmit = async (data: LoginFormData) => {
-    const res: UserAuth = await loginServices.login({
-      login: data.email,
-      senha: data.password,
-    });
-    if (res.access_token) {
-      document.cookie = `token=${res.access_token}; path=/; max-age=3600`;
-      
-      setIsLogged(true);
-      setUserData(res);
+    try {
+      const res: UserAuth = await loginServices.login({
+        login: data.email,
+        senha: data.password,
+      });
 
+      if (res.access_token) {
+        login(res);
+        window.location.href = "/employees/dashboard";
+      } else {
+        console.error("Erro: Token de acesso não encontrado.");
+      }
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
     }
   };
-
   return {
     register,
     handleSubmit,
