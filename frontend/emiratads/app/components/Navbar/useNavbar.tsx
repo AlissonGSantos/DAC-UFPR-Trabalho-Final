@@ -10,18 +10,28 @@ interface Shortcut {
 
 const useNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLogged } = useAuthContext();
+  const { isLogged, userData } = useAuthContext();
   const toggle = () => setIsOpen(!isOpen);
 
   const shortcuts: Shortcut[] = [
-    { name: "Home", link: "/" },
-    { name: "About", link: "/about" },
-    { name: "Services", link: "/services" },
-    { name: "Contact", link: "/contact" },
-    !isLogged ? { name: "Login", link: "/login" } : null,
-  ].filter((shortcut): shortcut is Shortcut => shortcut !== null);
+    { name: "Home", link: "/", enabled: true },
+    { name: "About", link: "/about", enabled: true },
+    { name: "Services", link: "/services", enabled: true },
+    { name: "Contact", link: "/contact", enabled: true },
+    {
+      name: "Login",
+      link: "/authentication/login",
+      enabled: !isLogged,
+    },
+  ].filter((shortcut) => shortcut.enabled);
 
-  return { isOpen, toggle, shortcuts, isLogged };
+  return {
+    isOpen,
+    toggle,
+    shortcuts,
+    isLogged,
+    username: userData?.usuario.nome,
+  };
 };
 
 export { useNavbar };

@@ -4,6 +4,8 @@ import React from "react";
 import { useNavbar } from "./useNavbar";
 import Shortcut from "./components/Shortcut";
 import SidebarToggler from "./components/SidebarToggler";
+import Logo from "@/app/assets/images/logos/emiratadsLogo.png";
+import Image from "next/image";
 
 interface NavbarProps {
   children?: React.ReactNode;
@@ -15,17 +17,23 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
   return (
     <div className="flex flex-col h-screen">
       <nav className="bg-slate-950 border-b-2 border-indigo-950 h-16 flex items-center justify-between px-4">
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <SidebarToggler onClick={toggle} isToggled={isOpen} />
-          <h1 className="text-white text-lg mx-6 hidden lg:block">
-            EMIRATADS
-          </h1>
+          <Image
+            src={Logo}
+            alt={"emiratads-logo"}
+            width={80}
+            className="mx-auto"
+          />
         </div>
         {!isOpen && (
           <div id="shortcuts-session" className="hidden md:flex h-full">
-            {shortcuts.map((shortcut, index) => (
-              <Shortcut key={`${shortcut.name}-${index}`} {...shortcut} />
-            ))}
+            {shortcuts.map(
+              (shortcut, index) =>
+                shortcut.enabled && (
+                  <Shortcut key={`${shortcut.name}-${index}`} {...shortcut} />
+                )
+            )}
           </div>
         )}
       </nav>
@@ -37,7 +45,11 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
         >
           <div className="flex flex-col items-center gap-4 py-8 px-1 h-full">
             {shortcuts.map((shortcut, index) => (
-              <Shortcut sidebar={isOpen} key={`${shortcut.name}-${index}`} {...shortcut} />
+              <Shortcut
+                sidebar={isOpen}
+                key={`${shortcut.name}-${index}`}
+                {...shortcut}
+              />
             ))}
           </div>
         </div>
