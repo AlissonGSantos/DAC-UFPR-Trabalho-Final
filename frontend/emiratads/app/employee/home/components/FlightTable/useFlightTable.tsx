@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Flight } from "@/app/types/FlightTypes";
 import { ButtonProps } from "@/app/components/Button/Button";
 import { statusFlightEnum } from "@/app/types/FlightTypes";
 
 const useFlightTable = () => {
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); 
+  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+
   const data: Flight[] = useMemo(() => {
     return [
       {
@@ -72,6 +75,10 @@ const useFlightTable = () => {
     ];
   }, []);
 
+  const [flightList, setFlightList] = useState<Flight[]>(data);
+
+
+
   // Define columns for the DataTable
   const columns: ColumnDef<Flight>[] = useMemo(
     () => [
@@ -93,6 +100,17 @@ const useFlightTable = () => {
     ], []
   );
 
+  const cancelFlight = (flight: Flight) => {
+    setFlightList((prev) =>
+      prev.filter((item) => item.codigo !== flight.codigo)
+    );
+    setIsCancelModalOpen(false);
+  }
+
+  const handleCancelFlight = (flight: Flight) => {
+    setIsCancelModalOpen(true);
+    setSelectedFlight(flight);
+  }
   // Define controls (buttons) for each row
   const controls: ButtonProps[] = useMemo(
     () => [
@@ -105,7 +123,7 @@ const useFlightTable = () => {
       },
       {
         text: "Cancelar Voo",
-        onClick: () => console.log("Abrir modal de cancelamento de voo"),
+        onClick:  handleCancelFlight,
         type: "DANGER",
         size: "SMALL",
       },
@@ -118,7 +136,7 @@ const useFlightTable = () => {
     ], []
   );
 
-  return { data, columns, controls };
+  return { data, columns, controls, cancelFlight, handleCancelFlight, isCancelModalOpen, setIsCancelModalOpen, selectedFlight, setSelectedFlight, flightList, setFlightList  };
 };
 
 export default useFlightTable;
