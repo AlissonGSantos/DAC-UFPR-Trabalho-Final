@@ -12,7 +12,7 @@ import { robotoFont } from "@/app/assets/fontsSetup";
 import Input from "../Input/Input";
 import useDataTable from "./useDataTable";
 
-interface DataTableProps {
+export interface DataTableProps {
   data: any[];
   columns: ColumnDef<any>[];
   controls?: ButtonProps[];
@@ -21,6 +21,7 @@ interface DataTableProps {
 const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
   const { currentData, handleSearch } = useDataTable({ data });
   const table = useReactTable({
+    getRowId: (row) => row.id,
     data: currentData,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -67,7 +68,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
                 <td key={control.text} className="p-2">
                   <Button
                     text={control.text}
-                    onClick={() => control.onClick}
+                    onClick={() => control.onClick && control.onClick(currentData[row.index])}
                     type={control.type}
                     size={control.size}
                     disabled={control.disabled}

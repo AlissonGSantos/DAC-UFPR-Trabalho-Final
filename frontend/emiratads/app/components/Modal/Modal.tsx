@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Button, { ButtonProps } from "../Button/Button";
 import { robotoFont } from "@/app/assets/fontsSetup";
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
@@ -24,12 +24,12 @@ const Modal: React.FC<ModalProps> = ({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-      <div className="bg-white border-sky-800 border-2 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+      <div className="bg-slate-800 border-indigo-900 border-2 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
         <div className="flex justify-between items-center border-b border-gray-300 pb-3">
-          <h2 className={`text-lg font-semibold ${robotoFont.className}`}>{title}</h2>
+          <h2 className={`text-lg font-semibold text-slate-300 ${robotoFont.className}`}>{title}</h2>
           <button 
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-3xl cursor-pointer transition"
+            className="text-white hover:text-gray-300 text-3xl cursor-pointer transition"
           >
             &times;
           </button>
