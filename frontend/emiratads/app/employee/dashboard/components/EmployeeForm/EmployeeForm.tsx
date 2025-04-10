@@ -59,7 +59,12 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 : []
             }
             extraClasses="flex-1"
-            {...register("nome")}
+            {...(register("nome"),
+            {
+              onChange: (e) => {
+                handleInputChange("nome", e.target.value);
+              },
+            })}
           />
           <Input
             type={"email"}
@@ -71,7 +76,12 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 : []
             }
             extraClasses="flex-1"
-            {...register("email")}
+            {...(register("email"),
+            {
+              onChange: (e) => {
+                handleInputChange("email", e.target.value);
+              },
+            })}
           />
 
           <Input

@@ -115,6 +115,17 @@ const useEmployeeTable = () => {
     }
   };
 
+  const onDelete = async () => {
+    try {
+      setData((prevData) =>
+        prevData.filter((item) => item.codigo !== employeeValue?.codigo)  
+      );
+      setDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+    }
+  };
+
   return {
     data,
     columns,
@@ -131,6 +142,8 @@ const useEmployeeTable = () => {
     isEditing,
     hasError,
     setHasError,
+    setDeleteModalOpen,
+    onDelete,
   };
 };
 

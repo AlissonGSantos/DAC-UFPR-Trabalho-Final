@@ -4,6 +4,7 @@ import { Pencil, Trash } from "phosphor-react";
 import useEmployeeTable from "./useEmployeeTable";
 import Button from "@/app/components/Button/Button";
 import EmployeeActionModal from "../EmployeeActionModal/EmployeeActionModal";
+import EmployeeDeleteModal from "../EmployeeDeleteModal/EmployeeDeleteModal";
 
 const EmployeeTable: React.FC = () => {
   const {
@@ -18,7 +19,10 @@ const EmployeeTable: React.FC = () => {
     onSubmit,
     setEmployeeValue,
     isEditing,
-    setHasError
+    setHasError,
+    deleteModalOpen,
+    setDeleteModalOpen,
+    onDelete,
   } = useEmployeeTable();
 
   return (
@@ -57,6 +61,11 @@ const EmployeeTable: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSubmit={onSubmit}
         setError={setHasError}
+      />
+      <EmployeeDeleteModal
+        onClose={() => setDeleteModalOpen(false)}
+        isOpen={deleteModalOpen}
+        onDelete={onDelete}
       />
     </div>
   );
