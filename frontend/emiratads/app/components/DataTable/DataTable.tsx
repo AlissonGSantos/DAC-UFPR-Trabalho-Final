@@ -37,7 +37,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
-      <table className="w-full border-indigo-950 border-2">
+      <table className="w-full border-indigo-950 bg-slate-950 border-2">
         <thead className="bg-slate-950 text-slate-300">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
