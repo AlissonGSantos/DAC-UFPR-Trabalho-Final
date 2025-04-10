@@ -2,6 +2,7 @@ package br.ufpr.dac.voo_service.resource.dto
 
 import br.ufpr.dac.voo_service.domain.Voo
 import java.time.ZonedDateTime
+import br.ufpr.dac.voo_service.domain.EstadoVoo
 
 data class VooOutputDTO(
     val codigo: String,
@@ -12,7 +13,7 @@ data class VooOutputDTO(
     val estado: String,
     val aeroporto_origem: AeroportoOutputDTO,
     val aeroporto_destino: AeroportoOutputDTO
-
+    val ativo: Boolean
 ) {
     constructor(voo: Voo) : this(
         codigo = voo.codigo,
@@ -22,6 +23,13 @@ data class VooOutputDTO(
         quantidade_poltronas_ocupadas = voo.quantidade_poltronas_ocupadas,
         estado = voo.estado.descricao,
         aeroporto_origem = AeroportoOutputDTO(voo.aeroporto_origem),
-        aeroporto_destino = AeroportoOutputDTO(voo.aeroporto_destino)
+        aeroporto_destino = AeroportoOutputDTO(voo.aeroporto_destino),
+        ativo = voo.ativo
     )
+
+    fun toVoo(): Voo {
+      return Voo(codigo,data,valor_passagem,quantidade_poltronas_total,
+      quantidade_poltronas_ocupadas,EstadoVoo(estado),AeroportoOutputDTO.toAeroporto(aeroporto_origem),
+      AeroportoOutputDTO.toAeroporto(aeroporto_destino),ativo)
+    }
 }

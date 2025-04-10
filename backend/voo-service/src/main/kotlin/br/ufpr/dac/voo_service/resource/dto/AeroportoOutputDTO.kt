@@ -6,12 +6,18 @@ data class AeroportoOutputDTO (
     val codigo: String,
     val nome: String,
     val cidade: String,
-    val uf: String
+    val uf: String,
+    val ativo: Boolean
 ) {
     constructor(aeroporto: Aeroporto) : this(
         codigo = aeroporto.codigo,
         nome = aeroporto.nome,
         cidade = aeroporto.cidade,
-        uf = aeroporto.uf
+        uf = aeroporto.uf,
+        ativo = aeroporto.ativo
     )
+
+    fun toAeroporto(): Aeroporto {
+      return Aeroporto(codigo,nome,cidade,uf,ativo)
+    }
 }

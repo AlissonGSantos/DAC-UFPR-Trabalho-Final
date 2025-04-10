@@ -1,7 +1,9 @@
 package br.ufpr.dac.voo_service.resource
 
 import br.ufpr.dac.voo_service.resource.dto.VooOutputDTO
+import br.ufpr.dac.voo_service.resource.dto.VooInputDTO
 import org.springframework.http.ResponseEntity
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -21,19 +23,19 @@ class VooController (private val service: VooService) {
     }
 
     @PutMapping("/id")
-    fun updateVoo(@PathVariable id: Long, @RequestBody vooDTO: VooInputDTO): ResponseEntity<VooOutputDTO> {
+    fun updateVoo(@PathVariable id: String, @RequestBody vooDTO: VooInputDTO): ResponseEntity<VooOutputDTO> {
       val updatedVoo = service.updateVoo(id, vooDTO)
       return ResponseEntity.ok().body(VooOutputDTO(updatedVoo))
     }
 
     @DeleteMapping("/id")
-    fun deleteVoo(@PathVariable id: Long): ResponseEntity<VooOutputDTO> {
+    fun deleteVoo(@PathVariable id: String): ResponseEntity<VooOutputDTO> {
       val deletedVoo = service.deleteVoo(id)
       return ResponseEntity.ok().body(VooOutputDTO(deletedVoo))
     }
 
     @GetMapping("/id")
-    fun getVooById(@PathVariable id: Long): ResponseEntity<VooOutputDTO> {
+    fun getVooById(@PathVariable id: String): ResponseEntity<VooOutputDTO> {
       val voo = service.getVooById(id)
       return ResponseEntity.ok().body(VooOutputDTO(voo))
     }
