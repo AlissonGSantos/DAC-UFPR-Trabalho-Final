@@ -18,6 +18,7 @@ const EmployeeTable: React.FC = () => {
     onSubmit,
     setEmployeeValue,
     isEditing,
+    setHasError
   } = useEmployeeTable();
 
   return (
@@ -55,6 +56,7 @@ const EmployeeTable: React.FC = () => {
         isEditing={isEditing}
         onClose={() => setIsModalOpen(false)}
         onSubmit={onSubmit}
+        setError={setHasError}
       />
     </div>
   );

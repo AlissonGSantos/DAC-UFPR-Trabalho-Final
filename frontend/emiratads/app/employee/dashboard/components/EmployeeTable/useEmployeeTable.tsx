@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Employee } from "@/app/types/EmployeeTypes";
 
@@ -8,6 +8,7 @@ const useEmployeeTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleEdit = (employee: Employee) => {
     setEmployeeValue(employee);
@@ -92,12 +93,27 @@ const useEmployeeTable = () => {
   ];
 
   const onSubmit = async (data: Employee) => {
-    setData((prevData) => [...prevData, data]);
-  };
+    try {
+      if (isEditing) {
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.codigo === data.codigo ? { ...item, ...data } : item
+          )
+        );
+      } else {
+        setData((prevData) => [
+          ...prevData,
+          { ...data, codigo: prevData.length + 1 },
+        ]);
+      }
 
-  useEffect(() => {
-    console.log("altered", data);
-  }, [data]);
+      if (!hasError) {
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
 
   return {
     data,
@@ -113,6 +129,8 @@ const useEmployeeTable = () => {
     handleRegisterClick,
     onSubmit,
     isEditing,
+    hasError,
+    setHasError,
   };
 };
 

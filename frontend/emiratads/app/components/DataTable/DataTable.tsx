@@ -64,11 +64,13 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
-              {controls?.map((control) => (
-                <td key={control.text} className="p-2">
+              {controls?.map((control, index) => (
+                <td key={`controls-${control.text ?? index}`} className="p-2">
                   <Button
                     text={control.text}
-                    onClick={() => control.onClick && control.onClick(currentData[row.index])}
+                    onClick={() =>
+                      control.onClick && control.onClick(currentData[row.index])
+                    }
                     type={control.type}
                     size={control.size}
                     disabled={control.disabled}

@@ -6,6 +6,7 @@ import { Employee } from "@/app/types/EmployeeTypes";
 import useEmployeeForm from "./useEmployeeForm";
 import { maskCPF } from "@/app/utils/cpfMask";
 import Button from "@/app/components/Button/Button";
+import { phoneMask } from "@/app/utils/phoneMask";
 
 interface EmployeeFormProps {
   employee?: Employee;
@@ -13,6 +14,7 @@ interface EmployeeFormProps {
   onSubmit: (employee: Employee) => void;
   onClose: () => void;
   isEditing: boolean;
+  onError?: (error: boolean) => void;
 }
 
 const EmployeeForm: React.FC<EmployeeFormProps> = ({
@@ -20,6 +22,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
   onChange,
   onSubmit,
   onClose,
+  onError,
   isEditing,
 }) => {
   const { register, handleSubmit, errors, setValue } = useEmployeeForm({
@@ -37,9 +40,13 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
     <div>
       <form
         className="flex w-full flex-col gap-3"
-        onSubmit={handleSubmit((data) =>
-          onSubmit({ ...data, codigo: data.codigo ?? 0 })
-        )}
+        onSubmit={handleSubmit((data) => {
+          const payload: Employee = {
+            ...data,
+            codigo: data.codigo ?? 0,
+          };
+          onSubmit(payload);
+        })}
       >
         <div className="flex gap-4 w-full">
           <Input
@@ -52,12 +59,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 : []
             }
             extraClasses="flex-1"
-            {...(register("nome"),
-            {
-              onChange: (e) => {
-                handleInputChange("nome", e.target.value);
-              },
-            })}
+            {...register("nome")}
           />
           <Input
             type={"email"}
@@ -69,12 +71,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 : []
             }
             extraClasses="flex-1"
-            {...(register("email"),
-            {
-              onChange: (e) => {
-                handleInputChange("email", e.target.value);
-              },
-            })}
+            {...register("email")}
           />
 
           <Input
@@ -118,10 +115,10 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                   ? [{ hasError: true, message: errors.telefone.message ?? "" }]
                   : []
               }
-              {...(register("telefone"),
-              {
+              {...register("telefone", {
                 onChange: (e) => {
-                  handleInputChange("telefone", e.target.value);
+                  const maskedValue = phoneMask(e.target.value);
+                  handleInputChange("telefone", maskedValue);
                 },
               })}
             />
@@ -139,9 +136,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
             type={"PRIMARY"}
             size="SMALL"
             typeButton="submit"
-            onClick={() => {
-              if (onSubmit) onSubmit(employee);
-            }}
           />
         </div>
       </form>

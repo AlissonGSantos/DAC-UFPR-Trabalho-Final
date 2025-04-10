@@ -12,6 +12,7 @@ export interface EmployeeActionModalProps {
   onSubmit: (employee: Employee) => void;
   isEditing?: boolean;
   onChange: (employee: Employee) => void;
+  setError?: (error: boolean) => void;
 }
 
 const EmployeeActionModal: React.FC<EmployeeActionModalProps> = ({
@@ -21,6 +22,7 @@ const EmployeeActionModal: React.FC<EmployeeActionModalProps> = ({
   onSubmit,
   isEditing = false,
   onChange,
+  setError,
 }) => {
   return (
     <Modal
@@ -34,6 +36,7 @@ const EmployeeActionModal: React.FC<EmployeeActionModalProps> = ({
         onChange={onChange}
         onClose={onClose}
         isEditing={isEditing}
+        onError={setError}
       />
     </Modal>
   );

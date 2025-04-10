@@ -13,8 +13,7 @@ const useDataTable = ({ data: usedData }: UseDataTableProps) => {
   };
 
   const filterData = () => {
-    if(!searchTerm) 
-        return usedData;
+    if (!searchTerm) return usedData;
     return data.filter((item) => {
       return Object.values(item).some((value) =>
         String(value).toLowerCase().includes(searchTerm.toLowerCase())
@@ -27,6 +26,10 @@ const useDataTable = ({ data: usedData }: UseDataTableProps) => {
     setData(filteredData);
   }, [searchTerm]);
 
+  useEffect(() => {
+    setData(usedData);
+  },[usedData])
+  
   return {
     currentData: data,
     handleSearch,
