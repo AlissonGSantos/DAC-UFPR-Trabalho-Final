@@ -28,11 +28,7 @@ class VooController (private val service: VooService) {
       return ResponseEntity.ok().body(VooOutputDTO(updatedVoo))
     }
 
-    @DeleteMapping("/id")
-    fun deleteVoo(@PathVariable id: String): ResponseEntity<VooOutputDTO> {
-      val deletedVoo = service.deleteVoo(id)
-      return ResponseEntity.ok().body(VooOutputDTO(deletedVoo))
-    }
+
 
     @GetMapping("/id")
     fun getVooById(@PathVariable id: String): ResponseEntity<VooOutputDTO> {

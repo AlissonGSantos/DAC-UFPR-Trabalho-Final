@@ -18,7 +18,7 @@ class VooService(private val repository : IVooRepository) {
 
     fun saveVoo(voo: VooInputDTO): Voo {
       voo.codigo = "TADS" + repository.count()
-      return repository.save(VooInputDTO.toVoo(voo))
+      return repository.save(voo.toVoo())
     }
 
     fun updateVoo(id: String, vooDTO: VooInputDTO): Voo {
@@ -30,8 +30,4 @@ class VooService(private val repository : IVooRepository) {
       return repository.save(voo)
     }
 
-    fun deleteVoo(id: String): Voo {
-      val voo = repository.findById(id).orElseThrow{ IllegalArgumentException("Voo não encontrado com o id: ${id}")}
-      repository.deleteById(id.toString())
-      return VooOutputDTO.toVoo(voo)
 }

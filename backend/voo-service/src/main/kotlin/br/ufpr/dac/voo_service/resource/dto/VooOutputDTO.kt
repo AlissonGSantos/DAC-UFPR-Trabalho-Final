@@ -10,7 +10,7 @@ data class VooOutputDTO(
     val valor_passagem: Double,
     val quantidade_poltronas_total: Int,
     val quantidade_poltronas_ocupadas: Int,
-    val estado: String,
+    val estado: EstadoVoo,
     val aeroporto_origem: AeroportoOutputDTO,
     val aeroporto_destino: AeroportoOutputDTO
     val ativo: Boolean
@@ -21,7 +21,7 @@ data class VooOutputDTO(
         valor_passagem = voo.valor_passagem,
         quantidade_poltronas_total = voo.quantidade_poltronas_total,
         quantidade_poltronas_ocupadas = voo.quantidade_poltronas_ocupadas,
-        estado = voo.estado.descricao,
+        estado = voo.estado,
         aeroporto_origem = AeroportoOutputDTO(voo.aeroporto_origem),
         aeroporto_destino = AeroportoOutputDTO(voo.aeroporto_destino),
         ativo = voo.ativo
@@ -29,7 +29,7 @@ data class VooOutputDTO(
 
     fun toVoo(): Voo {
       return Voo(codigo,data,valor_passagem,quantidade_poltronas_total,
-      quantidade_poltronas_ocupadas,EstadoVoo(estado),AeroportoOutputDTO.toAeroporto(aeroporto_origem),
-      AeroportoOutputDTO.toAeroporto(aeroporto_destino),ativo)
+      quantidade_poltronas_ocupadas,estado,aeroporto_origem.toAeroporto(),
+      aeroporto_destino.toAeroporto(),ativo)
     }
 }
