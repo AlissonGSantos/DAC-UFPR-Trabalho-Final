@@ -1,7 +1,7 @@
 package br.ufpr.dac.funcionario_service.resource
 
-import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioDTO
-import br.ufpr.dac.funcionario_service.service.FuncionarioService
+import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioInputDTO
+import utils.dto.FuncionarioOutputDTO
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 class FuncionarioController(private val service: FuncionarioService) {
 
     @GetMapping
-    fun getFuncionarios(): ResponseEntity<List<FuncionarioDTO>> {
+    fun getFuncionarios(): ResponseEntity<List<FuncionarioOutputDTO>> {
         val funcionarios = service.getAllFuncionarios()
         return ResponseEntity.ok().body(funcionarios)
     }
@@ -26,14 +26,14 @@ class FuncionarioController(private val service: FuncionarioService) {
 
     @PutMapping("/{id}")
     fun updateFuncionario(
-        @Valid @RequestBody funcionario: FuncionarioDTO, @PathVariable id: Long
-    ): ResponseEntity<FuncionarioDTO> {
+        @Valid @RequestBody funcionario: FuncionarioInputDTO, @PathVariable id: Long
+    ): ResponseEntity<FuncionarioOutputDTO> {
         val updatedFuncionario = service.updateFuncionario(id, funcionario)
         return ResponseEntity.ok().body(updatedFuncionario)
     }
 
     @PostMapping
-    fun createFuncionario(@Valid @RequestBody funcionario: FuncionarioDTO): ResponseEntity<FuncionarioDTO> {
+    fun createFuncionario(@Valid @RequestBody funcionario: FuncionarioInputDTO): ResponseEntity<FuncionarioOutputDTO> {
         return try {
             val savedFuncionario = service.saveFuncionario(funcionario)
             ResponseEntity.status(HttpStatus.CREATED).body(savedFuncionario)
@@ -44,7 +44,7 @@ class FuncionarioController(private val service: FuncionarioService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteFuncionario(@PathVariable id: Long): ResponseEntity<FuncionarioDTO> {
+    fun deleteFuncionario(@PathVariable id: Long): ResponseEntity<FuncionarioOutputDTO> {
         val deactivatedFuncionario = service.deactivateFuncionario(id)
         return ResponseEntity.ok(deactivatedFuncionario)
     }

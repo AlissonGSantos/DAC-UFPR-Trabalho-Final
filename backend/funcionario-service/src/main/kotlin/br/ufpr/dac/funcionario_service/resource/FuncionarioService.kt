@@ -1,9 +1,9 @@
-package br.ufpr.dac.funcionario_service.service
+package br.ufpr.dac.funcionario_service.resource
 
 import br.ufpr.dac.funcionario_service.repository.IFuncionarioRepository
-import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioDTO
-import utils.dto.FuncionarioOutputDTO
+import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioInputDTO
 import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioMapper
+import utils.dto.FuncionarioOutputDTO
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,32 +13,41 @@ class FuncionarioService(private val repository: IFuncionarioRepository) {
         return repository.findByAtivoTrue().map { FuncionarioMapper.toDTO(it) }
     }
 
-    fun getFuncionarioById(id: Long): FuncionarioDTO {
-        return repository.findByIdAndAtivoTrue(id)
-            .map { FuncionarioMapper.toDTO(it) }
-            .orElseThrow { IllegalArgumentException("Funcionário não encontrado com o ID: ${id}") }
+    fun updateFuncionario(codigo: Long, funcionarioDTO: FuncionarioInputDTO): FuncionarioOutputDTO {
+        val funcionario = repository.findByCodigoAndAtivoTrue(codigo)
+
+        funcionario?.let {
+            it.nome = funcionarioDTO.nome
+            it.email = funcionarioDTO.email
+            it.telefone = funcionarioDTO.telefone
+            return FuncionarioMapper.toDTO(repository.save(it))
+        }
+
+        throw IllegalArgumentException("Funcionário não encontrado com o ID: ${funcionarioDTO.codigo}")
     }
 
-    fun updateFuncionario(codigo: Long, funcionarioDTO: FuncionarioDTO): FuncionarioDTO {
-        val funcionario = repository.findById(codigo)
-            .orElseThrow { IllegalArgumentException("Funcionário não encontrado com o ID: ${funcionarioDTO.codigo}") }
-
-        funcionario.nome = funcionarioDTO.nome
-        funcionario.email = funcionarioDTO.email
-        funcionario.telefone = funcionarioDTO.telefone
-
-        return FuncionarioMapper.toDTO(repository.save(funcionario))
-    }
-
-    fun saveFuncionario(funcionario: FuncionarioDTO): FuncionarioDTO {
+    fun saveFuncionario(funcionario: FuncionarioInputDTO): FuncionarioOutputDTO {
         return FuncionarioMapper.toDTO(repository.save(funcionario.toFuncionario()))
     }
 
-    fun deactivateFuncionario(codigo: Long): FuncionarioDTO {
-        val funcionario = repository.findById(codigo)
-            .orElseThrow { IllegalArgumentException("Funcionário não encontrado com o ID: $codigo") }
+    fun deactivateFuncionario(codigo: Long): FuncionarioOutputDTO {
+        val funcionario = repository.findByCodigoAndAtivoTrue(codigo)
 
-        funcionario.ativo = false
-        return FuncionarioMapper.toDTO(repository.save(funcionario))
+        funcionario?.let {
+            it.ativo = false
+            return FuncionarioMapper.toDTO(repository.save(it))
+        }
+
+        throw IllegalArgumentException("Funcionário não encontrado com o ID: $codigo")
+    }
+
+    fun getFuncionarioByID(codigo: Long): FuncionarioOutputDTO {
+        val funcionario = repository.findByCodigoAndAtivoTrue(codigo)
+
+        funcionario?.let {
+            return FuncionarioMapper.toDTO(it)
+        }
+
+        throw IllegalArgumentException("Funcionário não encontrado com o ID: $codigo")
     }
 }

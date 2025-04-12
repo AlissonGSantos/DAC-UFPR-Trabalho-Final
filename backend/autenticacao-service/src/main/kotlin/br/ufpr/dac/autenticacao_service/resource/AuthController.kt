@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/v1/auth")
 class AuthController (val authService: AuthService) {
+
     @PostMapping("/login")
     @CrossOrigin
     fun login(@RequestBody @Valid usuario: loginInputDTO): ResponseEntity<loginOutputDTO> {

@@ -9,4 +9,6 @@ import java.util.*
 interface IFuncionarioRepository : JpaRepository<Funcionario, Long> {
     fun findByAtivoTrue(): List<Funcionario>
     fun findByIdAndAtivoTrue(id: Long): Optional<Funcionario>
+
+    fun findByCodigoAndAtivoTrue(codigo: Long): Funcionario?
 }

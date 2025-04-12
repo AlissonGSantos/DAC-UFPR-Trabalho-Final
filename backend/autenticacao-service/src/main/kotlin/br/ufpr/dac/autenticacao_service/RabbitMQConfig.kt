@@ -1,6 +1,5 @@
 package br.ufpr.dac.autenticacao_service
 
-import br.ufpr.dac.autenticacao_service.resource.AutenticacaoListener
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class RabbitMQConfig {
+class RabbitMQConfig() {
 
     @Bean
     fun autocadastroRequests(): Queue {
@@ -34,11 +33,6 @@ class RabbitMQConfig {
         return BindingBuilder.bind(autocadastroRequests)
             .to(sagaAutocadastro)
             .with("auth")
-    }
-
-    @Bean
-    fun autenticacaoListener(): AutenticacaoListener {
-        return AutenticacaoListener()
     }
 
 }

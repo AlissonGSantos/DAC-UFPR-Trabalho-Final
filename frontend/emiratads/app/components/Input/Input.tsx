@@ -9,7 +9,8 @@ export type InputType =
   | "email"
   | "number"
   | "tel"
-  | "url";
+  | "url"
+  | "datetime-local";
 
 export interface InputError {
   hasError: boolean;

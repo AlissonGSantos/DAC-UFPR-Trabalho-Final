@@ -15,13 +15,14 @@ export type ButtonType =
 export type ButtonSize = "SMALL" | "MEDIUM" | "LARGE";
 
 export interface ButtonProps {
-  text: string;
-  onClick?: () => void;
+  text?: string;
+  onClick?: (param?: any) => void;
   type?: ButtonType;
   disabled?: boolean;
   extraClass?: string;
   size?: ButtonSize;
   typeButton?: "button" | "submit" | "reset";
+  children?: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -32,6 +33,7 @@ const Button: React.FC<ButtonProps> = ({
   size = "MEDIUM",
   extraClass = "",
   typeButton,
+  children,
 }) => {
   const { getButtonColor, getButtonSize } = useButton(type, size);
 
@@ -42,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
       type={typeButton ?? "button"}
     >
-      {text}
+      {children || text}
     </button>
   );
 };
