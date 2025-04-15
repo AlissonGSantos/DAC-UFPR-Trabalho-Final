@@ -10,7 +10,7 @@ import utils.dto.UsuarioInputDTO
 @Service
 class AutenticacaoListener(private val authService: AuthService) {
 
-    @RabbitListener(queues = ["emiratads.autocadastro.autenticacao"])
+    @RabbitListener(queues = ["emiratads.autocadastro.autenticacao", "emiratads.cadastroFuncionario.auth"])
     fun autocadastroSaga(obj: String): String {
         val gson = Gson()
 
