@@ -1,5 +1,6 @@
 import React from "react";
 import CheckReservationForm from "./components/CheckReservationForm/CheckReservationForm";
+import ReadReservationForm from "./components/ReadReservationForm/ReadReservationForm";
 
 const CheckReservation = () => {
   return (
@@ -11,6 +12,8 @@ const CheckReservation = () => {
         >
           
           <CheckReservationForm></CheckReservationForm>
+          
+          <ReadReservationForm></ReadReservationForm>
           
         </div>
       </div>

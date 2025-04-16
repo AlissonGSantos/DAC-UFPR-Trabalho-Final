@@ -8,8 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import registerFlightServices from "@/app/employee/services/registerFlightServices";
 import { useState } from "react";
 
-
-
 type RegisterFlightFormData = z.infer<typeof RegisterFlightSchema>;
 
 const useRegisterFlightForm = () => {
