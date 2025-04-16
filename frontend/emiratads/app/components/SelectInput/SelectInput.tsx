@@ -2,10 +2,10 @@
 
 import React from "react";
 
-export interface SelectInputProps {
+export interface SelectInputProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: Array<{ value: any; label: string }>;
   value?: string;
-  onChange?: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
   error?: string | null;
@@ -16,12 +16,12 @@ export interface SelectInputProps {
 const SelectInput: React.FC<SelectInputProps> = ({
   options,
   value,
-  onChange,
   placeholder = "Selecione uma opção",
   disabled = false,
   error = null,
   extraClasses = "",
   label = "",
+  ...rest
 }) => {
   const hasError = !!error;
 
@@ -42,8 +42,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
             : "border-indigo-700 focus:border-indigo-800 hover:border-indigo-500"
         } shadow-sm focus:shadow ${extraClasses}`}
         value={value}
-        onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
+        {...rest}
       >
         <option
           value=""
