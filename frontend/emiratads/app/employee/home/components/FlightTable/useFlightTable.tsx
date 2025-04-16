@@ -8,6 +8,7 @@ import { statusFlightEnum } from "@/app/types/FlightTypes";
 
 const useFlightTable = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); 
+  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
   const data: Flight[] = useMemo(() => {
@@ -101,9 +102,6 @@ const useFlightTable = () => {
   );
 
   const cancelFlight = (flight: Flight) => {
-    setFlightList((prev) =>
-      prev.filter((item) => item.codigo !== flight.codigo)
-    );
     setIsCancelModalOpen(false);
   }
 
@@ -111,32 +109,53 @@ const useFlightTable = () => {
     setIsCancelModalOpen(true);
     setSelectedFlight(flight);
   }
-  // Define controls (buttons) for each row
-  const controls: ButtonProps[] = useMemo(
-    () => [
-      {
-        text: "Confirmar Embarque",
-        onClick: () => console.log("Abrir modal de confirmação de embarque"),
-        type: "PRIMARY",
-        size: "SMALL",
-        
-      },
-      {
-        text: "Cancelar Voo",
-        onClick:  handleCancelFlight,
-        type: "DANGER",
-        size: "SMALL",
-      },
-      {
-        text: "Realizar Voo",
-        onClick: () => console.log("Abrir modal de realização de voo"),
-        type: "SUCCESS",
-        size: "SMALL",
-      },
-    ], []
-  );
 
-  return { data, columns, controls, cancelFlight, handleCancelFlight, isCancelModalOpen, setIsCancelModalOpen, selectedFlight, setSelectedFlight, flightList, setFlightList  };
+  const closeConfirmBoard = () => {
+    setIsBoardModalOpen(false);
+  }
+
+  const handleConfirmBoard = () => {
+    setIsBoardModalOpen(true);
+  }
+  // Define controls (buttons) for each row
+const controls: ButtonProps[] = useMemo(
+  () => [
+    {
+      text: "Confirmar Embarque",
+      onClick: handleConfirmBoard, // Remova a arrow function e passe a função diretamente
+      type: "PRIMARY",
+      size: "SMALL",
+    },
+    {
+      text: "Cancelar Voo",
+      onClick: handleCancelFlight,
+      type: "DANGER",
+      size: "SMALL",
+    },
+    {
+      text: "Realizar Voo",
+      onClick: () => console.log("Abrir modal de realização de voo"),
+      type: "SUCCESS",
+      size: "SMALL",
+    },
+  ],
+  []
+);
+
+  return { 
+    data, 
+    columns, 
+    controls, 
+    cancelFlight, 
+    handleCancelFlight, 
+    isCancelModalOpen, setIsCancelModalOpen, 
+    isBoardModalOpen,
+    closeConfirmBoard,
+    selectedFlight, 
+    setSelectedFlight, 
+    flightList, 
+    setFlightList,
+  };
 };
 
 export default useFlightTable;
