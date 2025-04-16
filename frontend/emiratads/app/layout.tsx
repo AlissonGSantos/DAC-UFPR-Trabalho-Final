@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="pt-br">
       <AuthContextProvider>
         <FlightContextProvider>
-          <body className="h-screen bg-slate-800">
+          <body className="h-screen bg-slate-900">
             <ClientNavbarWrapper>{children}</ClientNavbarWrapper>
           </body>
         </FlightContextProvider>

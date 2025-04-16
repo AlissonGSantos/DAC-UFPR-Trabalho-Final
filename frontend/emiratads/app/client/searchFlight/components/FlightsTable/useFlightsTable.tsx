@@ -16,7 +16,7 @@ const useFlightsTable = () => {
     {
       accessorKey: "valor_passagem",
       header: "Valor Passagem",
-      cell: ({ row }) => `${maskCurrency(row.getValue("valor_passagem"))}`,
+      cell: ({ row }) => maskCurrency(row.getValue("valor_passagem")),
     },
     {
       accessorKey: "quantidade_poltronas_ocupadas",
@@ -36,8 +36,13 @@ const useFlightsTable = () => {
     },
   ];
 
+  const redirectToFlightDetail = (flight: Flight) => {
+    window.location.href = `/client/flight/${flight.codigo}`;
+  };
+
   return {
     columns,
+    redirectToFlightDetail,
   };
 };
 

@@ -3,8 +3,13 @@ import Button from "@/app/components/Button/Button";
 import SelectInput from "@/app/components/SelectInput/SelectInput";
 import React from "react";
 import useSearchForm from "./useSearchForm";
+import { Flight } from "@/app/types/FlightTypes";
 
-const SearchForm = () => {
+interface SearchFormProps {
+  onFindFlights: (flights: Flight[]) => void;
+}
+
+const SearchForm: React.FC<SearchFormProps> = ({ onFindFlights }) => {
   const {
     handleAirportChange,
     airportsOptions,
@@ -12,7 +17,7 @@ const SearchForm = () => {
     register,
     handleSubmit,
     onSubmit,
-  } = useSearchForm();
+  } = useSearchForm({ onFindFlights });
 
   return (
     <form

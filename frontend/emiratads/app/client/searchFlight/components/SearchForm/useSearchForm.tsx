@@ -8,7 +8,11 @@ import {
 import { Aeroporto, Flight } from "@/app/types/FlightTypes";
 import useFlightContext from "@/app/contexts/flight";
 
-const useSearchForm = () => {
+interface UseSearchFormProps {
+  onFindFlights: (flights: Flight[]) => void;
+}
+
+const useSearchForm = ({ onFindFlights }: UseSearchFormProps) => {
   const [originAirport, setOriginAirport] = useState<Aeroporto>(
     {} as Aeroporto
   );
@@ -74,7 +78,7 @@ const useSearchForm = () => {
         flight.aeroporto_destino.codigo === data.DestinationAirport
     );
     setFlights(selectedFlights);
-    console.log("Selected Flights:", selectedFlights);
+    onFindFlights(selectedFlights);
   };
 
   return {
