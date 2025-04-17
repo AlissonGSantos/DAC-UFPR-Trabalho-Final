@@ -38,7 +38,7 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <div className="flex flex-col gap-2">
-      {label && <label className={`text-sm ${hasError ? "text-red-700" : "text-slate-300"}`}>{label}</label>}
+      {label && <label className={`text-sm ${hasError ? "text-red-500" : "text-slate-300"}`}>{label}</label>}
       <input
         className={`w-full bg-transparent placeholder:text-slate-400 text-slate-300 text-sm border-2 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none ${
           hasError
@@ -49,16 +49,18 @@ const Input: React.FC<InputProps> = ({
         placeholder={placeholder}
         {...rest}
       />
+      <div className="min-h-4 text-sm mt-1">
       {error
         ?.filter((err) => err.hasError)
         .map((err, index) => (
           <li
-            key={`${err.message}-${index}`}
-            className="text-xs ml-4 text-red-800"
+          key={`${err.message}-${index}`}
+          className="text-xs ml-4 text-red-500"
           >
             {err.message}
           </li>
         ))}
+        </div>
     </div>
   );
 };
