@@ -10,7 +10,7 @@ const MileagePurchase = () => {
   
   const realizaCompra = async () =>{
     try {
-      const response = await fetch("/mileage", {
+      const response = await fetch("/mileage", { //wip: confirmar endpoint de compra de milhas
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
