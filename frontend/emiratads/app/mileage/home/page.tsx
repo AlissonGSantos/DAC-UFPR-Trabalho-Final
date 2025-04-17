@@ -1,7 +1,8 @@
 import React from "react";
+import MileagePurchase from "./components/MileagePurchase/MileagePurchase";
 
 const Home = () => {
   return (
-    <p>Teste de tela</p>
-  )
-}
+    <MileagePurchase />
+  );
+};
