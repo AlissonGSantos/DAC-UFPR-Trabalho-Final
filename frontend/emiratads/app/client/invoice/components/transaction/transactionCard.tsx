@@ -3,6 +3,7 @@
 import { Transaction } from "@/app/types/InvoiceTypes";
 import React from "react";
 import Link from "next/link";
+import { AirplaneTakeoff } from "phosphor-react";
 
 export interface transactionProps {
     transaction: Transaction
@@ -18,12 +19,21 @@ const TransactionCard: React.FC<transactionProps> = ({ transaction }) => {
             <div className={`text-3xl font-semibold ${isEntrada ? "text-green-500" : "text-red-500"}`}>
                 {isEntrada ? transaction.quantidade_milhas : `${transaction.quantidade_milhas}`}
             </div>
-            <div className="text-sm my-2">{transaction.descricao}</div>
+            <div className="text-sm my-2">
+                {transaction.descricao.includes("->") ? (
+                    <>
+                        {transaction.descricao.split("->")[0]}
+                        <AirplaneTakeoff size={22} className="inline mx-1" />
+                        {transaction.descricao.split("->")[1]}
+                    </>
+                ) : (
+                    transaction.descricao
+                )}
+            </div>
             {transaction.codigo_reserva && (
-                <Link 
-                    href={`/client/reserva/${transaction.codigo_reserva}`} 
-                    className="text-xs text-blue-400 underline"
-                >
+                <Link
+                    href={`/client/reserva/${transaction.codigo_reserva}`}
+                    className="text-xs text-blue-400 underline">
                     Ver reserva
                 </Link>
             )}

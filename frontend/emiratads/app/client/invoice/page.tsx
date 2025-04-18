@@ -27,6 +27,7 @@ const Invoice = () => {
             cell: ({ row }: { row: { original: { valor: number } } }) => maskCurrency(row.original.valor),
         },
         { accessorKey: "descricao", header: "Descrição" },
+        { accessorKey: "codigo_reserva", header: "Reserva", cell: ({ row }: { row: { original: { codigo_reserva: string } } }) => row.original.codigo_reserva || "-" },
         { accessorKey: "tipo", header: "Tipo" },
     ];
 

@@ -1,6 +1,6 @@
 export enum transactionTypeEnum {
     ENTRADA = 'ENTRADA',
-    SAIDA = 'SAIDA'
+    SAIDA = 'SAÍDA'
 }
 
 export interface Transaction {
