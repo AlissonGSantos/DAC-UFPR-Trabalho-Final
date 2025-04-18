@@ -5,31 +5,10 @@ import { robotoFont } from "@/app/assets/fontsSetup";
 import useInvoice from "./useInvoice";
 import TransactionCard from "./components/transaction/transactionCard";
 import DataTable from "@/app/components/DataTable/DataTable";
-import { maskCurrency } from "@/app/utils/currencyMask";
 import Button from "@/app/components/Button/Button";
 
 const Invoice = () => {
-    const { invoice } = useInvoice();
-    const [isCardView, setIsCardView] = useState(true);
-
-    const toggleView = () => setIsCardView(!isCardView);
-
-    const columns = [
-        {
-            accessorKey: "data",
-            header: "Data",
-            cell: ({ row }: { row: { original: { data: string } } }) => new Date(row.original.data).toLocaleString(),
-        },
-        { accessorKey: "quantidade_milhas", header: "Milhas" },
-        {
-            accessorKey: "valor",
-            header: "Valor em reais",
-            cell: ({ row }: { row: { original: { valor: number } } }) => maskCurrency(row.original.valor),
-        },
-        { accessorKey: "descricao", header: "Descrição" },
-        { accessorKey: "codigo_reserva", header: "Reserva", cell: ({ row }: { row: { original: { codigo_reserva: string } } }) => row.original.codigo_reserva || "-" },
-        { accessorKey: "tipo", header: "Tipo" },
-    ];
+    const { invoice, isCardView, toggleView, columns } = useInvoice();
 
     return (
         <div className="flex flex-col">
