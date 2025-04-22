@@ -15,6 +15,7 @@ type AuthContextType = {
   login: (data: UserAuth) => void;
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
+  updateMilesBalance: (miles: number) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,6 +28,17 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const saveToCookies = (key: string, value: string) => {
     document.cookie = `${key}=${value}; path=/; max-age=3600; secure; samesite=strict`;
+  };
+
+  const updateMilesBalance = (miles: number) => {
+    if (userData) {
+      const updatedUserData: UserAuth = {
+        ...userData,
+        usuario: { ...userData.usuario, saldo_milhas: miles },
+      };
+      setUserData(updatedUserData);
+      saveToCookies("user", JSON.stringify(updatedUserData));
+    }
   };
 
   const getFromCookies = (key: string): string | null => {
@@ -71,6 +83,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       logout,
       isLogged,
       setIsLogged,
+      updateMilesBalance,
     }),
     [userData, isLogged]
   );

@@ -14,15 +14,11 @@ const useNavbar = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   const shortcuts: Shortcut[] = [
-    { name: "Home", link: "/", enabled: true },
-    { name: "About", link: "/about", enabled: true },
-    { name: "Services", link: "/services", enabled: true },
-    { name: "Contact", link: "/contact", enabled: true },
-    {
-      name: "Login",
-      link: "/authentication/login",
-      enabled: !isLogged,
-    },
+    { name: "Início", link: "/client/home", enabled: true },
+    { name: "Milhas", link: "/about", enabled: true },
+    { name: "Reservar", link: "/services", enabled: true },
+    { name: "Reservas", link: "/contact", enabled: true },
+    { name: "Check-in", link: "/contact", enabled: true },
   ].filter((shortcut) => shortcut.enabled);
 
   return {
@@ -31,6 +27,7 @@ const useNavbar = () => {
     shortcuts,
     isLogged,
     username: userData?.usuario.nome,
+    milescore: userData?.usuario.saldo_milhas,
   };
 };
 

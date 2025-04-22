@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { RegisterFlightSchema } from "../../schema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import registerFlightServices from "@/app/employee/services/registerFlightServices";
-import { useState } from "react";
-
-
+import { useState, useEffect } from "react";
 
 type RegisterFlightFormData = z.infer<typeof RegisterFlightSchema>;
 
@@ -28,7 +25,7 @@ const useRegisterFlightForm = () => {
       dateTimeFlight: "",
       seatsQuantity: "",
       ticketValue: "",
-      miles: ""
+      miles: "",
     },
   });
 
@@ -37,7 +34,7 @@ const useRegisterFlightForm = () => {
   useEffect(() => {
     const cleanValue = ticketValue.replace(/[^\d,]/g, "").replace(",", ".");
     const numericValue = parseFloat(cleanValue);
-  
+
     if (!isNaN(numericValue)) {
       const calculatedMiles = (numericValue / 500).toFixed(0); // ou /5 se quiser o inverso
       setValue("miles", calculatedMiles);
@@ -47,14 +44,14 @@ const useRegisterFlightForm = () => {
   }, [ticketValue, setValue]);
 
   const onSubmit = (data: RegisterFlightFormData) => {
-    console.log("Form", data);
     setValue("OriginAirport", "");
     setValue("DestinationAirport", "");
     setValue("dateTimeFlight", "");
     setValue("seatsQuantity", "");
     setValue("ticketValue", "");
-    setValue("miles","");
-    setShowSuccess(true); 
+    setValue("miles", "");
+    setShowSuccess(true);
+
   };
 
   return {

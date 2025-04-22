@@ -10,18 +10,60 @@ import useFlightContext from "@/app/contexts/flight";
 
 interface UseSearchFormProps {
   onFindFlights: (flights: Flight[]) => void;
+  onChangeDestination?: (destination: Aeroporto) => void;
+  onChangeOrigin?: (origin: Aeroporto) => void;
+  destination?: Aeroporto["codigo"];
+  origin?: Aeroporto["codigo"];
+  onRedirect?: () => void;
 }
 
-const useSearchForm = ({ onFindFlights }: UseSearchFormProps) => {
-  const [originAirport, setOriginAirport] = useState<Aeroporto>(
-    {} as Aeroporto
+const useSearchForm = ({
+  onFindFlights,
+  onChangeDestination,
+  onChangeOrigin,
+  destination,
+  origin,
+  onRedirect,
+}: UseSearchFormProps) => {
+  const { aeroportos, flightList } = useFlightContext();
+
+  const getAirportsByParams = () => {
+    const destinationSelected = aeroportos.find(
+      (aeroporto) => aeroporto.codigo === destination
+    );
+
+    const originSelected = aeroportos.find(
+      (aeroporto) => aeroporto.codigo === origin
+    );
+
+    return {
+      destinationSelected: destinationSelected || null,
+      originSelected: originSelected || null,
+    };
+  };
+
+  const [originAirport, setOriginAirport] = useState<Aeroporto | null>(
+    origin ? getAirportsByParams().originSelected : null
   );
-  const [destinationAirport, setDestinationAirport] = useState<Aeroporto>(
-    {} as Aeroporto
-  );
+  const [destinationAirport, setDestinationAirport] =
+    useState<Aeroporto | null>(
+      destination ? getAirportsByParams().destinationSelected : null
+    );
   const [flights, setFlights] = useState<Flight[]>([]);
 
-  const { aeroportos, flightList } = useFlightContext();
+  useEffect(() => {
+    if (!origin && !destination) {
+      onChangeDestination?.(destinationAirport as Aeroporto);
+      onChangeOrigin?.(originAirport as Aeroporto);
+    }
+
+    if (origin && destination) {
+      onSubmit({
+        OriginAirport: origin,
+        DestinationAirport: destination,
+      });
+    }
+  }, [originAirport, destinationAirport, origin, destination]);
 
   const {
     register,
@@ -31,8 +73,8 @@ const useSearchForm = ({ onFindFlights }: UseSearchFormProps) => {
   } = useForm<SearchFlightSchemaFormData>({
     resolver: zodResolver(SearchFlightSchema),
     defaultValues: {
-      OriginAirport: "",
-      DestinationAirport: "",
+      OriginAirport: originAirport?.codigo ?? "",
+      DestinationAirport: destinationAirport?.codigo ?? "",
     },
   });
 
@@ -59,19 +101,20 @@ const useSearchForm = ({ onFindFlights }: UseSearchFormProps) => {
     type: "ORIGIN" | "DESTINATION"
   ) => {
     if (type === "ORIGIN") {
-      setOriginAirport(
-        aeroportos.find((a) => a.codigo === airport) || ({} as Aeroporto)
-      );
+      setOriginAirport(aeroportos.find((a) => a.codigo === airport) || null);
       setValue("OriginAirport", airport);
     } else {
       setDestinationAirport(
-        aeroportos.find((a) => a.codigo === airport) || ({} as Aeroporto)
+        aeroportos.find((a) => a.codigo === airport) || null
       );
       setValue("DestinationAirport", airport);
     }
   };
 
   const onSubmit = (data: SearchFlightSchemaFormData) => {
+    if (onRedirect) {
+      return onRedirect();
+    }
     const selectedFlights = flightList.filter(
       (flight) =>
         flight.aeroporto_origem.codigo === data.OriginAirport &&
