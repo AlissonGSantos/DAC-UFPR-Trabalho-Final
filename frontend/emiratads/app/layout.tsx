@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthContextProvider } from "./contexts/auth";
 import ClientNavbarWrapper from "./components/Navbar/components/ClientNavbarWrapper";
 import { FlightContextProvider } from "./contexts/flight";
+import { BookingContextProvider } from "./contexts/booking";
 
 export const metadata: Metadata = {
   title: "EmiraTADS Airlines",
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang="pt-br">
       <AuthContextProvider>
         <FlightContextProvider>
-          <body className="h-screen bg-slate-900">
-            <ClientNavbarWrapper>{children}</ClientNavbarWrapper>
-          </body>
+          <BookingContextProvider>
+            <body className="h-screen bg-slate-900">
+              <ClientNavbarWrapper>{children}</ClientNavbarWrapper>
+            </body>
+          </BookingContextProvider>
         </FlightContextProvider>
       </AuthContextProvider>
     </html>

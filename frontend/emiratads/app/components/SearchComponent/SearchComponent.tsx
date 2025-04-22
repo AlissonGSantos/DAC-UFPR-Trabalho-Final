@@ -1,11 +1,22 @@
 "use client";
 import React from "react";
-import SearchForm from "../SearchForm/SearchForm";
+import SearchForm from "@/app/client/searchFlight/components/SearchForm/SearchForm";
 import useSearchComponent from "./useSearchComponent";
-import FlightsTable from "../FlightsTable/FlightsTable";
+import FlightsTable from "@/app/client/searchFlight/components/FlightsTable/FlightsTable";
 
-const SearchComponent = () => {
-  const { activeFlightList, setActiveFlightList } = useSearchComponent();
+interface SearchComponentProps {
+  fromHome?: boolean;
+}
+
+const SearchComponent: React.FC<SearchComponentProps> = ({ fromHome }) => {
+  const {
+    activeFlightList,
+    onChangeDestination,
+    onChangeOrigin,
+    redirectToSearchFlight,
+    onFindFlights,
+    showFlightTable,
+  } = useSearchComponent();
 
   return (
     <>
@@ -13,11 +24,14 @@ const SearchComponent = () => {
         <div className="flex flex-col p-4 rounded-lg  gap-6 mb-8">
           <h1 className="text-3xl font-bold text-slate-300">Buscar Voos</h1>
           <SearchForm
-            onFindFlights={(flights) => setActiveFlightList(flights)}
+            onChangeDestination={onChangeDestination}
+            onChangeOrigin={onChangeOrigin}
+            onFindFlights={onFindFlights}
+            onRedirect={fromHome ? redirectToSearchFlight : undefined}
           />
         </div>
       </div>
-      {activeFlightList.length > 0 && (
+      {showFlightTable && (
         <div className="flex flex-col p-4 rounded-lg gap-6 my-8">
           <h1 className="text-2xl font-bold text-slate-300 uppercase">
             Resultados

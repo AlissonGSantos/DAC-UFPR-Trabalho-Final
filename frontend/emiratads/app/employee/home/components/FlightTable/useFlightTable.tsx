@@ -2,12 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Flight } from "@/app/types/FlightTypes";
 import { ButtonProps } from "@/app/components/Button/Button";
-import { statusFlightEnum } from "@/app/types/FlightTypes";
+import { statusFlightEnum, Flight } from "@/app/types/FlightTypes";
 
 const useFlightTable = () => {
-  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); 
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
@@ -33,54 +32,51 @@ const useFlightTable = () => {
           uf: "RJ",
         },
       },
-        {
-            codigo: "FL002",
-            data: "2023-12-02T15:30:00Z",
-            valor_passagem: 600,
-            quantidade_poltronas_total: 200,
-            quantidade_poltronas_ocupadas: 150,
-            estado: statusFlightEnum.CANCELADO,
-            aeroporto_origem: {
-                codigo: "BRC",
-                nome: "Aeroporto Internacional de Brasília",
-                cidade: "Brasília",
-                uf: "DF",
-            },
-            aeroporto_destino: {
-                codigo: "SSA",
-                nome: "Aeroporto Internacional de Salvador",
-                cidade: "Salvador",
-                uf: "BA",
-            },
+      {
+        codigo: "FL002",
+        data: "2023-12-02T15:30:00Z",
+        valor_passagem: 600,
+        quantidade_poltronas_total: 200,
+        quantidade_poltronas_ocupadas: 150,
+        estado: statusFlightEnum.CANCELADO,
+        aeroporto_origem: {
+          codigo: "BRC",
+          nome: "Aeroporto Internacional de Brasília",
+          cidade: "Brasília",
+          uf: "DF",
         },
-        {
-            codigo: "FL003",
-            data: "2023-12-03T08:45:00Z",
-            valor_passagem: 700,
-            quantidade_poltronas_total: 180,
-            quantidade_poltronas_ocupadas: 120,
-            estado: statusFlightEnum.REALIZADO,
-            aeroporto_origem: {
-                codigo: "POA",
-                nome: "Aeroporto Internacional de Porto Alegre",
-                cidade: "Porto Alegre",
-                uf: "RS",
-            },
-            aeroporto_destino: {
-                codigo: "REC",
-                nome: "Aeroporto Internacional do Recife",
-                cidade: "Recife",
-                uf: "PE",
-            },
-        }
+        aeroporto_destino: {
+          codigo: "SSA",
+          nome: "Aeroporto Internacional de Salvador",
+          cidade: "Salvador",
+          uf: "BA",
+        },
+      },
+      {
+        codigo: "FL003",
+        data: "2023-12-03T08:45:00Z",
+        valor_passagem: 700,
+        quantidade_poltronas_total: 180,
+        quantidade_poltronas_ocupadas: 120,
+        estado: statusFlightEnum.REALIZADO,
+        aeroporto_origem: {
+          codigo: "POA",
+          nome: "Aeroporto Internacional de Porto Alegre",
+          cidade: "Porto Alegre",
+          uf: "RS",
+        },
+        aeroporto_destino: {
+          codigo: "REC",
+          nome: "Aeroporto Internacional do Recife",
+          cidade: "Recife",
+          uf: "PE",
+        },
+      },
     ];
   }, []);
 
   const [flightList, setFlightList] = useState<Flight[]>(data);
 
-
-
-  // Define columns for the DataTable
   const columns: ColumnDef<Flight>[] = useMemo(
     () => [
       {
@@ -97,63 +93,64 @@ const useFlightTable = () => {
         accessorKey: "aeroporto_destino.nome",
         header: "Aeroporto de Destino",
         cell: ({ row }) => row.original.aeroporto_destino.nome,
-      }
-    ], []
+      },
+    ],
+    []
   );
 
   const cancelFlight = (flight: Flight) => {
     setIsCancelModalOpen(false);
-  }
+  };
 
   const handleCancelFlight = (flight: Flight) => {
     setIsCancelModalOpen(true);
     setSelectedFlight(flight);
-  }
+  };
 
   const closeConfirmBoard = () => {
     setIsBoardModalOpen(false);
-  }
+  };
 
   const handleConfirmBoard = () => {
     setIsBoardModalOpen(true);
-  }
-  // Define controls (buttons) for each row
-const controls: ButtonProps[] = useMemo(
-  () => [
-    {
-      text: "Confirmar Embarque",
-      onClick: handleConfirmBoard, // Remova a arrow function e passe a função diretamente
-      type: "PRIMARY",
-      size: "SMALL",
-    },
-    {
-      text: "Cancelar Voo",
-      onClick: handleCancelFlight,
-      type: "DANGER",
-      size: "SMALL",
-    },
-    {
-      text: "Realizar Voo",
-      onClick: () => console.log("Abrir modal de realização de voo"),
-      type: "SUCCESS",
-      size: "SMALL",
-    },
-  ],
-  []
-);
+  };
+  const controls: ButtonProps[] = useMemo(
+    () => [
+      {
+        text: "Confirmar Embarque",
+        onClick: handleConfirmBoard,
+        type: "PRIMARY",
+        size: "SMALL",
+      },
+      {
+        text: "Cancelar Voo",
+        onClick: handleCancelFlight,
+        type: "DANGER",
+        size: "SMALL",
+      },
+      {
+        text: "Realizar Voo",
+        onClick: () => console.log("Abrir modal de realização de voo"),
+        type: "SUCCESS",
+        size: "SMALL",
+      },
+    ],
+    []
+  );
 
-  return { 
-    data, 
-    columns, 
-    controls, 
-    cancelFlight, 
-    handleCancelFlight, 
-    isCancelModalOpen, setIsCancelModalOpen, 
+  return {
+    data,
+    columns,
+    controls,
+    cancelFlight,
+    handleCancelFlight,
+    isCancelModalOpen,
+    setIsCancelModalOpen,
     isBoardModalOpen,
     closeConfirmBoard,
-    selectedFlight, 
-    setSelectedFlight, 
-    flightList, 
+    selectedFlight,
+    setSelectedFlight,
+    flightList,
     setFlightList,
   };
 };

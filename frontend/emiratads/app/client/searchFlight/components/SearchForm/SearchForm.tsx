@@ -3,13 +3,27 @@ import Button from "@/app/components/Button/Button";
 import SelectInput from "@/app/components/SelectInput/SelectInput";
 import React from "react";
 import useSearchForm from "./useSearchForm";
-import { Flight } from "@/app/types/FlightTypes";
+import { Aeroporto, Flight } from "@/app/types/FlightTypes";
+import { useSearchParams } from "next/navigation";
 
 interface SearchFormProps {
   onFindFlights: (flights: Flight[]) => void;
+  onRedirect?: () => void;
+  onChangeDestination?: (destination: Aeroporto) => void;
+  onChangeOrigin?: (origin: Aeroporto) => void;
 }
 
-const SearchForm: React.FC<SearchFormProps> = ({ onFindFlights }) => {
+const SearchForm: React.FC<SearchFormProps> = ({
+  onFindFlights,
+  onChangeDestination,
+  onChangeOrigin,
+  onRedirect,
+}) => {
+  const searchParams = useSearchParams();
+
+  const origin = searchParams.get("origin") ?? undefined;
+  const destination = searchParams.get("destination") ?? undefined;
+
   const {
     handleAirportChange,
     airportsOptions,
@@ -17,7 +31,14 @@ const SearchForm: React.FC<SearchFormProps> = ({ onFindFlights }) => {
     register,
     handleSubmit,
     onSubmit,
-  } = useSearchForm({ onFindFlights });
+  } = useSearchForm({
+    onFindFlights,
+    onChangeDestination,
+    onChangeOrigin,
+    origin,
+    destination,
+    onRedirect,
+  });
 
   return (
     <form
