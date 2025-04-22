@@ -10,7 +10,7 @@ interface Shortcut {
 
 const useNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLogged, userData } = useAuthContext();
+  const { isLogged, userData, logout } = useAuthContext();
   const toggle = () => setIsOpen(!isOpen);
 
   const shortcuts: Shortcut[] = [
@@ -28,6 +28,7 @@ const useNavbar = () => {
     isLogged,
     username: userData?.usuario.nome,
     milescore: userData?.usuario.saldo_milhas,
+    logout,
   };
 };
 

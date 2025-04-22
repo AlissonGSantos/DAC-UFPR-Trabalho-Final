@@ -6,13 +6,15 @@ import Shortcut from "./components/Shortcut";
 import SidebarToggler from "./components/SidebarToggler";
 import Logo from "@/app/assets/images/logos/emiratadsLogo.png";
 import Image from "next/image";
+import Button from "../Button/Button";
 
 interface NavbarProps {
   children?: React.ReactNode;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ children }) => {
-  const { isOpen, toggle, shortcuts, username, milescore } = useNavbar();
+  const { isOpen, toggle, shortcuts, username, milescore, logout } =
+    useNavbar();
 
   return (
     <div className="flex flex-col h-screen">
@@ -39,9 +41,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
             )}
 
             <div className="ml-2 mr-6 h-10/12 border-l-2 border-indigo-950" />
-         {/*    <div className="flex min-w-50 justify-center">
-              <p className="text-slate-300">Saldo em milhas: {milescore}</p>
-            </div> */}
             <div className="flex min-w-50">
               <p className="text-slate-300">Bem vindo, {username}</p>
             </div>
@@ -70,6 +69,12 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
             <div className="flex min-w-50 justify-center">
               <p className="text-slate-300">Saldo em milhas: {milescore}</p>
             </div>
+            <Button
+              text="Logout"
+              size="SMALL"
+              type="SECONDARY"
+              onClick={logout}
+            />
           </div>
         </div>
         <main

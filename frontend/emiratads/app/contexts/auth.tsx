@@ -60,6 +60,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     setUserData(null);
     document.cookie = "token=; path=/; max-age=0";
     document.cookie = "user=; path=/; max-age=0";
+    window.location.href = "/authentication/login";
   };
 
   useEffect(() => {
