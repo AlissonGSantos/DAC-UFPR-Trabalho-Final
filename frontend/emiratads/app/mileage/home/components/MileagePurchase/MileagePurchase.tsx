@@ -1,16 +1,22 @@
 "use client";
+
+import Button from "@/app/components/Button/Button";
+import Input from "@/app/components/Input/Input";
 import React, { useState } from "react";
 import useMileagePurchase from "./useMileagePurchase";
+import { useAuthContext } from "@/app/contexts/auth";
+
 
 const MileagePurchase = () => {
   const {calculatePrice, fixedPrice} = useMileagePurchase();
   const [miles, setMiles] = useState(0);
   const [message, setMessage] = useState("");
+  const {userData} = useAuthContext;
   var total = calculatePrice(miles);
   
   const realizaCompra = async () =>{
     try {
-      const response = await fetch("/mileage", { //wip: confirmar endpoint de compra de milhas
+      const response = await fetch("/clinte/${id}/milhas", { //wip: confirmar endpoint de compra de milhas
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +38,9 @@ const MileagePurchase = () => {
   return (
     <div>
       <p>O custo de cada milha é R$ ${fixedPrice}</p>
+        <Input />
       <p>Total da sua compra é: R$ ${total}</p>
+      <Button text="Comprar Milhas" type="PRIMARY" size="MEDIUM" onclick={realizaCompra} />
     </div>
   );
 };
