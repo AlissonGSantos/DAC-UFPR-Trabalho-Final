@@ -37,7 +37,7 @@ const Input: React.FC<InputProps> = ({
   const hasError = error?.some((err) => err.hasError);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-1 flex-col gap-2">
       {label && <label className={`text-sm ${hasError ? "text-red-500" : "text-slate-300"}`}>{label}</label>}
       <input
         className={`w-full bg-transparent placeholder:text-slate-400 text-slate-300 text-sm border-2 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none ${
