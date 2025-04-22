@@ -38,7 +38,7 @@ const MileagePurchase = () => {
   return (
     <div>
       <p>O custo de cada milha é R$ ${fixedPrice}</p>
-        <Input />
+        <Input type="number" label="Milhas" placeholder="N. de Milhas" />
       <p>Total da sua compra é: R$ ${total}</p>
       <Button text="Comprar Milhas" type="PRIMARY" size="MEDIUM" onclick={realizaCompra} />
     </div>
