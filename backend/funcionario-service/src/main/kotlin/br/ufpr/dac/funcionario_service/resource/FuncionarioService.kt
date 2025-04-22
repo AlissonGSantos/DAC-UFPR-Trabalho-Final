@@ -1,10 +1,13 @@
 package br.ufpr.dac.funcionario_service.resource
 
 import br.ufpr.dac.funcionario_service.repository.IFuncionarioRepository
-import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioInputDTO
 import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioMapper
 import utils.dto.FuncionarioOutputDTO
 import org.springframework.stereotype.Service
+import utils.dto.ClienteInputDTO
+import utils.dto.ClienteOutputDTO
+import utils.dto.FuncionarioInputDTO
+import utils.exceptions.ResourcesConflictException
 
 @Service
 class FuncionarioService(private val repository: IFuncionarioRepository) {
@@ -27,7 +30,12 @@ class FuncionarioService(private val repository: IFuncionarioRepository) {
     }
 
     fun saveFuncionario(funcionario: FuncionarioInputDTO): FuncionarioOutputDTO {
-        return FuncionarioMapper.toDTO(repository.save(funcionario.toFuncionario()))
+        try {
+            val registry = repository.save(FuncionarioMapper.toDomain(funcionario))
+            return FuncionarioMapper.toDTO(registry)
+        } catch (ex: Exception) {
+            throw ResourcesConflictException("Usuário duplicado")
+        }
     }
 
     fun deactivateFuncionario(codigo: Long): FuncionarioOutputDTO {
@@ -41,7 +49,7 @@ class FuncionarioService(private val repository: IFuncionarioRepository) {
         throw IllegalArgumentException("Funcionário não encontrado com o ID: $codigo")
     }
 
-    fun getFuncionarioByID(codigo: Long): FuncionarioOutputDTO {
+    fun getFuncionarioById(codigo: Long): FuncionarioOutputDTO {
         val funcionario = repository.findByCodigoAndAtivoTrue(codigo)
 
         funcionario?.let {

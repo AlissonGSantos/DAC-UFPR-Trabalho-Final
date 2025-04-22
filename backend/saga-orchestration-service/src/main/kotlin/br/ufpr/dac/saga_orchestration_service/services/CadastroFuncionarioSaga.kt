@@ -1,6 +1,5 @@
 package br.ufpr.dac.saga_orchestration_service.services
 
-import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioInputDTO
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -11,12 +10,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import utils.GsonProcessor
+import utils.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
 import utils.dto.UsuarioInputDTO
 import utils.dto.UsuarioRole
 
 @Service
-class CadastroFuncionarioSaga (private val template: RabbitTemplate, @Qualifier("sagaCadastroFuncionario") val exchange: DirectExchange) {
+class CadastroFuncionarioSaga (private val template: RabbitTemplate, @Qualifier("sagaAutocadastro") val exchange: DirectExchange) {
      private val gson = Gson()
 
     suspend fun executeSaga(funcionarioCadastro: FuncionarioInputDTO): FuncionarioOutputDTO = coroutineScope {

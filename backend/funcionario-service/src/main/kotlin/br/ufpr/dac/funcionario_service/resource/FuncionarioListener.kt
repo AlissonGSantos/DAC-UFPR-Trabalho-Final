@@ -6,6 +6,7 @@ import jakarta.validation.Validation
 import jakarta.validation.Validator
 import jakarta.validation.ValidatorFactory
 import org.springframework.amqp.rabbit.annotation.RabbitListener
+import utils.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
 import utils.dto.RabbitMessageDTO
 
@@ -14,7 +15,7 @@ class FuncionarioListener(private val service: FuncionarioService) {
     private val factory: ValidatorFactory = Validation.buildDefaultValidatorFactory()
     private val validator: Validator = factory.validator
 
-    @RabbitListener(queues = ["emiratads.cadastroFuncionario.funcionario"])
+    @RabbitListener(queues = ["emiratads.autocadastro.funcionario"])
     fun cadastrarFuncionarioSaga(obj: String): String {
         val response: RabbitMessageDTO<FuncionarioOutputDTO>
         val funcionarioInput = gson.fromJson(obj, FuncionarioInputDTO::class.java)
@@ -33,7 +34,7 @@ class FuncionarioListener(private val service: FuncionarioService) {
     @RabbitListener(queues = ["emiratads.login.funcionario"])
     fun dadosLoginFuncionario(code: String): String {
         val codigo = code.toLong()
-        val dadosFuncionario = service.getFuncionarioByID(codigo)
+        val dadosFuncionario = service.getFuncionarioById(codigo)
         val gson = Gson()
 
         return gson.toJson(dadosFuncionario)
