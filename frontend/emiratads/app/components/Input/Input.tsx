@@ -44,7 +44,9 @@ const Input: React.FC<InputProps> = ({
           hasError
             ? "border-red-700 focus:border-red-500 hover:border-red-900"
             : "border-indigo-700 focus:border-indigo-800 hover:border-indigo-500"
-        }  shadow-sm focus:shadow ${extraClasses}`}
+        } shadow-sm focus:shadow ${extraClasses} ${
+          rest.disabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
         type={type}
         placeholder={placeholder}
         {...rest}
