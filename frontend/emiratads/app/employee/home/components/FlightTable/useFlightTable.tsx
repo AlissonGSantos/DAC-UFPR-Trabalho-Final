@@ -7,6 +7,7 @@ import { statusFlightEnum, Flight } from "@/app/types/FlightTypes";
 
 const useFlightTable = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
   const data: Flight[] = useMemo(() => {
@@ -98,9 +99,6 @@ const useFlightTable = () => {
   );
 
   const cancelFlight = (flight: Flight) => {
-    setFlightList((prev) =>
-      prev.filter((item) => item.codigo !== flight.codigo)
-    );
     setIsCancelModalOpen(false);
   };
 
@@ -109,11 +107,18 @@ const useFlightTable = () => {
     setSelectedFlight(flight);
   };
 
+  const closeConfirmBoard = () => {
+    setIsBoardModalOpen(false);
+  };
+
+  const handleConfirmBoard = () => {
+    setIsBoardModalOpen(true);
+  };
   const controls: ButtonProps[] = useMemo(
     () => [
       {
         text: "Confirmar Embarque",
-        onClick: () => console.log("Abrir modal de confirmação de embarque"),
+        onClick: handleConfirmBoard,
         type: "PRIMARY",
         size: "SMALL",
       },
@@ -141,6 +146,8 @@ const useFlightTable = () => {
     handleCancelFlight,
     isCancelModalOpen,
     setIsCancelModalOpen,
+    isBoardModalOpen,
+    closeConfirmBoard,
     selectedFlight,
     setSelectedFlight,
     flightList,
