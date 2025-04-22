@@ -88,6 +88,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
             type={"text"}
             label={"CPF:"}
             value={employee.cpf || ""}
+            disabled={isEditing}
             error={
               errors.cpf
                 ? [{ hasError: true, message: errors.cpf.message ?? "" }]
@@ -111,7 +112,9 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 { value: "false", label: "Inativo" },
               ]}
               placeholder="Selecione o status"
-              onChange={(value) => handleInputChange("ativo", value === "true")}
+              onChange={(e) =>
+                handleInputChange("ativo", e.target.value === "true")
+              }
               value={employee.ativo ? "true" : "false"}
             />
           </div>
