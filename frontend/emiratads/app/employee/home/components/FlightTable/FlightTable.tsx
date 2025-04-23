@@ -5,9 +5,23 @@ import useFlightTable from "./useFlightTable";
 import CancelFlightModal from "../CancelFlightModal/CancelFlightModal";
 import ConfirmBoardModal from "../ConfirmBoardModal/ConfirmBoardModal";
 import { Flight } from "@/app/types/FlightTypes";
+import FinishFlightModal from "../FinishFlightModal/FinishFlightModal";
 
 const FlightTable: React.FC = () => {
-  const { data, columns, controls, cancelFlight, setIsCancelModalOpen, isBoardModalOpen, isCancelModalOpen, closeConfirmBoard, selectedFlight } = useFlightTable();
+  const { 
+    data, 
+    columns, 
+    controls, 
+    cancelFlight, 
+    setIsCancelModalOpen, 
+    isBoardModalOpen, 
+    isCancelModalOpen, 
+    closeConfirmBoard, 
+    selectedFlight, 
+    isFinishModalOpen,
+    confirmFinishFlight,
+    setIsFinishModalOpen
+  } = useFlightTable();
 
   return (
     <div>
@@ -17,6 +31,7 @@ const FlightTable: React.FC = () => {
         setIsCancelModalOpen(false);
       } } 
       onDelete={cancelFlight} />
+      <FinishFlightModal flight={selectedFlight ?? {} as Flight} isOpen={isFinishModalOpen} onClose={() => {setIsFinishModalOpen(false)}} onConfirm={() => {}} />
     </div>
   );
 };
