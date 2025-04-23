@@ -34,7 +34,7 @@ const useLoginForm = () => {
 
       if (res.access_token) {
         login(res);
-        window.location.href = "/employee/dashboard";
+        window.location.href = "/client/home";
       } else {
         console.error("Erro: Token de acesso não encontrado.");
       }

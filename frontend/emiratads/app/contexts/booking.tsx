@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useMemo, useState } from "react";
-import { Booking } from "../types/BookingTypes";
+import { Booking, statusBookingEnum } from "../types/BookingTypes";
 import { statusFlightEnum } from "../types/FlightTypes";
 
 const bookingListMock: Booking[] = [
@@ -12,7 +12,7 @@ const bookingListMock: Booking[] = [
     milhas_utilizadas: 1000,
     quantidade_poltronas: 2,
     codigo_cliente: 1,
-    estado: statusFlightEnum.CONFIRMADO,
+    estado: statusBookingEnum.CRIADA,
     voo: {
       codigo: "FL001",
       data: "2025-04-15T08:00:00Z",
@@ -41,7 +41,7 @@ const bookingListMock: Booking[] = [
     milhas_utilizadas: 500,
     quantidade_poltronas: 1,
     codigo_cliente: 2,
-    estado: "PENDENTE",
+    estado: statusBookingEnum.CHECK_IN,
     voo: {
       codigo: "FL002",
       data: "2025-05-20T13:00:00Z",
@@ -60,6 +60,35 @@ const bookingListMock: Booking[] = [
         nome: "Aeroporto Internacional de Salvador",
         cidade: "Salvador",
         uf: "BA",
+      },
+    },
+  },
+  {
+    codigo: "BKG003",
+    data: "2025-06-10T12:00:00Z",
+    valor: 700.0,
+    milhas_utilizadas: 1500,
+    quantidade_poltronas: 3,
+    codigo_cliente: 3,
+    estado: statusBookingEnum.CANCELADA,
+    voo: {
+      codigo: "FL003",
+      data: "2025-06-10T10:00:00Z",
+      valor_passagem: 700.0,
+      quantidade_poltronas_total: 200,
+      quantidade_poltronas_ocupadas: 180,
+      estado: statusFlightEnum.CANCELADO,
+      aeroporto_origem: {
+        codigo: "BSB",
+        nome: "Aeroporto Internacional de Brasília",
+        cidade: "Brasília",
+        uf: "DF",
+      },
+      aeroporto_destino: {
+        codigo: "POA",
+        nome: "Aeroporto Internacional Salgado Filho",
+        cidade: "Porto Alegre",
+        uf: "RS",
       },
     },
   },

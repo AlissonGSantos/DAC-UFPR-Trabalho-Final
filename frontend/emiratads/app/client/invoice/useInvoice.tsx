@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useAuthContext } from "@/app/contexts/auth";
 import { maskCurrency } from "@/app/utils/currencyMask";
 import { transactionTypeEnum, Invoice } from "@/app/types/InvoiceTypes";
 
 const useInvoice = () => {
+    const { userData } = useAuthContext();
     const invoice: Invoice = {
         codigo: 1,
         saldo_milhas: 10.0,
@@ -35,6 +37,40 @@ const useInvoice = () => {
     const [isCardView, setIsCardView] = useState(true);
     const toggleView = () => setIsCardView(!isCardView);
 
+    const [filter, setFilter] = useState<"lastWeek" | "lastTenDays" | "lastMonth" | "lastYear" | "all">("all");
+
+    const filterTransactionsByDate = (
+        transactions: Invoice["transacoes"],
+        filter: "lastWeek" | "lastTenDays" | "lastMonth" | "lastYear"
+    ): Invoice["transacoes"] => {
+        const now = new Date();
+        let startDate: Date;
+
+        switch (filter) {
+            case "lastWeek":
+                startDate = new Date(now.setDate(now.getDate() - 7));
+                break;
+            case "lastTenDays":
+                startDate = new Date(now.setDate(now.getDate() - 10));
+                break;
+            case "lastMonth":
+                startDate = new Date(now.setMonth(now.getMonth() - 1));
+                break;
+            case "lastYear":
+                startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+                break;
+            default:
+                return transactions;
+        }
+
+        return transactions.filter(
+            (transaction) => new Date(transaction.data) >= startDate
+        );
+    };
+
+    const filteredTransactions =
+        filter === "all" ? invoice.transacoes : filterTransactionsByDate(invoice.transacoes, filter);
+
     const columns = [
         {
             accessorKey: "data",
@@ -56,7 +92,10 @@ const useInvoice = () => {
         invoice,
         isCardView,
         toggleView,
-        columns
+        columns,
+        milescore: userData?.usuario.saldo_milhas,
+        filteredTransactions,
+        setFilter,
     };
 };
 

@@ -37,14 +37,16 @@ const Input: React.FC<InputProps> = ({
   const hasError = error?.some((err) => err.hasError);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-1 flex-col gap-2">
       {label && <label className={`text-sm ${hasError ? "text-red-500" : "text-slate-300"}`}>{label}</label>}
       <input
         className={`w-full bg-transparent placeholder:text-slate-400 text-slate-300 text-sm border-2 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none ${
           hasError
             ? "border-red-700 focus:border-red-500 hover:border-red-900"
             : "border-indigo-700 focus:border-indigo-800 hover:border-indigo-500"
-        }  shadow-sm focus:shadow ${extraClasses}`}
+        } shadow-sm focus:shadow ${extraClasses} ${
+          rest.disabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
         type={type}
         placeholder={placeholder}
         {...rest}

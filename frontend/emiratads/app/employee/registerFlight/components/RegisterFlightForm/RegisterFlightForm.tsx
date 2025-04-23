@@ -5,9 +5,18 @@ import Input from "@/app/components/Input/Input";
 import useRegisterFlightForm from "./useRegisterFlightForm";
 import { maskCurrency } from "@/app/utils/currencyMask";
 import { robotoFont } from "@/app/assets/fontsSetup";
+import SelectInput from "@/app/components/SelectInput/SelectInput";
 
 const RegisterFlightForm = () => {
-  const { register, handleSubmit, errors, onSubmit, showSuccess } = useRegisterFlightForm();
+  const {
+    register,
+    handleSubmit,
+    errors,
+    onSubmit,
+    showSuccess,
+    originOptions,
+    destinationOptions,
+  } = useRegisterFlightForm();
 
   return (
     <div className="flex flex-col w-full justify-center py-8">
@@ -17,41 +26,42 @@ const RegisterFlightForm = () => {
         CADASTRO DE VOO
       </h1>
       <div className="flex w-3/4 flex-row mx-auto justify-center">
-        <form className="flex w-full flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
-          
-          <div className="flex flex-row justify-around">
-            <Input
-              type="text"
+        <form
+          className="flex w-full flex-col gap-3"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="flex flex-row justify-around gap-4">
+            <SelectInput
+              options={originOptions}
               label="Aeroporto de Origem:"
               {...register("OriginAirport")}
-              error={
-                errors.OriginAirport
-                  ? [{ hasError: true, message: errors.OriginAirport.message ?? "" }]
-                  : []
-              }
-              extraClasses="flex-1"
+              error={errors.OriginAirport ? errors.OriginAirport.message : ""}
             />
-            <Input
-              type="text"
+            <SelectInput
+              options={destinationOptions}
               label="Aeroporto de Destino:"
               {...register("DestinationAirport")}
               error={
                 errors.DestinationAirport
-                  ? [{ hasError: true, message: errors.DestinationAirport.message ?? "" }]
-                  : []
+                  ? errors.DestinationAirport.message
+                  : ""
               }
-              extraClasses="flex-1"
             />
           </div>
 
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row justify-around gap-4">
             <Input
               type="datetime-local"
               label="Data e Hora do Voo:"
               {...register("dateTimeFlight")}
               error={
                 errors.dateTimeFlight
-                  ? [{ hasError: true, message: errors.dateTimeFlight.message ?? "" }]
+                  ? [
+                      {
+                        hasError: true,
+                        message: errors.dateTimeFlight.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -62,14 +72,19 @@ const RegisterFlightForm = () => {
               {...register("seatsQuantity")}
               error={
                 errors.seatsQuantity
-                  ? [{ hasError: true, message: errors.seatsQuantity.message ?? "" }]
+                  ? [
+                      {
+                        hasError: true,
+                        message: errors.seatsQuantity.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
             />
           </div>
 
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row justify-around gap-4">
             <Input
               type="text"
               step="0.01"
@@ -87,7 +102,12 @@ const RegisterFlightForm = () => {
               {...register("miles")}
               error={
                 errors.seatsQuantity
-                  ? [{ hasError: true, message: errors.seatsQuantity.message ?? "" }]
+                  ? [
+                      {
+                        hasError: true,
+                        message: errors.seatsQuantity.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -102,7 +122,7 @@ const RegisterFlightForm = () => {
               typeButton="submit"
               size="SMALL"
             />
-        </div>
+          </div>
         </form>
       </div>
       {showSuccess && (

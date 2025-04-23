@@ -10,7 +10,9 @@ export type ButtonType =
   | "DANGER"
   | "SUCCESS"
   | "WARNING"
-  | "QUATERNARY";
+  | "QUATERNARY"
+  | "DISABLED"
+  ;
 
 export type ButtonSize = "SMALL" | "MEDIUM" | "LARGE";
 

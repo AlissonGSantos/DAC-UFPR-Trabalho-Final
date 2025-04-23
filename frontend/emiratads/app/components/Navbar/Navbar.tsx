@@ -6,13 +6,15 @@ import Shortcut from "./components/Shortcut";
 import SidebarToggler from "./components/SidebarToggler";
 import Logo from "@/app/assets/images/logos/emiratadsLogo.png";
 import Image from "next/image";
+import Button from "../Button/Button";
 
 interface NavbarProps {
   children?: React.ReactNode;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ children }) => {
-  const { isOpen, toggle, shortcuts } = useNavbar();
+  const { isOpen, toggle, shortcuts, username, milescore, logout } =
+    useNavbar();
 
   return (
     <div className="flex flex-col h-screen">
@@ -27,13 +29,21 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
           />
         </div>
         {!isOpen && (
-          <div id="shortcuts-session" className="hidden md:flex h-full">
+          <div
+            id="shortcuts-session"
+            className="hidden md:flex h-full items-center w-8/10"
+          >
             {shortcuts.map(
               (shortcut, index) =>
                 shortcut.enabled && (
                   <Shortcut key={`${shortcut.name}-${index}`} {...shortcut} />
                 )
             )}
+
+            <div className="ml-2 mr-6 h-10/12 border-l-2 border-indigo-950" />
+            <div className="flex min-w-50">
+              <p className="text-slate-300">Bem vindo, {username}</p>
+            </div>
           </div>
         )}
       </nav>
@@ -44,6 +54,10 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
           }`}
         >
           <div className="flex flex-col items-center gap-4 py-8 px-1 h-full">
+            <div className="flex min-w-50 justify-center">
+              <p className="text-slate-300">Bem vindo, {username}</p>
+            </div>
+            <div className="my-2 h-0.25 w-10/12 bg-indigo-900" />
             {shortcuts.map((shortcut, index) => (
               <Shortcut
                 sidebar={isOpen}
@@ -51,6 +65,16 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
                 {...shortcut}
               />
             ))}
+            <div className="my-2 h-0.25 w-10/12 bg-indigo-900" />
+            <div className="flex min-w-50 justify-center">
+              <p className="text-slate-300">Saldo em milhas: {milescore}</p>
+            </div>
+            <Button
+              text="Logout"
+              size="SMALL"
+              type="SECONDARY"
+              onClick={logout}
+            />
           </div>
         </div>
         <main
