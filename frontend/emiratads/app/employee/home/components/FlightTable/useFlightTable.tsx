@@ -8,6 +8,7 @@ import { statusFlightEnum, Flight } from "@/app/types/FlightTypes";
 const useFlightTable = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+  const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
   const data: Flight[] = useMemo(() => {
@@ -114,6 +115,18 @@ const useFlightTable = () => {
   const handleConfirmBoard = () => {
     setIsBoardModalOpen(true);
   };
+
+  const handleFinishFlight = () => {
+    setIsFinishModalOpen(true);
+  };
+
+  const confirmFinishFlight = () => {
+    // Lógica para marcar o voo como realizado
+    setIsFinishModalOpen(false);
+    // Exibir feedback visual ao usuário
+    console.log("Voo finalizado com sucesso!");
+  };
+
   const controls: ButtonProps[] = useMemo(
     () => [
       {
@@ -129,8 +142,8 @@ const useFlightTable = () => {
         size: "SMALL",
       },
       {
-        text: "Realizar Voo",
-        onClick: () => console.log("Abrir modal de realização de voo"),
+        text: "Finalizar Voo",
+        onClick: handleFinishFlight,
         type: "SUCCESS",
         size: "SMALL",
       },
@@ -152,6 +165,9 @@ const useFlightTable = () => {
     setSelectedFlight,
     flightList,
     setFlightList,
+    isFinishModalOpen,
+    confirmFinishFlight,
+    setIsFinishModalOpen,
   };
 };
 
