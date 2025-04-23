@@ -121,9 +121,7 @@ const useFlightTable = () => {
   };
 
   const confirmFinishFlight = () => {
-    // Lógica para marcar o voo como realizado
     setIsFinishModalOpen(false);
-    // Exibir feedback visual ao usuário
     console.log("Voo finalizado com sucesso!");
   };
 
