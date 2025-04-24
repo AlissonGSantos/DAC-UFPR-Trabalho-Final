@@ -1,47 +1,54 @@
 "use client";
 
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ReadReservationSchema } from "../../schema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Booking } from "@/app/types/BookingTypes";
 
 type ReadReservationFormData = z.infer<typeof ReadReservationSchema>;
 
-const useReadReservationForm = () => {
+interface ReadReservationFormProps {
+  reservation: Booking;
+}
+
+const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors },
   } = useForm<ReadReservationFormData>({
     resolver: zodResolver(ReadReservationSchema),
     defaultValues: {
-      CodeReservation: "",
-      dateTimeFlight: "",
-      OriginAirport: "",
-      DestinationAirport: "",
-      ticketValue: "",
-      miles: "",
-      flightStatus: "",
+      CodeReservation: reservation.codigo,
+      dateTimeFlight: new Date(reservation.data).toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      OriginAirport: reservation.voo.aeroporto_origem.codigo,
+      DestinationAirport: reservation.voo.aeroporto_destino.codigo,
+      ticketValue: reservation.valor.toString(),
+      miles: reservation.milhas_utilizadas.toString(),
+      flightStatus: reservation.voo.estado,
     },
   });
 
   const onSubmit = (data: ReadReservationFormData) => {
     console.log("Form", data);
-    setValue("CodeReservation", "");
-    setValue("dateTimeFlight", "");
-    setValue("OriginAirport", "");
-    setValue("DestinationAirport", "");
-    setValue("ticketValue", "");
-    setValue("miles", "");
-    setValue("flightStatus", "");
-    setShowSuccess(true);
+    alert("Reserva check-in realizada com sucesso!");
   };
+
+  useEffect(() => {
+    const canCheckIn = verifyDateCheckIn(reservation.data);
+    setCanCheckIn(canCheckIn);
+  }, [reservation]);
 
   const verifyDateCheckIn = (bookingDate: string) => {
     const today = new Date();
@@ -57,6 +64,8 @@ const useReadReservationForm = () => {
     errors,
     onSubmit,
     showSuccess,
+    setShowSuccess,
+    canCheckIn,
   };
 };
 
