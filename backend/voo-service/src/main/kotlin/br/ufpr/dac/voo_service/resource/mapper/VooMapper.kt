@@ -15,8 +15,8 @@ class VooMapper {
       voo.quantidade_poltronas_total,
       voo.quantidade_poltronas_ocupadas,
       voo.estado,
-      voo.AeroportoOutputDTO(voo.aeroporto_origem),
-      voo.AeroportoOutputDTO(voo.aeroporto_destino),
+      voo.aeroporto_origem,
+      voo.aeroporto_destino,
       voo.ativo
      )
    }
