@@ -20,9 +20,5 @@ data class VooInputDTO(
   val aeroporto_destino: Aeroporto
   val ativo: Boolean
 ) {
-  fun toVoo(): Voo {
-    return Voo(codigo = codigo, data = data, valor_passagem = valor_passagem,quantidade_poltronas_total = quantidade_poltronas_total,
-    quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas, estado = estado,
-     aeroporto_origem = aeroporto_origem, aeroporto_destino = aeroporto_destino, ativo = ativo)
-  }
+   }
 }
