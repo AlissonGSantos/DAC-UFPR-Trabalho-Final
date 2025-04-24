@@ -7,7 +7,7 @@ class TransacaoMapper {
     companion object {
         fun toDTO(transacao: Transacao): TransacaoExtratoDTO {
             return TransacaoExtratoDTO(
-                transacao.data, transacao.quantidade_milhas, transacao.valor, transacao.descricao, transacao.tipo.toString()
+                transacao.data, transacao.codigo_reserva, transacao.quantidade_milhas, transacao.valor, transacao.descricao, transacao.tipo.toString()
             )
         }
     }
