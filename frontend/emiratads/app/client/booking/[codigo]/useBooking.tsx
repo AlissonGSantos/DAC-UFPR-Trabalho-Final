@@ -1,32 +1,12 @@
 import { useState, useEffect } from "react";
-
-// Mock da interface (seu amigo sugeriu)
-export interface Booking {
-  codigo: string;
-  data: string;
-  valor: number;
-  milhas_utilizadas: number;
-  quantidade_poltronas: number;
-  codigo_cliente: number;
-  estado: string;
-  voo: Flight;
-}
-
-interface Flight {
-  origem: string;
-  destino: string;
-  // ... outros campos
-}
+import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
+import { statusFlightEnum } from "@/app/types/FlightTypes";
 
 export default function useBooking(codigo: string) {
   const [booking, setBooking] = useState<Booking | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simula chamada API
     const fetchBooking = async () => {
-      setIsLoading(true);
-      // Mock de dados (substitua por uma API real)
       const mockBooking: Booking = {
         codigo,
         data: "2025-04-20T14:30:00Z",
@@ -34,21 +14,36 @@ export default function useBooking(codigo: string) {
         milhas_utilizadas: 5000,
         quantidade_poltronas: 2,
         codigo_cliente: 1,
-        estado: "CONFIRMADA",
+        estado: statusBookingEnum.EMBARCADA,
         voo: {
-          origem: "CWB",
-          destino: "GRU",
+          codigo: "TADS0001",
+          data: "2025-04-20T14:30:00Z",
+          valor_passagem: 1500,
+          quantidade_poltronas_total: 200,
+          quantidade_poltronas_ocupadas: 50,
+          estado: statusFlightEnum.CONFIRMADO,
+          aeroporto_origem: {
+            codigo: "GRU",
+            nome: "Aeroporto Internacional de São Paulo/Guarulhos",
+            cidade: "São Paulo",
+            uf: "SP"
+          },
+          aeroporto_destino: {
+            codigo: "JFK",
+            nome: "Aeroporto Internacional John F. Kennedy",
+            cidade: "Nova Iorque",
+            uf: "NY"
+          }
         },
       };
       
       setTimeout(() => {
         setBooking(mockBooking);
-        setIsLoading(false);
-      }, 1000); // Simula delay de rede
+      });
     };
 
     fetchBooking();
   }, [codigo]);
 
-  return { booking, isLoading };
+  return { booking };
 }
