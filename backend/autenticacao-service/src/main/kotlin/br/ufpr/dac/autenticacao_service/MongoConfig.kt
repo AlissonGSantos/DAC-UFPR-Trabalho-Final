@@ -20,6 +20,8 @@ class MongoConfig {
                 "${passwordService.hashPassword("TADS", "12334")}:12334", UsuarioRole.FUNCIONARIO))
             repository.save(User("cliente1@example.com", 1L,
                 "${passwordService.hashPassword("TADS", "25302")}:25302", UsuarioRole.CLIENTE))
+            repository.save(User("cliente3@example.com", 3L,
+                "${passwordService.hashPassword("TADS", "43096")}:43096", UsuarioRole.CLIENTE))
         }
     }
 }

@@ -27,6 +27,7 @@ class MilhasService(
 
             val nova_transacao = Transacao(
                 cliente = it,
+                codigo_reserva = null,
                 data = ZonedDateTime.now(),
                 quantidade_milhas = quantidade,
                 valor = quantidade * 5.0,
