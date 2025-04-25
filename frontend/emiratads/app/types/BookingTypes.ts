@@ -4,19 +4,19 @@ export enum statusBookingEnum {
     CRIADA = 'CRIADA',
     CHECK_IN = 'CHECK-IN',
     CANCELADA = 'CANCELADA',
-    CANCELADA_VOO = 'CANCELADO VOO',
+    CANCELADA_VOO = 'CANCELADA VOO',
     EMBARCADA = 'EMBARCADA',
     REALIZADA = 'REALIZADA',
-    NÃO_REALIZADA = 'NÃO REALIZADA'
+    NAO_REALIZADA = 'NÃO REALIZADA'
 }
 
 export interface Booking {
     codigo: string;
-    data: string;
+    data: string; 
     valor: number;
     milhas_utilizadas: number;
     quantidade_poltronas: number;
     codigo_cliente: number;
-    estado: statusBookingEnum;
+    estado: statusBookingEnum; 
     voo: Flight;
   }
