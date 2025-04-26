@@ -1,4 +1,5 @@
 import { validateCPF } from '@/app/utils/cpfValidator';
+import { removeSpecialCharacters } from '@/app/utils/removeSpecialCharacters';
 import { z } from 'zod';
 
 export const RegisterSchema = z.object({
@@ -9,7 +10,8 @@ export const RegisterSchema = z.object({
     .max(14, { message: 'O CPF deve ter no máximo 14 caracteres' })
     .refine((cpf) => validateCPF(cpf), {
       message: 'CPF inválido',
-    }),
+    })
+    .transform(cpf => removeSpecialCharacters(cpf)),
   email: z
     .string()
     .nonempty({ message: 'O e-mail é obrigatório' })
@@ -22,7 +24,8 @@ export const RegisterSchema = z.object({
       .string()
       .nonempty({ message: 'O CEP é obrigatório' })
       .min(9, { message: 'O CEP deve ter 9 caracteres (incluindo o traço)' })
-      .max(9, { message: 'O CEP deve ter no máximo 9 caracteres' }),
+      .max(9, { message: 'O CEP deve ter no máximo 9 caracteres' })
+      .transform(cep => removeSpecialCharacters(cep)),
     uf: z
       .string()
       .nonempty({ message: 'O estado (UF) é obrigatório' }),
@@ -44,3 +47,5 @@ export const RegisterSchema = z.object({
       .optional(),
   }),
 });
+
+export type RegisterFormData = z.infer<typeof RegisterSchema>;

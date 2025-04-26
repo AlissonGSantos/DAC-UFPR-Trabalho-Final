@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import RegisterForm from "./components/RegisterForm/RegisterForm";
 import Logo from "@/app/assets/images/logos/emiratadsLogo.png";
 import Image from "next/image";
@@ -16,7 +17,7 @@ const Register = () => {
             width={260}
             className="mx-auto"
           />
-
+          
           <RegisterForm />
           <span className="text-center font-bold text-slate-300 text-sm mx-32 my-8">
             Já possui conta?{" "}

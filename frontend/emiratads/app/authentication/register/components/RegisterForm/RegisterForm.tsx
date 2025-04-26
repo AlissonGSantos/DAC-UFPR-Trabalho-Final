@@ -6,13 +6,21 @@ import useRegisterForm from "./useRegisterForm";
 import { maskCPF } from "@/app/utils/cpfMask";
 import cepMask from "@/app/utils/cepMask";
 import { robotoFont } from "@/app/assets/fontsSetup";
+import Modal from "@/app/components/Modal/Modal";
+import Link from "next/link";
 
 const RegisterForm = () => {
-  const { register, handleSubmit, errors, onSubmit, handleCepBlur } =
+  const { register, handleSubmit, errors, onSubmit, handleCepBlur, modalState, setModalState } =
     useRegisterForm();
 
   return (
     <div className="flex flex-col w-full justify-center py-8">
+      <Modal isOpen={modalState} onClose={() => setModalState(false)} title="Cadastro realizado com sucesso!!!">
+            <h2 className="py-4 text-gray-200 text-lg">Obrigado por se cadastrar!</h2>
+            <p className="text-gray-200">Você receberá um e-mail no endereço informado contendo uma senha temporária para acessar a aplicação.</p>
+            <Link className="flex justify-center align-center m-auto mt-8 bg-gray-200 py-4 px-12 w-fit rounded-md text-xl uppercase font-semibold tracking-widest hover:bg-gray-300 delay-50" href={"/authentication/login"}>Login</Link>
+      </Modal>
+
       <h1
         className={`text-5xl font-semibold ${robotoFont.className} my-12 tracking-widest text-indigo-600 mx-auto`}
       >

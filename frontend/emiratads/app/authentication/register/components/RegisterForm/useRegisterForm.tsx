@@ -1,12 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { RegisterSchema } from "../../schema/schema";
-import { z } from "zod";
+import { RegisterFormData, RegisterSchema } from "../../schema/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import registerServices from "../../../services/registerServices";
+import useRegister from "../../useRegister";
+import { useState } from "react";
 
-type RegisterFormData = z.infer<typeof RegisterSchema>;
 
 const useRegisterForm = () => {
   const {
@@ -31,9 +31,15 @@ const useRegisterForm = () => {
       },
     },
   });
+  const [modalState, setModalState] = useState(false)
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log("Form", data);
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      await registerServices.registerUser(data);
+      setModalState(true)
+    } catch (error) {
+      console.error("Erro ao registrar usuário:", error);
+    }
   };
 
   const handleCepBlur = async (cep: string) => {
@@ -57,7 +63,9 @@ const useRegisterForm = () => {
     handleSubmit,
     errors,
     onSubmit,
-    handleCepBlur
+    handleCepBlur,
+    modalState,
+    setModalState
   };
 };
 
