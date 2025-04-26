@@ -15,7 +15,7 @@ const useNavbar = () => {
 
   const shortcuts: Shortcut[] = [
     { name: "Início", link: "/client/home", enabled: true },
-    { name: "Milhas", link: "/about", enabled: true },
+        { name: "Milhas", link: "/client/invoice", enabled: true },
     { name: "Reservar", link: "/services", enabled: true },
     { name: "Reservas", link: "/contact", enabled: true },
     { name: "Check-in", link: "/client/checkin", enabled: true },
