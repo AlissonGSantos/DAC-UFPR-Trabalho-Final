@@ -33,3 +33,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Kls file that keeps on showing this little MF ###
+.db
