@@ -1,3 +1,6 @@
+// DESATIVAR DEPOIS
+
+
 require("dotenv-safe").config();
 const express = require("express");
 let http = require("http");
