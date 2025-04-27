@@ -62,7 +62,9 @@ const SelectInput: React.FC<SelectInputProps> = ({
           </option>
         ))}
       </select>
-      {hasError && <span className="text-xs text-red-800">{error}</span>}
+      <div className="min-h-4">
+        {hasError && <span className="text-xs text-red-800">{error}</span>}
+      </div>
     </div>
   );
 };
