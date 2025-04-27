@@ -4,11 +4,14 @@ import { useForm } from "react-hook-form";
 import { RegisterFormData, RegisterSchema } from "../../schema/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import registerServices from "../../../services/registerServices";
-import useRegister from "../../useRegister";
 import { useState } from "react";
 
+interface UseRegisterFormProps {
+  setIsToastOpen: (isOpen: boolean) => void;
+  setErrorMessage: (message: string) => void;
+}
 
-const useRegisterForm = () => {
+const useRegisterForm = ({ setIsToastOpen, setErrorMessage }: UseRegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -31,14 +34,21 @@ const useRegisterForm = () => {
       },
     },
   });
-  const [modalState, setModalState] = useState(false)
+  const [modalState, setModalState] = useState(false);
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
       await registerServices.registerUser(data);
-      setModalState(true)
+      setModalState(true);
     } catch (error) {
-      console.error("Erro ao registrar usuário:", error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage(
+          "Ocorreu um erro ao realizar o cadastro, tente novamente mais tarde!"
+        );
+      }
+      setIsToastOpen(true);
     }
   };
 
@@ -65,7 +75,7 @@ const useRegisterForm = () => {
     onSubmit,
     handleCepBlur,
     modalState,
-    setModalState
+    setModalState,
   };
 };
 
