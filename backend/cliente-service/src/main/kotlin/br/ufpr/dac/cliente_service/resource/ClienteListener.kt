@@ -1,24 +1,22 @@
 package br.ufpr.dac.cliente_service.resource
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import jakarta.validation.ConstraintViolation
 import jakarta.validation.Validation
 import jakarta.validation.Validator
 import jakarta.validation.ValidatorFactory
-import org.postgresql.util.PSQLException
 import org.springframework.amqp.rabbit.annotation.RabbitListener
-import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler
-import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
-import utils.dto.ClienteInputDTO
-import utils.dto.ClienteOutputDTO
-import utils.dto.RabbitMessageDTO
-import utils.exceptions.ResourcesConflictException
+import utils.dto.*
+import utils.gson.ZonedDateTimeAdapter
+import java.time.ZonedDateTime
 
 @Service
-class ClienteListener(private val service: ClienteService) {
-    private final val gson = Gson()
+class ClienteListener(private val service: ClienteService, private val milhasService: MilhasService) {
+    private final val gson: Gson = GsonBuilder()
+        .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeAdapter())
+        .create()
     private final val factory: ValidatorFactory = Validation.buildDefaultValidatorFactory()
     private final val validator: Validator = factory.validator
 
@@ -32,7 +30,11 @@ class ClienteListener(private val service: ClienteService) {
             val cliente = service.saveCliente(clienteInput)
             response = RabbitMessageDTO(true, cliente)
         } else {
-            response = RabbitMessageDTO(false, "Cliente enviado com formato inválido: $violations", "ConstraintViolationException")
+            response = RabbitMessageDTO(
+                false,
+                "Cliente enviado com formato inválido: $violations",
+                "ConstraintViolationException"
+            )
         }
 
         return gson.toJson(response)
@@ -44,5 +46,13 @@ class ClienteListener(private val service: ClienteService) {
         val dadosCliente = service.getClienteByID(idCliente)
 
         return gson.toJson(dadosCliente)
+    }
+
+    @RabbitListener(queues = ["emiratads.criareserva.cliente"], errorHandler = "customErrorHandler")
+    fun efetuarReserva(payload: String): String {
+        val transaction = gson.fromJson(payload, ReservaCreationResponseDTO::class.java)
+        val result = milhasService.registrarReserva(transaction)
+
+        return gson.toJson(RabbitMessageDTO(true, result))
     }
 }

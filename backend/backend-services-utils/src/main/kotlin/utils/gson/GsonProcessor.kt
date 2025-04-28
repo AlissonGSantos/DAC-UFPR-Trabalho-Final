@@ -1,15 +1,19 @@
-package utils
+package utils.gson
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import jakarta.validation.ConstraintViolationException
 import utils.dto.RabbitMessageDTO
 import utils.exceptions.*
+import java.time.ZonedDateTime
 import kotlin.jvm.Throws
 
 class GsonProcessor {
     companion object {
-        val gson = Gson()
+        val gson: Gson = GsonBuilder()
+            .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeAdapter())
+            .create()
         val knownExceptions = mapOf(
             "ResourcesConflictException" to ResourcesConflictException::class.java,
             "ResourceNotFoundException" to ResourceNotFoundException::class.java,

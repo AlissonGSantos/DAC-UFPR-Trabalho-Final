@@ -5,11 +5,12 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "reserva", schema = "emiratads_reserva_transaction")
 data class Reserva (
+    @Id
     val codigo: String,
     val codigo_cliente: Long,
-    val codigo_voo: Long,
+    val codigo_voo: String,
     @OneToOne
-    @Column(name = "estado_codigo")
+    @JoinColumn(name = "estado_codigo")
     val estado: EstadoReserva,
     val quantidade_milhas: Double
 )

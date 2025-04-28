@@ -6,5 +6,5 @@ data class ReservaInputDTO (
     val quantidade_poltronas: Int,
     val poltronas_reservadas: List<Int>?,
     val codigo_cliente: Long,
-    val codigo_voo: Long
+    val codigo_voo: String
 )

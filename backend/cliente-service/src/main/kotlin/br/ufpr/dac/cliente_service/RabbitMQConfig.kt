@@ -6,13 +6,12 @@ import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
-import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import utils.dto.RabbitMessageDTO
 
 @Configuration
 class RabbitMQConfig {
+    private val DEFAULT_ROUTING_KEY = "cliente"
 
     @Bean
     fun autocadastroRequests(): Queue {
@@ -34,6 +33,15 @@ class RabbitMQConfig {
         return DirectExchange("emiratads.login")
     }
 
+    @Bean
+    fun novasReservas(): Queue {
+        return Queue("emiratads.criareserva.cliente")
+    }
+
+    @Bean
+    fun sagaCriarReserva(): DirectExchange {
+        return DirectExchange("emiratads.criareserva")
+    }
 
     @Bean
     fun bindingAutocadastro(
@@ -42,7 +50,7 @@ class RabbitMQConfig {
     ): Binding {
         return BindingBuilder.bind(autocadastroRequests)
             .to(sagaAutocadastro)
-            .with("cliente")
+            .with(DEFAULT_ROUTING_KEY)
     }
 
     @Bean
@@ -52,7 +60,17 @@ class RabbitMQConfig {
     ): Binding {
         return BindingBuilder.bind(loginClientes)
             .to(sagaLogin)
-            .with("cliente")
+            .with(DEFAULT_ROUTING_KEY)
+    }
+
+    @Bean
+    fun bindingCriarReserva(
+        sagaCriarReserva: DirectExchange,
+        novasReservas: Queue
+    ): Binding {
+        return BindingBuilder.bind(novasReservas)
+            .to(sagaCriarReserva)
+            .with(DEFAULT_ROUTING_KEY)
     }
 
     @Bean

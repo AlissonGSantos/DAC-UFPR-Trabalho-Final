@@ -24,4 +24,9 @@ class RabbitMQConfig {
         return DirectExchange("emiratads.autocadastro")
     }
 
+    @Bean
+    fun sagaCriarReserva(): DirectExchange {
+        return DirectExchange("emiratads.criareserva")
+    }
+
 }

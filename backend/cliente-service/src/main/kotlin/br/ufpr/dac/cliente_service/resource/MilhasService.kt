@@ -4,12 +4,13 @@ import br.ufpr.dac.cliente_service.domain.TipoTransacao
 import br.ufpr.dac.cliente_service.domain.Transacao
 import br.ufpr.dac.cliente_service.repository.IClienteRepository
 import br.ufpr.dac.cliente_service.repository.ITransacaoRepository
-import br.ufpr.dac.cliente_service.resource.dto.ExtratoDTO
+import utils.dto.ExtratoDTO
 import br.ufpr.dac.cliente_service.resource.dto.MilhasCompraDTO
 import br.ufpr.dac.cliente_service.resource.mapper.ClienteMapper
 import br.ufpr.dac.cliente_service.resource.mapper.TransacaoMapper
 import org.springframework.stereotype.Service
 import utils.dto.ClienteOutputDTO
+import utils.dto.ReservaCreationResponseDTO
 import utils.exceptions.ResourceNotFoundException
 import java.time.ZonedDateTime
 
@@ -42,6 +43,36 @@ class MilhasService(
         }
 
         throw ResourceNotFoundException("Cliente não encontrado com o ID: $codigo")
+    }
+
+    fun registrarReserva(reserva: ReservaCreationResponseDTO): ExtratoDTO {
+        val cliente = repository.findByCodigoAndAtivoTrue(reserva.codigo_cliente)
+
+        cliente?.let {
+            val quantidade = reserva.quantidade_milhas
+
+            val nova_transacao = Transacao(
+                cliente = it,
+                codigo_reserva = reserva.codigo_reserva,
+                data = reserva.data,
+                quantidade_milhas = quantidade,
+                valor = reserva.valor,
+                descricao = reserva.descricao,
+                tipo = TipoTransacao.SAIDA
+            )
+
+            it.saldo_milhas -= quantidade
+            val clienteAtualizado = repository.save(it)
+            val transacao = transacaoRepository.save(nova_transacao)
+
+            return ExtratoDTO(
+                clienteAtualizado.codigo,
+                clienteAtualizado.saldo_milhas,
+                listOf(TransacaoMapper.toDTO(transacao))
+            )
+        }
+
+        throw ResourceNotFoundException("Cliente não encontrado com o ID: ${reserva.codigo_cliente}")
     }
 
     fun emitirExtrato(codigo: Long): ExtratoDTO {

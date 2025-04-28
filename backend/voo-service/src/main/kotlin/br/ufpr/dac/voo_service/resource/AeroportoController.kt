@@ -1,6 +1,6 @@
 package br.ufpr.dac.voo_service.resource
 
-import br.ufpr.dac.voo_service.resource.dto.AeroportoOutputDTO
+import utils.dto.AeroportoOutputDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
