@@ -5,6 +5,6 @@ import java.io.Serializable
 
 @Embeddable
 data class ReservaConsultaId(
-    val codigo: Int,
+    val codigo: String,
     val codigo_voo: String
 ) : Serializable

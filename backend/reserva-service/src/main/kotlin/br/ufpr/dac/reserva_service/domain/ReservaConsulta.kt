@@ -1,18 +1,18 @@
 package br.ufpr.dac.reserva_service.domain
 
+import br.ufpr.dac.reserva_service.domain.embeddable.ReservaConsultaId
 import jakarta.persistence.*
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 @Entity
 @Table(name = "reserva", schema = "emiratads_reserva_access")
 data class ReservaConsulta(
-    @Id
-    val codigo: String,
+    @EmbeddedId
+    val id: ReservaConsultaId,
     @Column(name = "poltronas", columnDefinition = "integer[]")
     val poltronas: List<Int>,
-    val codigo_voo: String,
     val codigo_cliente: Long,
     val estado: String,
-    val data: LocalDateTime,
-    val quantidade_milhas: Double
+    val data: ZonedDateTime,
+    val quantidade_milhas: Float
 )

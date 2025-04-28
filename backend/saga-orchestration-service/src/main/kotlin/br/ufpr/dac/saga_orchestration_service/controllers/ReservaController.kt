@@ -13,7 +13,7 @@ import java.net.URI
 @RestController
 class ReservaController(private val saga: CriarReservaSaga) {
 
-    @PostMapping("reserva")
+    @PostMapping("v1/reservas")
     fun efetuarReserva(@RequestBody payload : ReservaInputDTO): ResponseEntity<ReservaOutputDTO> {
         val reserva = runBlocking {
             saga.executeSaga(payload)

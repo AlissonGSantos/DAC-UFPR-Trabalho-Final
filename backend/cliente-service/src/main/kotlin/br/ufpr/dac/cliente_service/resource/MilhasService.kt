@@ -61,7 +61,7 @@ class MilhasService(
                 tipo = TipoTransacao.SAIDA
             )
 
-            it.saldo_milhas -= quantidade
+            it.saldo_milhas -= ((quantidade - (reserva.valor / 5))).toFloat()
             val clienteAtualizado = repository.save(it)
             val transacao = transacaoRepository.save(nova_transacao)
 

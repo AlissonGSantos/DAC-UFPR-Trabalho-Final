@@ -5,11 +5,9 @@ import br.ufpr.dac.reserva_service.domain.HistoricoReserva
 import br.ufpr.dac.reserva_service.domain.PoltronasReservadas
 import br.ufpr.dac.reserva_service.domain.Reserva
 import br.ufpr.dac.reserva_service.domain.embeddable.PoltronasReservadasId
-import br.ufpr.dac.reserva_service.repository.IEstadoReservaRepository
-import br.ufpr.dac.reserva_service.repository.IHistoricoRepository
-import br.ufpr.dac.reserva_service.repository.IPoltronaRepository
-import br.ufpr.dac.reserva_service.repository.ITransactionRepository
+import br.ufpr.dac.reserva_service.repository.*
 import br.ufpr.dac.reserva_service.resource.dto.ReservaConsultaInputDTO
+import br.ufpr.dac.reserva_service.resource.mapper.ReservaMapper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.springframework.amqp.core.DirectExchange
@@ -17,7 +15,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import utils.dto.ReservaCreationResponseDTO
+import utils.dto.ReservaOutputDTO
 import utils.dto.ReservaTransactionDTO
+import utils.exceptions.ResourceNotFoundException
 import utils.exceptions.ResourcesConflictException
 import utils.gson.ZonedDateTimeAdapter
 import java.time.ZoneOffset
@@ -27,6 +27,7 @@ import java.time.ZonedDateTime
 class ReservaService(
     private val template: RabbitTemplate,
     private val repository: ITransactionRepository,
+    private val consultaReposity: IConsultaRepository,
     private val poltronaRepository: IPoltronaRepository,
     private val historicoRepository: IHistoricoRepository,
     private val estadoReservaRepository: IEstadoReservaRepository,
@@ -39,6 +40,21 @@ class ReservaService(
     fun listPoltronasOcupadas(voo: String): List<Int> {
         val poltronas = poltronaRepository.getPoltronasReservadas(voo)
         return poltronas.map { it.id.codigo }
+    }
+
+    fun listReservasByCliente(codigo: Long): List<ReservaOutputDTO> {
+        val reservas = consultaReposity.findReservasByCodigoCliente(codigo)
+        return reservas.map { ReservaMapper.toDTO(it) }
+    }
+
+    fun detailReserva(codigo: String): ReservaOutputDTO {
+        val reserva = consultaReposity.findReservaByCodigo(codigo)
+
+        reserva?.let {
+            return ReservaMapper.toDTO(it)
+        }
+
+        throw ResourceNotFoundException("Reserva não encontrada com o código fornecido.")
     }
 
     fun efetuarReserva(reserva: ReservaTransactionDTO): ReservaCreationResponseDTO {
@@ -91,7 +107,7 @@ class ReservaService(
             )
         }
 
-        template.convertAndSend(gson.toJson(reservaConsulta))
+        template.convertAndSend(exchange.name, "gravacao", gson.toJson(reservaConsulta))
 
         return ReservaCreationResponseDTO(
             data,

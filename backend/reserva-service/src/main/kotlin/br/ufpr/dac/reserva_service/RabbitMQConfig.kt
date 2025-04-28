@@ -24,8 +24,13 @@ class RabbitMQConfig {
     }
 
     @Bean
-    fun reservasCQRS(): Queue {
+    fun reservasCQRSgravacao(): Queue {
         return Queue("emiratads.cqrs.gravacao")
+    }
+
+    @Bean
+    fun reservasCQRSedicao(): Queue {
+        return Queue("emiratads.cqrs.edicao")
     }
 
     @Bean
@@ -44,13 +49,23 @@ class RabbitMQConfig {
     }
 
     @Bean
-    fun bindingCQRSReserva(
+    fun bindingCQRSReservaGravacao(
         reservasCQRSExchange: DirectExchange,
-        reservasCQRS: Queue
+        reservasCQRSgravacao: Queue
     ): Binding {
-        return BindingBuilder.bind(reservasCQRS)
+        return BindingBuilder.bind(reservasCQRSgravacao)
             .to(reservasCQRSExchange)
-            .with(DEFAULT_ROUTING_KEY)
+            .with("gravacao")
+    }
+
+    @Bean
+    fun bindingCQRSReservaEdicao(
+        reservasCQRSExchange: DirectExchange,
+        reservasCQRSedicao: Queue
+    ): Binding {
+        return BindingBuilder.bind(reservasCQRSedicao)
+            .to(reservasCQRSExchange)
+            .with("edicao")
     }
 
     @Bean
