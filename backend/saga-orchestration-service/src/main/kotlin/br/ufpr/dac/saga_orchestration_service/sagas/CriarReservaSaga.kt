@@ -20,7 +20,9 @@ class CriarReservaSaga(private val rabbit: RabbitUtils, @Qualifier("sagaCriarRes
 
     suspend fun executeSaga(payload: ReservaInputDTO): ReservaOutputDTO = coroutineScope {
         // Verificar se o cliente tem milhas suficientes
-
+        val requestConsultaSaldo = async { rabbit.asyncSendAndReceive(exchange.name, "saldo", gson.toJson(payload)) }
+        val responseConsultaSaldo = requestConsultaSaldo.await()
+        GsonProcessor.parseJson<ClienteOutputDTO>(responseConsultaSaldo)
 
         // Verifica os assentos disponíveis no voo e marca como ocupados (retorna dados do voo)
         val checkVooRequest = async { rabbit.asyncSendAndReceive(exchange.name, "voo", gson.toJson(payload)) }

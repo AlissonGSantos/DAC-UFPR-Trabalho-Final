@@ -71,4 +71,12 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
         return VooMapper.toDTO(repository.save(voo))
     }
 
+    fun liberaLotacao(codigoVoo: String, quantidadePoltronas: Int): VooOutputDTO {
+        val voo = repository.findById(codigoVoo)
+            .orElseThrow { ResourceNotFoundException("Voo não encontrado com o id: ${codigoVoo}") }
+
+        voo.quantidade_poltronas_ocupadas -= quantidadePoltronas
+
+        return VooMapper.toDTO(repository.save(voo))
+    }
 }

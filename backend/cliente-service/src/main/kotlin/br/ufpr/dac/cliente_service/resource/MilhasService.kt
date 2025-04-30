@@ -11,6 +11,7 @@ import br.ufpr.dac.cliente_service.resource.mapper.TransacaoMapper
 import org.springframework.stereotype.Service
 import utils.dto.ClienteOutputDTO
 import utils.dto.ReservaCreationResponseDTO
+import utils.dto.ReservaOutputDTO
 import utils.exceptions.ResourceNotFoundException
 import java.time.ZonedDateTime
 
@@ -21,13 +22,11 @@ class MilhasService(
 ) {
 
     fun comprarMilhas(codigo: Long, milhas: MilhasCompraDTO): ClienteOutputDTO {
-        val cliente = repository.findByCodigoAndAtivoTrue(codigo)
-
-        cliente?.let {
+        repository.findByCodigoAndAtivoTrue(codigo)?.let { cliente ->
             val quantidade = milhas.quantidade
 
             val nova_transacao = Transacao(
-                cliente = it,
+                cliente = cliente,
                 codigo_reserva = null,
                 data = ZonedDateTime.now(),
                 quantidade_milhas = quantidade,
@@ -37,32 +36,30 @@ class MilhasService(
             )
 
             transacaoRepository.save(nova_transacao)
-            it.saldo_milhas += quantidade
+            cliente.saldo_milhas += quantidade
 
-            return ClienteMapper.toDTO(repository.save(it))
+            return ClienteMapper.toDTO(repository.save(cliente))
         }
 
         throw ResourceNotFoundException("Cliente não encontrado com o ID: $codigo")
     }
 
     fun registrarReserva(reserva: ReservaCreationResponseDTO): ExtratoDTO {
-        val cliente = repository.findByCodigoAndAtivoTrue(reserva.codigo_cliente)
-
-        cliente?.let {
+        repository.findByCodigoAndAtivoTrue(reserva.codigo_cliente)?.let { cliente ->
             val quantidade = reserva.quantidade_milhas
 
             val nova_transacao = Transacao(
-                cliente = it,
+                cliente = cliente,
                 codigo_reserva = reserva.codigo_reserva,
                 data = reserva.data,
-                quantidade_milhas = quantidade,
+                quantidade_milhas = -quantidade,
                 valor = reserva.valor,
                 descricao = reserva.descricao,
                 tipo = TipoTransacao.SAIDA
             )
 
-            it.saldo_milhas -= ((quantidade - (reserva.valor / 5))).toFloat()
-            val clienteAtualizado = repository.save(it)
+            cliente.saldo_milhas -= ((quantidade - (reserva.valor / 5))).toFloat()
+            val clienteAtualizado = repository.save(cliente)
             val transacao = transacaoRepository.save(nova_transacao)
 
             return ExtratoDTO(
@@ -75,10 +72,31 @@ class MilhasService(
         throw ResourceNotFoundException("Cliente não encontrado com o ID: ${reserva.codigo_cliente}")
     }
 
-    fun emitirExtrato(codigo: Long): ExtratoDTO {
-        val cliente = repository.findByCodigoAndAtivoTrue(codigo)
+    fun reembolsarReserva(reserva: ReservaOutputDTO): ClienteOutputDTO {
+        repository.findByCodigoAndAtivoTrue(reserva.codigo_cliente)?.let { cliente ->
+            val quantidade = reserva.quantidade_milhas
 
-        cliente?.let { data ->
+            val nova_transacao = Transacao(
+                cliente = cliente,
+                codigo_reserva = reserva.codigo,
+                data = reserva.data,
+                quantidade_milhas = quantidade,
+                valor = 0.0,
+                descricao = "REEMBOLSO",
+                tipo = TipoTransacao.ENTRADA
+            )
+
+            transacaoRepository.save(nova_transacao)
+            cliente.saldo_milhas += quantidade
+
+            return ClienteMapper.toDTO(repository.save(cliente))
+        }
+
+        throw ResourceNotFoundException("Cliente não encontrado com o ID: ${reserva.codigo_cliente}")
+    }
+
+    fun emitirExtrato(codigo: Long): ExtratoDTO {
+        repository.findByCodigoAndAtivoTrue(codigo)?.let { data ->
             val transacoes = transacaoRepository.findByCliente(data)
 
             return ExtratoDTO(data.codigo, data.saldo_milhas, transacoes.map { TransacaoMapper.toDTO(it) })

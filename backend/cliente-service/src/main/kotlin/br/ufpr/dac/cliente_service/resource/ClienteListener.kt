@@ -10,6 +10,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Service
 import utils.dto.*
 import utils.gson.ZonedDateTimeAdapter
+import java.lang.IllegalArgumentException
 import java.time.ZonedDateTime
 
 @Service
@@ -48,10 +49,30 @@ class ClienteListener(private val service: ClienteService, private val milhasSer
         return gson.toJson(dadosCliente)
     }
 
+    @RabbitListener(queues = ["emiratads.criareserva.saldo"], errorHandler = "customErrorHandler")
+    fun consultaSaldo(payload: String): String {
+        val dadosReserva = gson.fromJson(payload, ReservaInputDTO::class.java)
+        val dadosCliente = service.getClienteByID(dadosReserva.codigo_cliente)
+
+        if (dadosReserva.milhas_utilizadas > dadosCliente.saldo_milhas){
+            throw IllegalArgumentException("Saldo de milhas insuficiente para realizar operação")
+        }
+
+        return gson.toJson(RabbitMessageDTO(true, dadosCliente))
+    }
+
     @RabbitListener(queues = ["emiratads.criareserva.cliente"], errorHandler = "customErrorHandler")
     fun efetuarReserva(payload: String): String {
         val transaction = gson.fromJson(payload, ReservaCreationResponseDTO::class.java)
         val result = milhasService.registrarReserva(transaction)
+
+        return gson.toJson(RabbitMessageDTO(true, result))
+    }
+
+    @RabbitListener(queues = ["emiratads.cancelareserva.cliente"], errorHandler = "customErrorHandler")
+    fun cancelarReserva(payload: String): String {
+        val reserva = gson.fromJson(payload, ReservaOutputDTO::class.java)
+        val result = milhasService.reembolsarReserva(reserva)
 
         return gson.toJson(RabbitMessageDTO(true, result))
     }

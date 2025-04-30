@@ -24,12 +24,32 @@ class RabbitMQConfig {
     }
 
     @Bean
+    fun cancelarReserva(): Queue {
+        return Queue("emiratads.cancelareserva.voo")
+    }
+
+    @Bean
+    fun sagaCancelarReserva(): DirectExchange {
+        return DirectExchange("emiratads.cancelareserva")
+    }
+
+    @Bean
     fun bindingCriarReserva(
         sagaCriarReserva: DirectExchange,
         novasReservas: Queue
     ): Binding {
         return BindingBuilder.bind(novasReservas)
             .to(sagaCriarReserva)
+            .with(DEFAULT_ROUTING_KEY)
+    }
+
+    @Bean
+    fun bindingCancelarReserva(
+        sagaCancelarReserva: DirectExchange,
+        cancelarReserva: Queue
+    ): Binding {
+        return BindingBuilder.bind(cancelarReserva)
+            .to(sagaCancelarReserva)
             .with(DEFAULT_ROUTING_KEY)
     }
 

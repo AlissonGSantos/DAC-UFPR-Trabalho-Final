@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/aeroportos")
+@RequestMapping("/v1/aeroportos")
 class AeroportoController (private val service: AeroportoService) {
     @GetMapping
     fun getAeroportos(): ResponseEntity<List<AeroportoOutputDTO>> {

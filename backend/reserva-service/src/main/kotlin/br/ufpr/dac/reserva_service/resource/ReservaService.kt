@@ -14,12 +14,11 @@ import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
-import utils.dto.ReservaCreationResponseDTO
-import utils.dto.ReservaOutputDTO
-import utils.dto.ReservaTransactionDTO
+import utils.dto.*
 import utils.exceptions.ResourceNotFoundException
 import utils.exceptions.ResourcesConflictException
 import utils.gson.ZonedDateTimeAdapter
+import java.lang.IllegalArgumentException
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
@@ -48,9 +47,7 @@ class ReservaService(
     }
 
     fun detailReserva(codigo: String): ReservaOutputDTO {
-        val reserva = consultaReposity.findReservaByCodigo(codigo)
-
-        reserva?.let {
+        consultaReposity.findReservaByCodigo(codigo)?.let {
             return ReservaMapper.toDTO(it)
         }
 
@@ -77,8 +74,7 @@ class ReservaService(
 
         val codigo = "RES" + (repository.count() + 1).toString().padStart(4, '0')
         val quantidade_milhas = reserva.milhas_utilizadas + (reserva.valor / 5)
-        val estadoReserva = estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.codigo)
-            .orElseThrow { IllegalArgumentException("Estado de reserva não encontrado") }
+        val estadoReserva = estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.codigo).get()
         val data = ZonedDateTime.now(ZoneOffset.of("-03:00"))
 
         val input = Reserva(codigo, reserva.codigo_cliente, reserva.voo.codigo, estadoReserva, quantidade_milhas)
@@ -118,6 +114,42 @@ class ReservaService(
             quantidade_milhas.toFloat(),
             "${reserva.voo.aeroporto_origem.codigo}->${reserva.voo.aeroporto_destino.codigo}",
             reserva.valor
+        )
+    }
+
+    fun cancelarReserva(codigo: String): ReservaOutputDTO {
+        var reserva = repository.findById(codigo).orElseThrow {
+            throw ResourceNotFoundException("Reserva não encontrada com o código fornecido.")
+        }
+        if (reserva.estado.codigo !in arrayOf(EstadoReservaEnum.CRIADA.codigo, EstadoReservaEnum.CHECK_IN.codigo)) {
+            throw IllegalArgumentException("Uma reserva só pode ser cancelada nos estados CRIADA ou CHECK-IN")
+        }
+
+        val data = ZonedDateTime.now(ZoneOffset.of("-03:00"))
+        val estadoAntigo = reserva.estado
+        val novoEstado = estadoReservaRepository.findById(EstadoReservaEnum.CANCELADA.codigo).get()
+        reserva.estado = novoEstado
+        reserva = repository.save(reserva)
+
+        historicoRepository.save(HistoricoReserva(0L, data, reserva, estadoAntigo, novoEstado))
+        val poltronas = poltronaRepository.getPoltronasReservadas(reserva.codigo_voo)
+
+        template.convertAndSend(
+            exchange.name,
+            "edicao",
+            gson.toJson(ReservaUpdateEstadoDTO(reserva.codigo, reserva.estado.descricao, data))
+        )
+
+        return ReservaOutputDTO(
+            reserva.codigo,
+            data,
+            reserva.estado.descricao,
+            reserva.quantidade_milhas.toFloat(),
+            reserva.codigo_cliente,
+            null,
+            poltronas.map { it.id.codigo },
+            null,
+            reserva.codigo_voo
         )
     }
 }

@@ -24,4 +24,11 @@ class TransactionListener(private val service: ReservaService) {
         return gson.toJson(response)
     }
 
+    @RabbitListener(queues = ["emiratads.cancelareserva.reserva"], errorHandler = "customErrorHandler")
+    fun cancelarReserva(codigo: String): String {
+        val reserva = service.cancelarReserva(codigo)
+        val response = RabbitMessageDTO(true, reserva)
+
+        return gson.toJson(response)
+    }
 }

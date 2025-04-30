@@ -13,5 +13,4 @@ class RabbitUtils(private val template: RabbitTemplate) {
             template.convertSendAndReceive(exchange, routingKey, message) as String
         }
     }
-
 }

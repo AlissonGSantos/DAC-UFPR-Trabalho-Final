@@ -11,6 +11,6 @@ data class Reserva (
     val codigo_voo: String,
     @OneToOne
     @JoinColumn(name = "estado_codigo")
-    val estado: EstadoReserva,
+    var estado: EstadoReserva,
     val quantidade_milhas: Double
 )

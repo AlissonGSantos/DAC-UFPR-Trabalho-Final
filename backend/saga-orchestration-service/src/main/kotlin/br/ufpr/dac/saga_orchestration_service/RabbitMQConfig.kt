@@ -29,4 +29,19 @@ class RabbitMQConfig {
         return DirectExchange("emiratads.criareserva")
     }
 
+    @Bean
+    fun sagaCancelarReserva(): DirectExchange {
+        return DirectExchange("emiratads.cancelareserva")
+    }
+
+    @Bean
+    fun sagaCancelarVoo(): DirectExchange {
+        return DirectExchange("emiratads.cancelavoo")
+    }
+
+    @Bean
+    fun sagaRealizarVoo(): DirectExchange {
+        return DirectExchange("emiratads.realizavoo")
+    }
+
 }

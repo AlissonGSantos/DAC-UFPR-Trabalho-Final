@@ -106,7 +106,7 @@ INSERT INTO emiratads_cliente.transacao (cliente_codigo, data, quantidade_milhas
     (1, '2025-08-10T10:30:00-03:00', -200.00, 0.00, 'RES0001', 'POA->CWB', 'SAIDA'),
     (2, '2025-09-11T09:30:00-03:00', -90.00, 0.00, 'RES0002', 'CWB->GIG', 'SAIDA'),
     (3, '2025-10-12T08:30:00-03:00', -80.00, 0.00, 'RES0003', 'CWB->POA', 'SAIDA'),
-    (3, '2025-10-13T10:00:00-03:00', 80.00, 0.00, NULL, 'REEMBOLSO RESERVA', 'ENTRADA');
+    (3, '2025-10-13T10:00:00-03:00', 80.00, 0.00, 'RES0003', 'REEMBOLSO', 'ENTRADA');
 
 -- Atualizar o saldo_milhas na tabela cliente
 UPDATE emiratads_cliente.cliente c

@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Service
 import utils.dto.RabbitMessageDTO
 import utils.dto.ReservaInputDTO
+import utils.dto.ReservaOutputDTO
 import utils.gson.ZonedDateTimeAdapter
 import java.time.ZonedDateTime
 
@@ -20,6 +21,16 @@ class VooListener(private val service: VooService) {
         val input = gson.fromJson(payload, ReservaInputDTO::class.java)
 
         val dadosVoo = service.verificaEAtualizaLotacao(input.codigo_voo, input.quantidade_poltronas)
+
+        val response = RabbitMessageDTO(true, dadosVoo)
+        return gson.toJson(response)
+    }
+
+    @RabbitListener(queues = ["emiratads.cancelareserva.voo"], errorHandler = "customErrorHandler")
+    fun liberaLotacaoVoo(payload: String): String {
+        val output = gson.fromJson(payload, ReservaOutputDTO::class.java)
+
+        val dadosVoo = service.liberaLotacao(output.voo_codigo ?: "", output.poltronas_reservadas.size)
 
         val response = RabbitMessageDTO(true, dadosVoo)
         return gson.toJson(response)

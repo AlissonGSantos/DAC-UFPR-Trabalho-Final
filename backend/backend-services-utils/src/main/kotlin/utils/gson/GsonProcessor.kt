@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import jakarta.validation.ConstraintViolationException
 import utils.dto.RabbitMessageDTO
 import utils.exceptions.*
+import java.lang.IllegalArgumentException
 import java.time.ZonedDateTime
 import kotlin.jvm.Throws
 
@@ -17,7 +18,8 @@ class GsonProcessor {
         val knownExceptions = mapOf(
             "ResourcesConflictException" to ResourcesConflictException::class.java,
             "ResourceNotFoundException" to ResourceNotFoundException::class.java,
-            "ConstraintViolationException" to ConstraintViolationException::class.java
+            "ConstraintViolationException" to ConstraintViolationException::class.java,
+            "IllegalArgumentException" to IllegalArgumentException::class.java
         )
 
         @Throws(

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class RabbitMQConfig {
-    private val DEFAULT_ROUTING_KEY = "cliente"
+    private final val DEFAULT_ROUTING_KEY = "cliente"
 
     @Bean
     fun autocadastroRequests(): Queue {
@@ -39,8 +39,23 @@ class RabbitMQConfig {
     }
 
     @Bean
+    fun consultaSaldo(): Queue {
+        return Queue("emiratads.criareserva.saldo")
+    }
+
+    @Bean
     fun sagaCriarReserva(): DirectExchange {
         return DirectExchange("emiratads.criareserva")
+    }
+
+    @Bean
+    fun cancelarReserva(): Queue {
+        return Queue("emiratads.cancelareserva.cliente")
+    }
+
+    @Bean
+    fun sagaCancelarReserva(): DirectExchange {
+        return DirectExchange("emiratads.cancelareserva")
     }
 
     @Bean
@@ -71,6 +86,26 @@ class RabbitMQConfig {
         return BindingBuilder.bind(novasReservas)
             .to(sagaCriarReserva)
             .with(DEFAULT_ROUTING_KEY)
+    }
+
+    @Bean
+    fun bindingCancelarReserva(
+        sagaCancelarReserva: DirectExchange,
+        cancelarReserva: Queue
+    ): Binding {
+        return BindingBuilder.bind(cancelarReserva)
+            .to(sagaCancelarReserva)
+            .with(DEFAULT_ROUTING_KEY)
+    }
+
+    @Bean
+    fun bindingConsultaSaldo(
+        sagaCriarReserva: DirectExchange,
+        consultaSaldo: Queue
+    ): Binding {
+        return BindingBuilder.bind(consultaSaldo)
+            .to(sagaCriarReserva)
+            .with("saldo")
     }
 
     @Bean

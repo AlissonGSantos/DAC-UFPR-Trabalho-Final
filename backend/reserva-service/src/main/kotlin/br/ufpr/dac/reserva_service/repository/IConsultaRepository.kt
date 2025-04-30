@@ -85,4 +85,15 @@ interface IConsultaRepository : JpaRepository<ReservaConsulta, ReservaConsultaId
         @Param("poltrona") poltrona: Int,
         @Param("quantidade_milhas") quantidade_milhas: Double
     )
+
+    @Transactional
+    @Modifying
+    @Query(
+        """
+            UPDATE emiratads_reserva_access.reserva r
+            SET r.estado = :estado, r.data = :data
+            WHERE r.codigo = :codigo
+        """, nativeQuery = true
+    )
+    fun update(@Param("estado") estado: String, @Param("data") data: ZonedDateTime, @Param("codigo") codigo: String)
 }
