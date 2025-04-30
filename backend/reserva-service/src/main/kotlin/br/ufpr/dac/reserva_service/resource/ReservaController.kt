@@ -11,25 +11,29 @@ import utils.dto.ReservaOutputDTO
 class ReservaController(private val service: ReservaService) {
 
     @GetMapping("/poltronas/{voo}")
-    fun getPoltronasOcupadas(@PathVariable voo: String): ResponseEntity<PoltronasOcupadasDTO>{
+    fun getPoltronasOcupadas(@PathVariable voo: String): ResponseEntity<PoltronasOcupadasDTO> {
         val poltronas = service.listPoltronasOcupadas(voo)
         return ResponseEntity.ok(PoltronasOcupadasDTO(poltronas))
     }
 
     @GetMapping("/cliente/{codigo_cliente}")
-    fun getReservasByCliente(@PathVariable codigo_cliente: Long): ResponseEntity<List<ReservaOutputDTO>>{
+    fun getReservasByCliente(@PathVariable codigo_cliente: Long): ResponseEntity<List<ReservaOutputDTO>> {
         val reservas = service.listReservasByCliente(codigo_cliente)
         return ResponseEntity.ok(reservas)
     }
 
     @GetMapping("/{codigo}")
-    fun detailReserva(@PathVariable codigo: String): ResponseEntity<ReservaOutputDTO>{
+    fun detailReserva(@PathVariable codigo: String): ResponseEntity<ReservaOutputDTO> {
         val reserva = service.detailReserva(codigo)
         return ResponseEntity.ok(reserva)
     }
 
     @PatchMapping("/{codigo}/estado")
-    fun alterarEstado(@PathVariable codigo: String, @RequestBody estado: AlternaEstadoDTO){
-
+    fun alterarEstado(
+        @PathVariable codigo: String,
+        @RequestBody payload: AlternaEstadoDTO
+    ): ResponseEntity<ReservaOutputDTO> {
+        val reserva = service.alterarEstado(codigo, payload)
+        return ResponseEntity.ok(reserva)
     }
 }

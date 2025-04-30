@@ -1,9 +1,6 @@
 package br.ufpr.dac.reserva_service.resource
 
-import br.ufpr.dac.reserva_service.domain.EstadoReservaEnum
-import br.ufpr.dac.reserva_service.domain.HistoricoReserva
-import br.ufpr.dac.reserva_service.domain.PoltronasReservadas
-import br.ufpr.dac.reserva_service.domain.Reserva
+import br.ufpr.dac.reserva_service.domain.*
 import br.ufpr.dac.reserva_service.domain.embeddable.PoltronasReservadasId
 import br.ufpr.dac.reserva_service.repository.*
 import br.ufpr.dac.reserva_service.resource.dto.ReservaConsultaInputDTO
@@ -118,38 +115,68 @@ class ReservaService(
     }
 
     fun cancelarReserva(codigo: String): ReservaOutputDTO {
-        var reserva = repository.findById(codigo).orElseThrow {
+        val reserva = repository.findById(codigo).orElseThrow {
             throw ResourceNotFoundException("Reserva não encontrada com o código fornecido.")
         }
         if (reserva.estado.codigo !in arrayOf(EstadoReservaEnum.CRIADA.codigo, EstadoReservaEnum.CHECK_IN.codigo)) {
             throw IllegalArgumentException("Uma reserva só pode ser cancelada nos estados CRIADA ou CHECK-IN")
         }
 
+        return atualizarEstadoReserva(reserva, EstadoReservaEnum.CANCELADA.codigo)
+    }
+
+    fun alterarEstado(codigo: String, payload: AlternaEstadoDTO): ReservaOutputDTO {
+        val reserva = repository.findById(codigo).orElseThrow {
+            throw ResourceNotFoundException("Reserva não encontrada com o código fornecido.")
+        }
+        val novoEstado = validaAlteracaoEstado(payload.estado, reserva.estado).codigo
+
+        return atualizarEstadoReserva(reserva, novoEstado)
+    }
+
+    private fun atualizarEstadoReserva( reserva: Reserva, codigo_estado: Long ): ReservaOutputDTO {
         val data = ZonedDateTime.now(ZoneOffset.of("-03:00"))
         val estadoAntigo = reserva.estado
-        val novoEstado = estadoReservaRepository.findById(EstadoReservaEnum.CANCELADA.codigo).get()
-        reserva.estado = novoEstado
-        reserva = repository.save(reserva)
+        val estadoNovo = estadoReservaRepository.findById(codigo_estado).get()
+        reserva.estado = estadoNovo
+        val reservaAtualizada = repository.save(reserva)
 
-        historicoRepository.save(HistoricoReserva(0L, data, reserva, estadoAntigo, novoEstado))
+        historicoRepository.save(HistoricoReserva(0L, data, reservaAtualizada, estadoAntigo, estadoNovo))
         val poltronas = poltronaRepository.getPoltronasReservadas(reserva.codigo_voo)
 
         template.convertAndSend(
             exchange.name,
             "edicao",
-            gson.toJson(ReservaUpdateEstadoDTO(reserva.codigo, reserva.estado.descricao, data))
+            gson.toJson(ReservaUpdateEstadoDTO(reservaAtualizada.codigo, reservaAtualizada.estado.descricao, data))
         )
 
         return ReservaOutputDTO(
-            reserva.codigo,
+            reservaAtualizada.codigo,
             data,
-            reserva.estado.descricao,
-            reserva.quantidade_milhas.toFloat(),
-            reserva.codigo_cliente,
+            reservaAtualizada.estado.descricao,
+            reservaAtualizada.quantidade_milhas.toFloat(),
+            reservaAtualizada.codigo_cliente,
             null,
             poltronas.map { it.id.codigo },
             null,
-            reserva.codigo_voo
+            reservaAtualizada.codigo_voo
         )
+    }
+
+    private fun validaAlteracaoEstado(estadoDesejado: String, estadoAtual: EstadoReserva): EstadoReservaEnum {
+        val transicoesValidas = mapOf(
+            "CHECK-IN" to EstadoReservaEnum.CRIADA,
+            "EMBARCADA" to EstadoReservaEnum.CHECK_IN
+        )
+
+        val estadoDesejadoEnum = EstadoReservaEnum.valueOf(estadoDesejado.uppercase().replace("-", "_"))
+        val estadoAtualEsperado = transicoesValidas[estadoDesejado.uppercase()]
+            ?: throw IllegalArgumentException("Estado desejado inválido: $estadoDesejado")
+
+        if (estadoAtual.codigo != estadoAtualEsperado.codigo) {
+            throw IllegalArgumentException("Condições para troca de estado não atendidas")
+        }
+
+        return estadoDesejadoEnum
     }
 }
