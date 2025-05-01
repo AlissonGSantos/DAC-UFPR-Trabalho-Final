@@ -99,9 +99,9 @@ class RabbitMQConfig {
     @Bean
     fun bindingRealizarVoo(
         sagaRealizarVoo: DirectExchange,
-        cancelarVoo: Queue
+        realizarVoo: Queue
     ): Binding {
-        return BindingBuilder.bind(cancelarVoo)
+        return BindingBuilder.bind(realizarVoo)
             .to(sagaRealizarVoo)
             .with(DEFAULT_ROUTING_KEY)
     }

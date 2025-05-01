@@ -41,4 +41,13 @@ class TransactionListener(private val service: ReservaService) {
 
         return gson.toJson(response)
     }
+
+    @RabbitListener(queues = ["emiratads.realizavoo.reserva"], errorHandler = "customErrorHandler")
+    fun realizaVoo(payload: String): String {
+        val voo = gson.fromJson(payload, VooOutputDTO::class.java)
+        val reserva = service.realizaVoo(voo)
+        val response = RabbitMessageDTO(true, reserva)
+
+        return gson.toJson(response)
+    }
 }

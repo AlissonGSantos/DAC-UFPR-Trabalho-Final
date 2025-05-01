@@ -16,10 +16,12 @@ class VooController(
 ) {
 
     @PatchMapping("/{codigo}/estado")
-    fun alterarEstado(@PathVariable codigo: String, @RequestBody estado: AlternaEstadoDTO) {
+    fun alterarEstado(@PathVariable codigo: String, @RequestBody estado: AlternaEstadoDTO): ResponseEntity<VooOutputDTO> {
         val voo = runBlocking {
             realizarVoo.executeSaga(codigo, estado)
         }
+
+        return ResponseEntity.ok(voo)
     }
 
     @DeleteMapping("/{codigo}")

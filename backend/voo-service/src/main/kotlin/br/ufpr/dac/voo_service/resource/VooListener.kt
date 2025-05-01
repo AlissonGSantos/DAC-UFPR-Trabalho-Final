@@ -44,4 +44,12 @@ class VooListener(private val service: VooService) {
         val response = RabbitMessageDTO(true, VooMapper.toDTO(dadosVoo))
         return gson.toJson(response)
     }
+
+    @RabbitListener(queues = ["emiratads.realizavoo.voo"], errorHandler = "customErrorHandler")
+    fun realizaVoo(codigo: String): String {
+        val dadosVoo = service.realizaVoo(codigo)
+
+        val response = RabbitMessageDTO(true, VooMapper.toDTO(dadosVoo))
+        return gson.toJson(response)
+    }
 }

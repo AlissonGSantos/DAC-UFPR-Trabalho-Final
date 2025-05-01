@@ -59,6 +59,17 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
         return repository.save(voo)
     }
 
+    fun realizaVoo(codigo: String): Voo {
+        val voo = repository.findById(codigo)
+            .orElseThrow { ResourceNotFoundException("Voo não encontrado com o id: $codigo") }
+        if (voo.estado!!.codigo != EstadoVooEnum.CONFIMADO.codigo) {
+            throw IllegalArgumentException("Um voo só pode ser realizado no estado CONFIRMADO")
+        }
+        val estado = estadoVooRepository.findById(EstadoVooEnum.REALIZADO.codigo).get()
+        voo.estado = estado
+        return repository.save(voo)
+    }
+
     fun verificaEAtualizaLotacao(codigoVoo: String, quantidadePoltronas: Int): VooOutputDTO {
         val voo = repository.findById(codigoVoo)
             .orElseThrow { ResourceNotFoundException("Voo não encontrado com o id: ${codigoVoo}") }
