@@ -1,9 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const funcionarioController = require('../controllers/funcionarioController.js');
-const verifyJWT = require('../middlewares/verifyJWT.js');
+const funcionarioController = require("../controllers/funcionarioController.js");
+const verifyJWT = require("../middlewares/verifyJWT.js");
 
-// Descomentar o verifyJWT quando o serviço de autenticação estiver implementado
-router.get('/funcionarios'/*, verifyJWT(['FUNCIONARIO'])*/, funcionarioController.getAllFuncionarios);
+// Rota principal para funcionários
+router.get(
+  "/funcionarios" /*, verifyJWT(['FUNCIONARIO'])*/,
+  funcionarioController.getAllFuncionarios
+);
+router.get("/funcionarios/:id", funcionarioController.getFuncionarioById);
+router.post("/funcionarios", funcionarioController.createFuncionario);
+router.put("/funcionarios/:id", funcionarioController.updateFuncionario);
+router.delete("/funcionarios/:id", funcionarioController.deleteFuncionario);
 
 module.exports = router;
