@@ -10,6 +10,7 @@ import br.ufpr.dac.voo_service.repository.IEstadoVooRepository
 import br.ufpr.dac.voo_service.resource.mapper.VooMapper
 import utils.exceptions.ResourceNotFoundException
 import utils.exceptions.ResourcesConflictException
+import java.lang.IllegalArgumentException
 import java.time.ZonedDateTime
 
 @Service
@@ -39,21 +40,22 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
         return repository.findById(id).orElseThrow { ResourceNotFoundException("Voo não encontrado com o id ${id}") }
     }
 
-    fun saveVoo(voo: VooInputDTO): Voo {
-        voo.codigo = "TADS" + (repository.count() + 1).toString().padStart(4, '0')
-        val estado = estadoVooRepository.findById(EstadoVooEnum.CONFIMADO.codigo)
-            .orElseThrow { ResourceNotFoundException("Estado de voo não encontrado") }
+    fun saveVoo(input: VooInputDTO): Voo {
+        input.codigo = "TADS" + (repository.count() + 1).toString().padStart(4, '0')
+        val estado = estadoVooRepository.findById(EstadoVooEnum.CONFIMADO.codigo).get()
+        val voo = VooMapper.toDomain(input)
         voo.estado = estado
-        return repository.save(VooMapper.toDomain(voo))
+        return repository.save(voo)
     }
 
-    fun updateVoo(id: String, vooDTO: VooInputDTO): Voo {
-        val voo = repository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Voo não encontrado com o id: ${vooDTO.codigo}") }
-
-        voo.estado = vooDTO.estado
-        voo.quantidade_poltronas_ocupadas = vooDTO.quantidade_poltronas_ocupadas!!
-
+    fun cancelaVoo(codigo: String): Voo {
+        val voo = repository.findById(codigo)
+            .orElseThrow { ResourceNotFoundException("Voo não encontrado com o id: $codigo") }
+        if (voo.estado!!.codigo != EstadoVooEnum.CONFIMADO.codigo) {
+            throw IllegalArgumentException("Um voo só pode ser cancelado no estado CONFIRMADO")
+        }
+        val estado = estadoVooRepository.findById(EstadoVooEnum.CANCELADO.codigo).get()
+        voo.estado = estado
         return repository.save(voo)
     }
 

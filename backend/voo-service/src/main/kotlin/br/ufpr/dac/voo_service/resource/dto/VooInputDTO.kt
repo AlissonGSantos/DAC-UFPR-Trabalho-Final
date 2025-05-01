@@ -17,9 +17,6 @@ data class VooInputDTO(
   val valor_passagem: Double,
   @field:SomenteNumeros
   val quantidade_poltronas_total: Int,
-  @field:SomenteNumeros
-  val quantidade_poltronas_ocupadas: Int?,
-  var estado: EstadoVoo?,
   @field:Valid
   @field:NotEmpty
   val aeroporto_origem: AeroportoInputDTO,

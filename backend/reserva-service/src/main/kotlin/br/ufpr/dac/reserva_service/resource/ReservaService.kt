@@ -134,6 +134,11 @@ class ReservaService(
         return atualizarEstadoReserva(reserva, novoEstado)
     }
 
+    fun canceladoVoo(voo: VooOutputDTO): List<ReservaOutputDTO> {
+        val reservas = repository.findByCodigoVoo(voo.codigo)
+        return reservas.map { atualizarEstadoReserva(it, EstadoReservaEnum.CANCELADA_VOO.codigo) }
+    }
+
     private fun atualizarEstadoReserva( reserva: Reserva, codigo_estado: Long ): ReservaOutputDTO {
         val data = ZonedDateTime.now(ZoneOffset.of("-03:00"))
         val estadoAntigo = reserva.estado

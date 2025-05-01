@@ -2,6 +2,7 @@ package br.ufpr.dac.cliente_service.resource
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import jakarta.validation.ConstraintViolation
 import jakarta.validation.Validation
 import jakarta.validation.Validator
@@ -74,6 +75,16 @@ class ClienteListener(private val service: ClienteService, private val milhasSer
         val reserva = gson.fromJson(payload, ReservaOutputDTO::class.java)
         val result = milhasService.reembolsarReserva(reserva)
 
+        return gson.toJson(RabbitMessageDTO(true, result))
+    }
+
+    @RabbitListener(queues = ["emiratads.cancelavoo.cliente"], errorHandler = "customErrorHandler")
+    fun canceladoVoo(payload: String): String {
+        val reservas: List<ReservaOutputDTO> = gson.fromJson(
+            payload,
+            object : TypeToken<List<ReservaOutputDTO>>() {}.type
+        )
+        val result = milhasService.reembolsarVoo(reservas)
         return gson.toJson(RabbitMessageDTO(true, result))
     }
 }

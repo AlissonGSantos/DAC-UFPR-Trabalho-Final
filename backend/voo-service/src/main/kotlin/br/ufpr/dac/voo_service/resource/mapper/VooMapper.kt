@@ -25,8 +25,8 @@ class VooMapper {
                 voo.data,
                 voo.valor_passagem,
                 voo.quantidade_poltronas_total,
-                voo.quantidade_poltronas_ocupadas ?: 0,
-                voo.estado,
+                0,
+                null,
                 AeroportoMapper.toDomain(voo.aeroporto_origem),
                 AeroportoMapper.toDomain(voo.aeroporto_destino)
             )

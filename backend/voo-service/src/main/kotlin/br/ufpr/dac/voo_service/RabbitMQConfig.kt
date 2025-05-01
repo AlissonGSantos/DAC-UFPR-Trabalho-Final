@@ -14,24 +14,28 @@ class RabbitMQConfig {
     private val DEFAULT_ROUTING_KEY = "voo"
 
     @Bean
-    fun novasReservas(): Queue {
-        return Queue("emiratads.criareserva.voo")
-    }
+    fun novasReservas(): Queue = Queue("emiratads.criareserva.voo")
 
     @Bean
-    fun sagaCriarReserva(): DirectExchange {
-        return DirectExchange("emiratads.criareserva")
-    }
+    fun sagaCriarReserva(): DirectExchange = DirectExchange("emiratads.criareserva")
 
     @Bean
-    fun cancelarReserva(): Queue {
-        return Queue("emiratads.cancelareserva.voo")
-    }
+    fun cancelarReserva(): Queue = Queue("emiratads.cancelareserva.voo")
 
     @Bean
-    fun sagaCancelarReserva(): DirectExchange {
-        return DirectExchange("emiratads.cancelareserva")
-    }
+    fun sagaCancelarReserva(): DirectExchange = DirectExchange("emiratads.cancelareserva")
+
+    @Bean
+    fun cancelarVoo(): Queue = Queue("emiratads.cancelavoo.voo")
+
+    @Bean
+    fun sagaCancelarVoo(): DirectExchange = DirectExchange("emiratads.cancelavoo")
+
+    @Bean
+    fun realizarVoo(): Queue = Queue("emiratads.realizavoo.voo")
+
+    @Bean
+    fun sagaRealizarVoo(): DirectExchange = DirectExchange("emiratads.realizavoo")
 
     @Bean
     fun bindingCriarReserva(
@@ -50,6 +54,26 @@ class RabbitMQConfig {
     ): Binding {
         return BindingBuilder.bind(cancelarReserva)
             .to(sagaCancelarReserva)
+            .with(DEFAULT_ROUTING_KEY)
+    }
+
+    @Bean
+    fun bindingCancelarVoo(
+        sagaCancelarVoo: DirectExchange,
+        cancelarVoo: Queue
+    ): Binding {
+        return BindingBuilder.bind(cancelarVoo)
+            .to(sagaCancelarVoo)
+            .with(DEFAULT_ROUTING_KEY)
+    }
+
+    @Bean
+    fun bindingRealizarVoo(
+        sagaRealizarVoo: DirectExchange,
+        cancelarVoo: Queue
+    ): Binding {
+        return BindingBuilder.bind(cancelarVoo)
+            .to(sagaRealizarVoo)
             .with(DEFAULT_ROUTING_KEY)
     }
 

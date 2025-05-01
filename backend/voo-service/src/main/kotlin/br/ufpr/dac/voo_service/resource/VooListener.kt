@@ -1,5 +1,6 @@
 package br.ufpr.dac.voo_service.resource
 
+import br.ufpr.dac.voo_service.resource.mapper.VooMapper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.springframework.amqp.rabbit.annotation.RabbitListener
@@ -33,6 +34,14 @@ class VooListener(private val service: VooService) {
         val dadosVoo = service.liberaLotacao(output.voo_codigo ?: "", output.poltronas_reservadas.size)
 
         val response = RabbitMessageDTO(true, dadosVoo)
+        return gson.toJson(response)
+    }
+
+    @RabbitListener(queues = ["emiratads.cancelavoo.voo"], errorHandler = "customErrorHandler")
+    fun cancelaVoo(codigo: String): String {
+        val dadosVoo = service.cancelaVoo(codigo)
+
+        val response = RabbitMessageDTO(true, VooMapper.toDTO(dadosVoo))
         return gson.toJson(response)
     }
 }

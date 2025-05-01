@@ -14,49 +14,37 @@ class RabbitMQConfig {
     private final val DEFAULT_ROUTING_KEY = "cliente"
 
     @Bean
-    fun autocadastroRequests(): Queue {
-        return Queue("emiratads.autocadastro.cliente")
-    }
+    fun autocadastroRequests(): Queue = Queue("emiratads.autocadastro.cliente")
 
     @Bean
-    fun sagaAutocadastro(): DirectExchange {
-        return DirectExchange("emiratads.autocadastro")
-    }
+    fun sagaAutocadastro(): DirectExchange = DirectExchange("emiratads.autocadastro")
 
     @Bean
-    fun loginClientes(): Queue {
-        return Queue("emiratads.login.cliente")
-    }
+    fun loginClientes(): Queue = Queue("emiratads.login.cliente")
 
     @Bean
-    fun sagaLogin(): DirectExchange {
-        return DirectExchange("emiratads.login")
-    }
+    fun sagaLogin(): DirectExchange = DirectExchange("emiratads.login")
 
     @Bean
-    fun novasReservas(): Queue {
-        return Queue("emiratads.criareserva.cliente")
-    }
+    fun novasReservas(): Queue = Queue("emiratads.criareserva.cliente")
 
     @Bean
-    fun consultaSaldo(): Queue {
-        return Queue("emiratads.criareserva.saldo")
-    }
+    fun consultaSaldo(): Queue = Queue("emiratads.criareserva.saldo")
 
     @Bean
-    fun sagaCriarReserva(): DirectExchange {
-        return DirectExchange("emiratads.criareserva")
-    }
+    fun sagaCriarReserva(): DirectExchange = DirectExchange("emiratads.criareserva")
 
     @Bean
-    fun cancelarReserva(): Queue {
-        return Queue("emiratads.cancelareserva.cliente")
-    }
+    fun cancelarReserva(): Queue = Queue("emiratads.cancelareserva.cliente")
 
     @Bean
-    fun sagaCancelarReserva(): DirectExchange {
-        return DirectExchange("emiratads.cancelareserva")
-    }
+    fun sagaCancelarReserva(): DirectExchange = DirectExchange("emiratads.cancelareserva")
+
+    @Bean
+    fun cancelarVoo(): Queue = Queue("emiratads.cancelavoo.cliente")
+
+    @Bean
+    fun sagaCancelarVoo(): DirectExchange = DirectExchange("emiratads.cancelavoo")
 
     @Bean
     fun bindingAutocadastro(
@@ -106,6 +94,16 @@ class RabbitMQConfig {
         return BindingBuilder.bind(consultaSaldo)
             .to(sagaCriarReserva)
             .with("saldo")
+    }
+
+    @Bean
+    fun bindingCancelarVoo(
+        sagaCancelarVoo: DirectExchange,
+        cancelarVoo: Queue
+    ): Binding {
+        return BindingBuilder.bind(cancelarVoo)
+            .to(sagaCancelarVoo)
+            .with(DEFAULT_ROUTING_KEY)
     }
 
     @Bean

@@ -31,12 +31,6 @@ class VooController(private val service: VooService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(VooMapper.toDTO(savedVoo))
     }
 
-    @PutMapping("/{id}")
-    fun updateVoo(@PathVariable id: String, @RequestBody vooDTO: VooInputDTO): ResponseEntity<VooOutputDTO> {
-        val updatedVoo = service.updateVoo(id, vooDTO)
-        return ResponseEntity.ok().body(VooMapper.toDTO(updatedVoo))
-    }
-
     @GetMapping("/{id}")
     fun getVooById(@PathVariable id: String): ResponseEntity<VooOutputDTO> {
         val voo = service.getVooById(id)

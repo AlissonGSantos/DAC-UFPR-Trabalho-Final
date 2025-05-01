@@ -95,6 +95,28 @@ class MilhasService(
         throw ResourceNotFoundException("Cliente não encontrado com o ID: ${reserva.codigo_cliente}")
     }
 
+    fun reembolsarVoo(reservas: List<ReservaOutputDTO>) {
+        reservas.forEach { reserva ->
+            repository.findByCodigoAndAtivoTrue(reserva.codigo_cliente)?.let { cliente ->
+                val quantidade = reserva.quantidade_milhas
+
+                val nova_transacao = Transacao(
+                    cliente = cliente,
+                    codigo_reserva = reserva.codigo,
+                    data = reserva.data,
+                    quantidade_milhas = quantidade,
+                    valor = 0.0,
+                    descricao = "REEMBOLSO",
+                    tipo = TipoTransacao.ENTRADA
+                )
+
+                transacaoRepository.save(nova_transacao)
+                cliente.saldo_milhas += quantidade
+                repository.save(cliente)
+            }
+        }
+    }
+
     fun emitirExtrato(codigo: Long): ExtratoDTO {
         repository.findByCodigoAndAtivoTrue(codigo)?.let { data ->
             val transacoes = transacaoRepository.findByCliente(data)
