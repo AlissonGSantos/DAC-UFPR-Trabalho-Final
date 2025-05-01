@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { ButtonProps } from "@/app/components/Button/Button";
 import { statusFlightEnum, Flight } from "@/app/types/FlightTypes";
+import { AirplaneLanding, Check, X } from "phosphor-react";
 
 const useFlightTable = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -88,12 +89,34 @@ const useFlightTable = () => {
       {
         accessorKey: "aeroporto_origem.nome",
         header: "Aeroporto de Origem",
-        cell: ({ row }) => row.original.aeroporto_origem.nome,
+        cell: ({ row }) =>
+          `${row.original.aeroporto_origem.nome} (${row.original.aeroporto_origem.codigo})`,
+      },
+      {
+        accessorKey: "aeroporto_origem.cidade",
+        header: "Origem",
+        cell: ({ row }) => row.original.aeroporto_origem.cidade,
+      },
+      {
+        accessorKey: "aeroporto_origem.uf",
+        header: "UF Origem",
+        cell: ({ row }) => row.original.aeroporto_origem.uf,
       },
       {
         accessorKey: "aeroporto_destino.nome",
         header: "Aeroporto de Destino",
-        cell: ({ row }) => row.original.aeroporto_destino.nome,
+        cell: ({ row }) =>
+          `${row.original.aeroporto_destino.nome} (${row.original.aeroporto_destino.codigo})`,
+      },
+      {
+        accessorKey: "aeroporto_destino.cidade",
+        header: "Destino",
+        cell: ({ row }) => row.original.aeroporto_destino.cidade,
+      },
+      {
+        accessorKey: "aeroporto_destino.uf",
+        header: "UF Destino",
+        cell: ({ row }) => row.original.aeroporto_destino.uf,
       },
     ],
     []
@@ -132,18 +155,21 @@ const useFlightTable = () => {
         onClick: handleConfirmBoard,
         type: "PRIMARY",
         size: "SMALL",
+        children: <Check size={16} weight="bold" />,
       },
       {
         text: "Cancelar Voo",
         onClick: handleCancelFlight,
         type: "DANGER",
         size: "SMALL",
+        children: <X size={16} weight="bold" />,
       },
       {
         text: "Finalizar Voo",
         onClick: handleFinishFlight,
         type: "SUCCESS",
         size: "SMALL",
+        children: <AirplaneLanding size={16} weight="bold" />,
       },
     ],
     []

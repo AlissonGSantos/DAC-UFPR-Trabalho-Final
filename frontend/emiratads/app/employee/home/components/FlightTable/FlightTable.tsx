@@ -19,12 +19,11 @@ const FlightTable: React.FC = () => {
     closeConfirmBoard, 
     selectedFlight, 
     isFinishModalOpen,
-    confirmFinishFlight,
     setIsFinishModalOpen
   } = useFlightTable();
 
   return (
-    <div>
+    <div className="flex w-full">
       <DataTable data={data} columns={columns} controls={controls} />
       <ConfirmBoardModal onClose={closeConfirmBoard} isOpen={isBoardModalOpen} onConfirm={() => {}} />
       <CancelFlightModal flight={selectedFlight ?? {} as Flight} isOpen={isCancelModalOpen} onClose={() => {

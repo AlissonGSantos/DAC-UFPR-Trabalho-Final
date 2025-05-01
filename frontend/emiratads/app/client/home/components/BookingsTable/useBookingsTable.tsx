@@ -3,13 +3,14 @@ import { useAuthContext } from "@/app/contexts/auth";
 import useBookingContext from "@/app/contexts/booking";
 import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const useBookingsTable = () => {
   const { bookingList, setBookingList } = useBookingContext();
   const { userData, updateMilesBalance } = useAuthContext();
 
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   const onDismissCancelModal = () => {
     setIsCancelModalOpen(false);
@@ -105,6 +106,12 @@ const useBookingsTable = () => {
       },
     ].filter(Boolean) as ButtonProps[];
 
+  useEffect(() => {
+    const list = bookingList.filter((booking) => booking.estado === "CRIADA");
+
+    setBookings(list.length > 0 ? list : bookingList);
+  }, [bookingList]);
+
   return {
     bookingList,
     columns,
@@ -113,6 +120,7 @@ const useBookingsTable = () => {
     isCancelModalOpen,
     onDismissCancelModal,
     onCancelBooking,
+    bookings,
   };
 };
 
