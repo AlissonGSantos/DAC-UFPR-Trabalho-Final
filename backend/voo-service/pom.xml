@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>voo-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>voo-service</name>
 	<description>Módulo responsável pela manutenção dos voos</description>
 
@@ -22,6 +22,10 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
 		</dependency>
 	</dependencies>
 

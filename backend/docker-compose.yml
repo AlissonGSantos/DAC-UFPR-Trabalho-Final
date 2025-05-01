@@ -89,9 +89,11 @@ services:
       dockerfile: ../Dockerfile
     ports:
       - "8084:8080"
+      - "5008:5005"
     depends_on:
       - autenticacaoservice
       - dbdevelopment
+      - rabbitmq
     networks:
       - emiratads-network
 
@@ -101,6 +103,7 @@ services:
       dockerfile: ../Dockerfile
     ports:
       - "8085:8080"
+      - "5009:5005"
     depends_on:
       - autenticacaoservice
       - dbdevelopment

@@ -12,6 +12,7 @@ class Transacao (
     @ManyToOne
     @JoinColumn(name = "cliente_codigo")
     val cliente: Cliente,
+    val codigo_reserva: String?,
     val data: ZonedDateTime,
     val quantidade_milhas: Float,
     val valor: Double,

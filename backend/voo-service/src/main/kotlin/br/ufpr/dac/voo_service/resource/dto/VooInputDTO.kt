@@ -1,24 +1,26 @@
 package br.ufpr.dac.voo_service.resource.dto
 
-import jakarta.persistence.*
-import jakarta.validation.constraints.*
-import java.time.ZonedDateTime
 import br.ufpr.dac.voo_service.domain.EstadoVoo
-import br.ufpr.dac.voo_service.domain.Aeroporto
-import br.ufpr.dac.voo_service.domain.Voo
+import jakarta.validation.Valid
+import jakarta.validation.constraints.Future
+import jakarta.validation.constraints.NotEmpty
+import utils.validators.SomenteNumeros
+import java.time.ZonedDateTime
 
 data class VooInputDTO(
-
-  @NotBlank
-  var codigo: String,
+  var codigo: String?,
+  @field:NotEmpty
+  @field:Future
   val data: ZonedDateTime,
+  @field:NotEmpty
+  @field:SomenteNumeros
   val valor_passagem: Double,
+  @field:SomenteNumeros
   val quantidade_poltronas_total: Int,
-  val quantidade_poltronas_ocupadas: Int,
-  val estado: EstadoVoo,
-  val aeroporto_origem: Aeroporto
-  val aeroporto_destino: Aeroporto
-  val ativo: Boolean
-) {
-   }
-}
+  @field:Valid
+  @field:NotEmpty
+  val aeroporto_origem: AeroportoInputDTO,
+  @field:Valid
+  @field:NotEmpty
+  val aeroporto_destino: AeroportoInputDTO
+)

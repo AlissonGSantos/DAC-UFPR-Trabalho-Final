@@ -5,9 +5,8 @@ import java.time.ZonedDateTime
 
 @Entity
 @Table(name = "voo")
-class Voo (
+class Voo(
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val codigo: String,
     val data: ZonedDateTime,
 
@@ -17,7 +16,7 @@ class Voo (
 
     @ManyToOne
     @JoinColumn(name = "estado_codigo", referencedColumnName = "codigo")
-    var estado: EstadoVoo,
+    var estado: EstadoVoo?,
 
     @ManyToOne
     @JoinColumn(name = "aeroporto_origem", referencedColumnName = "codigo")
@@ -25,7 +24,5 @@ class Voo (
 
     @ManyToOne
     @JoinColumn(name = "aeroporto_destino", referencedColumnName = "codigo")
-    val aeroporto_destino: Aeroporto,
-
-    val ativo: Boolean
+    val aeroporto_destino: Aeroporto
 )

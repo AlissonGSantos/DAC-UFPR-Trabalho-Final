@@ -6,11 +6,8 @@ import jakarta.persistence.*
 @Table(name = "aeroporto")
 class Aeroporto(
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val codigo: String,
-
     val nome: String,
     val cidade: String,
-    val uf: String,
-    val ativo: Boolean
+    val uf: String
 )
