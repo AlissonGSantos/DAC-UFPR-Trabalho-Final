@@ -76,7 +76,7 @@ const useFlightDetail = (codigo: string) => {
 
       setIsConfirmModalOpen(false);
 
-      window.location.href = "/client/searchFlight"
+      window.location.href = "/client/home"
     } catch (error) {
       console.error(error);
     }

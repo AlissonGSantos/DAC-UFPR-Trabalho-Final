@@ -31,12 +31,14 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
   return (
     <div className={`p-4 ${robotoFont.className}`}>
       <div className="flex items-center justify-end mb-4">
-        <Input
-          type={"search"}
-          placeholder="Pesquisar:"
-          label={""}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
+        <div className="min-w-50">
+          <Input
+            type={"search"}
+            placeholder="Pesquisar:"
+            label={""}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
       </div>
       <table className="w-full border-indigo-950 bg-slate-950 border-2">
         <thead className="bg-slate-950 text-slate-300">
