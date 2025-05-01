@@ -2,20 +2,22 @@ package br.ufpr.dac.reserva_service.domain
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 @Entity
 @Table(name = "historico_reserva", schema = "emiratads_reserva_transaction")
 data class HistoricoReserva(
     @Id
-    val data: LocalDateTime,
-    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val codigo: Long = 0L,
+    val data: ZonedDateTime,
     @ManyToOne
-    @JoinColumn(name = "codigo_reserva")
+    @JoinColumn(name = "reserva_codigo")
     val reserva: Reserva,
     @OneToOne
-    @Column(name = "estado_old")
-    val estadoAntigo: EstadoReserva,
+    @JoinColumn(name = "estado_old")
+    val estadoAntigo: EstadoReserva?,
     @OneToOne
-    @Column(name = "estado_new")
+    @JoinColumn(name = "estado_new")
     val estadoNovo: EstadoReserva
 )

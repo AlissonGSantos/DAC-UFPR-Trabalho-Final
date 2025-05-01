@@ -20,8 +20,17 @@ class RabbitMQConfig {
     }
 
     @Bean
-    fun sagaAutocadastro(): DirectExchange {
-        return DirectExchange("emiratads.autocadastro")
-    }
+    fun sagaAutocadastro(): DirectExchange = DirectExchange("emiratads.autocadastro")
 
+    @Bean
+    fun sagaCriarReserva(): DirectExchange = DirectExchange("emiratads.criareserva")
+
+    @Bean
+    fun sagaCancelarReserva(): DirectExchange = DirectExchange("emiratads.cancelareserva")
+
+    @Bean
+    fun sagaCancelarVoo(): DirectExchange = DirectExchange("emiratads.cancelavoo")
+
+    @Bean
+    fun sagaRealizarVoo(): DirectExchange = DirectExchange("emiratads.realizavoo")
 }

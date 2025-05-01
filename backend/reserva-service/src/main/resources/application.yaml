@@ -8,6 +8,11 @@ spring:
     password: senha4
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        type: trace
   rabbitmq:
     host: rabbitmq
     username: guest

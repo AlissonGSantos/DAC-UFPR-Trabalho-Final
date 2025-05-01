@@ -137,11 +137,12 @@ CREATE TABLE emiratads_reserva_transaction.reserva (
 );
 
 CREATE TABLE emiratads_reserva_transaction.historico_reserva (
+    codigo bigserial NOT NULL,
     data timestamptz NOT NULL,
     reserva_codigo varchar(8) NOT NULL,
     estado_old bigint NULL,
     estado_new bigint NOT NULL,
-    CONSTRAINT hist_reserva_pkey PRIMARY KEY (data,reserva_codigo),
+    CONSTRAINT hist_reserva_pkey PRIMARY KEY (codigo),
     CONSTRAINT hist_reserva_old_estado_fk FOREIGN KEY (estado_old) REFERENCES emiratads_reserva_transaction.estado_reserva(codigo),
     CONSTRAINT hist_reserva_new_estado_fk FOREIGN KEY (estado_new) REFERENCES emiratads_reserva_transaction.estado_reserva(codigo),
     CONSTRAINT reserva_codigo_fk FOREIGN KEY (reserva_codigo) REFERENCES emiratads_reserva_transaction.reserva(codigo)
@@ -164,5 +165,5 @@ CREATE TABLE emiratads_reserva_access.reserva (
     data timestamptz NOT NULL,
     poltrona int NOT NULL,
     quantidade_milhas numeric(10, 2) NOT NULL,
-    CONSTRAINT reserva_access_pkey UNIQUE (codigo,poltrona)
+    CONSTRAINT reserva_access_pkey PRIMARY KEY (codigo,codigo_voo,poltrona)
 );

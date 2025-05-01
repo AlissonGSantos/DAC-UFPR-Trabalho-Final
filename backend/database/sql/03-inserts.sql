@@ -26,8 +26,12 @@ INSERT INTO emiratads_cliente.cliente (cpf, nome, email, saldo_milhas, endereco_
 INSERT INTO emiratads_voo.aeroporto (codigo, nome, cidade, uf) VALUES
     ('GRU', 'Aeroporto Internacional de São Paulo/Guarulhos', 'Guarulhos', 'SP'),
     ('GIG', 'Aeroporto Internacional do Rio de Janeiro/Galeão', 'Rio de Janeiro', 'RJ'),
-    ('CWB', 'Aeroporto Internacional de Curitiba', 'Curitiba', 'PR'),
-    ('POA', 'Aeroporto Internacional Salgado Filho', 'Porto Alegre', 'RS');
+    ('CWB', 'Aeroporto Internacional Afonso Pena', 'Curitiba', 'PR'),
+    ('POA', 'Aeroporto Internacional Salgado Filho', 'Porto Alegre', 'RS'),
+    ('BSB', 'Aeroporto Internacional de Brasília', 'Brasília', 'DF'),
+    ('CNF', 'Aeroporto Internacional de Belo Horizonte/Confins', 'Belo Horizonte', 'MG'),
+    ('REC', 'Aeroporto Internacional do Recife/Guararapes', 'Recife', 'PE'),
+    ('SSA', 'Aeroporto Internacional de Salvador', 'Salvador', 'BA');
 
 -- Inserção dos valores na tabela estado_voo
 INSERT INTO emiratads_voo.estado_voo (sigla, descricao) VALUES
@@ -37,9 +41,24 @@ INSERT INTO emiratads_voo.estado_voo (sigla, descricao) VALUES
 
 -- Inserts para a tabela voo
 INSERT INTO emiratads_voo.voo (codigo, data, valor_passagem, quantidade_poltronas_total, quantidade_poltronas_ocupadas, estado_codigo, aeroporto_origem, aeroporto_destino) VALUES
-    ('TADS0001', '2025-08-10T10:30:00-03:00', 500.00, 150, 0, 1, 'POA', 'CWB'),
-    ('TADS0002', '2025-09-11T09:30:00-03:00', 450.00, 150, 0, 1, 'CWB', 'GIG'),
-    ('TADS0003', '2025-10-12T08:30:00-03:00', 400.00, 150, 0, 1, 'CWB', 'POA');
+    ('TADS0001', '2025-08-10T10:30:00-03:00', 500.00, 150, 2, 1, 'POA', 'CWB'),
+    ('TADS0002', '2025-09-11T09:30:00-03:00', 450.00, 150, 1, 1, 'CWB', 'GIG'),
+    ('TADS0003', '2025-10-12T08:30:00-03:00', 400.00, 150, 1, 1, 'CWB', 'POA'),
+    ('TADS0004', '2025-11-01T14:00:00-03:00', 500.00, 180, 10, 1, 'GRU', 'GIG'),
+    ('TADS0005', '2025-11-02T15:30:00-03:00', 600.00, 200, 50, 1, 'GIG', 'CWB'),
+    ('TADS0006', '2025-11-03T16:45:00-03:00', 450.00, 150, 20, 1, 'CWB', 'BSB'),
+    ('TADS0007', '2025-11-04T18:00:00-03:00', 700.00, 220, 100, 1, 'BSB', 'REC'),
+    ('TADS0008', '2025-11-05T19:15:00-03:00', 800.00, 250, 240, 1, 'REC', 'SSA'),
+    ('TADS0009', '2025-11-06T20:30:00-03:00', 500.00, 180, 30, 1, 'SSA', 'CNF'),
+    ('TADS0010', '2025-11-07T21:45:00-03:00', 400.00, 150, 5, 1, 'CNF', 'POA'),
+    ('TADS0011', '2025-11-08T22:00:00-03:00', 650.00, 200, 80, 1, 'POA', 'GRU'),
+    ('TADS0012', '2025-11-09T23:15:00-03:00', 750.00, 220, 150, 1, 'GRU', 'BSB'),
+    ('TADS0013', '2025-11-10T08:00:00-03:00', 600.00, 200, 60, 1, 'BSB', 'CWB'),
+    ('TADS0014', '2025-11-11T09:30:00-03:00', 550.00, 180, 90, 1, 'CWB', 'REC'),
+    ('TADS0015', '2025-11-12T10:45:00-03:00', 500.00, 150, 40, 1, 'REC', 'GIG'),
+    ('TADS0016', '2025-11-13T12:00:00-03:00', 450.00, 150, 25, 1, 'GIG', 'SSA'),
+    ('TADS0017', '2025-11-14T13:15:00-03:00', 700.00, 220, 120, 1, 'SSA', 'CNF'),
+    ('TADS0018', '2025-11-15T14:30:00-03:00', 800.00, 250, 180, 1, 'CNF', 'POA');
 
 -- Inserts para a tabela estado_resera
 INSERT INTO emiratads_reserva_transaction.estado_reserva (sigla, descricao) VALUES
@@ -87,7 +106,7 @@ INSERT INTO emiratads_cliente.transacao (cliente_codigo, data, quantidade_milhas
     (1, '2025-08-10T10:30:00-03:00', -200.00, 0.00, 'RES0001', 'POA->CWB', 'SAIDA'),
     (2, '2025-09-11T09:30:00-03:00', -90.00, 0.00, 'RES0002', 'CWB->GIG', 'SAIDA'),
     (3, '2025-10-12T08:30:00-03:00', -80.00, 0.00, 'RES0003', 'CWB->POA', 'SAIDA'),
-    (3, '2025-10-13T10:00:00-03:00', 80.00, 0.00, NULL, 'REEMBOLSO RESERVA', 'ENTRADA');
+    (3, '2025-10-13T10:00:00-03:00', 80.00, 0.00, 'RES0003', 'REEMBOLSO', 'ENTRADA');
 
 -- Atualizar o saldo_milhas na tabela cliente
 UPDATE emiratads_cliente.cliente c

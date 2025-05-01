@@ -1,6 +1,6 @@
 package br.ufpr.dac.saga_orchestration_service.controllers
 
-import br.ufpr.dac.saga_orchestration_service.services.AutocadastroSaga
+import br.ufpr.dac.saga_orchestration_service.sagas.AutocadastroSaga
 import jakarta.validation.Valid
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.ResponseEntity
