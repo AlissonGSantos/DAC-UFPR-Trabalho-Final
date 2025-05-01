@@ -10,9 +10,7 @@ import jakarta.persistence.Table
 @Table (name = "estado_voo")
 class EstadoVoo (
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val codigo: Long,
-
     val sigla: String,
     val descricao: String
 )

@@ -1,4 +1,4 @@
-package br.ufpr.dac.cliente_service.resource.dto
+package utils.dto
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZonedDateTime

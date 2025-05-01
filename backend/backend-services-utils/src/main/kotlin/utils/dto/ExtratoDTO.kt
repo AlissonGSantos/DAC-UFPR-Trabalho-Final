@@ -1,4 +1,4 @@
-package br.ufpr.dac.cliente_service.resource.dto
+package utils.dto
 
 data class ExtratoDTO (
     val codigo: Long,

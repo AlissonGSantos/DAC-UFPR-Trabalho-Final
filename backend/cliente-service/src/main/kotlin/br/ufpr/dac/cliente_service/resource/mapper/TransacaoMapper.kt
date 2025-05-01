@@ -1,7 +1,8 @@
 package br.ufpr.dac.cliente_service.resource.mapper
 
 import br.ufpr.dac.cliente_service.domain.Transacao
-import br.ufpr.dac.cliente_service.resource.dto.TransacaoExtratoDTO
+import utils.dto.ReservaCreationResponseDTO
+import utils.dto.TransacaoExtratoDTO
 
 class TransacaoMapper {
     companion object {

@@ -1,21 +1,13 @@
 package br.ufpr.dac.reserva_service.domain
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import br.ufpr.dac.reserva_service.domain.embeddable.PoltronasReservadasId
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "poltronas_reservadas", schema = "emiratads_reserva_transaction")
 data class PoltronasReservadas(
-    @Id
-    val codigo: Int,
-    @Id
-    val codigo_voo: String,
+    @EmbeddedId
+    val id: PoltronasReservadasId,
     val codigo_cliente: Long,
-
-    @ManyToOne
-    @JoinColumn(name = "codigo_reserva")
-    val reserva: Reserva
+    val codigo_reserva: String
 )

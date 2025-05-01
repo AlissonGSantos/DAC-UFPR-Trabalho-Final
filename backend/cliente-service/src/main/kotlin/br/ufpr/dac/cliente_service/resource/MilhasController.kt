@@ -1,6 +1,6 @@
 package br.ufpr.dac.cliente_service.resource
 
-import br.ufpr.dac.cliente_service.resource.dto.ExtratoDTO
+import utils.dto.ExtratoDTO
 import br.ufpr.dac.cliente_service.resource.dto.MilhasCompraDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
