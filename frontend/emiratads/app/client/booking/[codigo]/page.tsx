@@ -1,0 +1,80 @@
+"use client";
+
+import useBooking from "./useBooking";
+import BookingCard from "./components/BookingCard";
+import { maskCurrency } from "@/app/utils/currencyMask";
+import Button from "@/app/components/Button/Button";
+import { useRouter } from "next/navigation";
+
+const BookingDetail = ({ params }: { params: { codigo: string } }) => {
+  const {
+    booking
+  } = useBooking(params.codigo);
+
+  const router = useRouter();
+
+  if (!booking) return <div className="p-10 text-slate-300">Reserva não encontrada</div>;
+
+  return (
+    <div className="flex flex-col h-full w-full">
+      <div className="flex flex-row justify-between items-center px-16 py-8">
+        <h1 className="text-2xl text-slate-300 uppercase">
+          Detalhes da Reserva
+        </h1>
+      </div>
+      <div className="flex flex-row items-center p-8 bg-slate-900 rounded-lg h-full w-2/3">
+        <div className="flex justify-around items-center h-full bg-slate-800 rounded-lg p-8">
+          {/* Seção Esquerda - Informações da Reserva */}
+          <div className="flex flex-col h-full w-2/3 gap-6">
+            
+            <BookingCard 
+              title="Dados da Reserva"
+              items={[
+                { label: "Código", value: booking.codigo },
+                { label: "Data", value: new Date(booking.data).toLocaleString("pt-BR") },
+                { label: "Valor Total", value: maskCurrency(booking.valor) },
+                { label: "Milhas Utilizadas", value: booking.milhas_utilizadas.toString() },
+                { label: "Poltronas", value: booking.quantidade_poltronas.toString() },
+                { label: "Status", value: booking.estado}
+              ]}
+            />
+          </div>
+
+          {/* Linha roxa lindona no meio */}
+          <div className="w-0.5 bg-indigo-800 h-11/12 mx-8"></div>
+
+          {/* Seção Direita - Informações do Voo */}
+          <div className="flex flex-col h-full w-2/3 gap-6">
+            
+            <BookingCard 
+              title="Dados do Voo"
+              items={[
+                { label: "Código", value: booking.voo.codigo },
+                { label: "Data", value: new Date(booking.voo.data).toLocaleString("pt-BR") },
+                { label: "Valor da Passagem", value: maskCurrency(booking.voo.valor_passagem) },
+                { label: "Assentos Disponíveis", 
+                    value: `${booking.voo.quantidade_poltronas_total - booking.voo.quantidade_poltronas_ocupadas}/${booking.voo.quantidade_poltronas_total}` },
+                { label: "Origem", 
+                    value: `${booking.voo.aeroporto_origem.codigo} - ${booking.voo.aeroporto_origem.cidade}/${booking.voo.aeroporto_origem.uf}` },
+                { label: "Destino", 
+                    value: `${booking.voo.aeroporto_destino.codigo} - ${booking.voo.aeroporto_destino.cidade}/${booking.voo.aeroporto_destino.uf}` },
+                { label: "Status", value: booking.voo.estado }
+              ]}
+            />
+          </div>
+        </div>
+          
+        </div>
+        <div className="flex flex-row justify-start items-center py-4 px-16">
+          <Button
+              onClick={() => router.push("/client/booking")}
+              type="PRIMARY"
+              text="Voltar para Reservas"
+              size="SMALL"
+          />
+          </div>
+      </div>
+  );
+};
+
+export default BookingDetail;

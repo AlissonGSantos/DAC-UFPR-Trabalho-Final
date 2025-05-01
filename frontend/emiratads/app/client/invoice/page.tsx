@@ -1,6 +1,5 @@
 "use client"
 
-import React, { useState } from "react";
 import { robotoFont } from "@/app/assets/fontsSetup";
 import useInvoice from "./useInvoice";
 import Link from "next/link";
@@ -9,8 +8,9 @@ import DataTable from "@/app/components/DataTable/DataTable";
 import Button from "@/app/components/Button/Button";
 import SelectInput from "@/app/components/SelectInput/SelectInput";
 
+
 const Invoice = () => {
-    const { invoice, isCardView, toggleView, columns, milescore, filteredTransactions, setFilter } = useInvoice();
+    const { invoice, filter, isCardView, toggleView, columns, milescore, filteredTransactions, setFilter } = useInvoice();
 
     const filterOptions = [
         { value: "all", label: "Todos" },
@@ -46,7 +46,7 @@ const Invoice = () => {
                     </Button>
                     <SelectInput
                         options={filterOptions}
-                        value={filterOptions.find((opt) => opt.value === "all")?.value}
+                        value={filterOptions.find((opt) => opt.value === filter)?.value}
                         onChange={(e) => setFilter(e.target.value as any)}
                         label="Filtrar por data"
                     />

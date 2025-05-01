@@ -3,6 +3,8 @@ export enum transactionTypeEnum {
     SAIDA = 'SAÍDA'
 }
 
+export type FilterOptions = "lastWeek" | "lastTenDays" | "lastMonth" | "lastYear" | "all";
+
 export interface Transaction {
     data: string; // ISO date
     valor: number;
