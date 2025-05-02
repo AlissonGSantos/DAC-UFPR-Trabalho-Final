@@ -4,18 +4,15 @@ import RegisterForm from "./components/RegisterForm/RegisterForm";
 import Logo from "@/app/assets/images/logos/emiratadsLogo.png";
 import Image from "next/image";
 import Toast from "@/app/components/Toast/Toast";
-import { useState } from "react";
+import useRegisterForm from "./useRegister";
 
 const Register = () => {
-  const [isToastOpen, setIsToastOpen] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const { isToastOpen, setIsToastOpen, errorMessage, setErrorMessage } = useRegisterForm();
 
   return (
     <div className="flex w-full p-4">
       <div className="flex justify-center flex-col mx-auto">
-        <div
-          className={`flex flex-col bg-sky min-w-2xl w-full-50 w-full rounded-md p-4 border-2 border-indigo-900`}
-        >
+        <div className={`flex flex-col bg-sky min-w-2xl w-full-50 w-full rounded-md p-4 border-2 border-indigo-900`}>
           <Image
             src={Logo}
             alt={"emiratads-logo"}
