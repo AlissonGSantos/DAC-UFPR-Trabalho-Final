@@ -20,14 +20,14 @@ const CancelFlightModal : React.FC<CancelModalProps>  = ({ flight, isOpen, onClo
         <p className='text-slate-300 font-semibold'>Você tem certeza que deseja cancelar o voo {flight.codigo}?</p>
         <div className='flex justify-end gap-2 mt-4'>
             <Button
-            text="Cancelar"
+            text="Cancelar ação"
             type="SECONDARY"
             size="SMALL"
             onClick={onClose}
             extraClass=''
           />
           <Button
-            text={"Deletar"}
+            text={"Confirmar Cancelamento"}
             type={"DANGER"}
             size="SMALL"
             onClick={onDelete}
