@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 import java.io.IOException
 import java.nio.charset.StandardCharsets
+import org.springframework.core.io.FileSystemResource
+import java.io.File
 
 @Service
 class EmailService(private val mailSender: JavaMailSender) {
@@ -30,6 +32,10 @@ class EmailService(private val mailSender: JavaMailSender) {
             helper.setTo(destiny)
             helper.setSubject("Novo usuário e senha gerados!")
             helper.setText(emailBody(senha), true)
+
+            // Adiciona a imagem como anexo e referência no HTML
+            val logoFile = FileSystemResource(File("src/main/resources/static/emiratadsLogo.png"))
+            helper.addInline("emiratadsLogo", logoFile)
 
             mailSender.send(mimeMessage)
         } catch (ex: MailException) {
