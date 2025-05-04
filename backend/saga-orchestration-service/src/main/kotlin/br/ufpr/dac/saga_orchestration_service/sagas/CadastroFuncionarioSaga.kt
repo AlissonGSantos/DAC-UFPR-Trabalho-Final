@@ -1,4 +1,4 @@
-package br.ufpr.dac.saga_orchestration_service.services
+package br.ufpr.dac.saga_orchestration_service.sagas
 
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -9,7 +9,7 @@ import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
-import utils.GsonProcessor
+import utils.gson.GsonProcessor
 import utils.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
 import utils.dto.UsuarioInputDTO
@@ -24,7 +24,7 @@ class CadastroFuncionarioSaga (private val template: RabbitTemplate, @Qualifier(
         val responseFuncionario = requestFuncionario.await()
 
         val funcionario = GsonProcessor.parseJson<FuncionarioOutputDTO>(responseFuncionario)
-        val inputFuncionario = UsuarioInputDTO(funcionario.codigo, funcionario.email, null, UsuarioRole.FUNCIONARIO)
+        val inputFuncionario = UsuarioInputDTO(funcionario.codigo, funcionario.email, funcionario.senha, UsuarioRole.FUNCIONARIO)
 
         val requestAuth = async { asyncSendAndReceive(exchange.name, "auth", gson.toJson(inputFuncionario)) }
         val responseAuth = requestAuth.await()
@@ -39,7 +39,7 @@ class CadastroFuncionarioSaga (private val template: RabbitTemplate, @Qualifier(
     }
 
     private suspend fun processResponses(responseFuncionario: FuncionarioOutputDTO, responseAuth: String): FuncionarioOutputDTO {
-        if (responseAuth == "sucesso") {
+        if (responseAuth == "Sucesso") {
             return responseFuncionario
         } else {
             throw RuntimeException()

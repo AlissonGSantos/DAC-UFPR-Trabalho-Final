@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import utils.dto.FuncionarioInputDTO
 
 @RestController
-@RequestMapping("/funcionarios")
+@RequestMapping("/v1/funcionarios")
 class FuncionarioController(private val service: FuncionarioService) {
 
     @GetMapping

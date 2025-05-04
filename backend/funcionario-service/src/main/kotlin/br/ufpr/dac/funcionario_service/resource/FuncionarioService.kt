@@ -17,13 +17,12 @@ class FuncionarioService(private val repository: IFuncionarioRepository) {
     }
 
     fun updateFuncionario(codigo: Long, funcionarioDTO: FuncionarioInputDTO): FuncionarioOutputDTO {
-        val funcionario = repository.findByCodigoAndAtivoTrue(codigo)
+        repository.findByCodigoAndAtivoTrue(codigo)?.let { funcionario ->
+            funcionario.nome = funcionarioDTO.nome
+            funcionario.email = funcionarioDTO.email
+            funcionario.telefone = funcionarioDTO.telefone
 
-        funcionario?.let {
-            it.nome = funcionarioDTO.nome
-            it.email = funcionarioDTO.email
-            it.telefone = funcionarioDTO.telefone
-            return FuncionarioMapper.toDTO(repository.save(it))
+            return FuncionarioMapper.toDTO(repository.save(funcionario))
         }
 
         throw IllegalArgumentException("Funcionário não encontrado com o ID: ${funcionarioDTO.codigo}")
@@ -39,21 +38,17 @@ class FuncionarioService(private val repository: IFuncionarioRepository) {
     }
 
     fun deactivateFuncionario(codigo: Long): FuncionarioOutputDTO {
-        val funcionario = repository.findByCodigoAndAtivoTrue(codigo)
-
-        funcionario?.let {
-            it.ativo = false
-            return FuncionarioMapper.toDTO(repository.save(it))
+        repository.findByCodigoAndAtivoTrue(codigo)?.let { funcionario ->
+            funcionario.ativo = false
+            return FuncionarioMapper.toDTO(repository.save(funcionario))
         }
 
         throw IllegalArgumentException("Funcionário não encontrado com o ID: $codigo")
     }
 
     fun getFuncionarioById(codigo: Long): FuncionarioOutputDTO {
-        val funcionario = repository.findByCodigoAndAtivoTrue(codigo)
-
-        funcionario?.let {
-            return FuncionarioMapper.toDTO(it)
+        repository.findByCodigoAndAtivoTrue(codigo)?.let { funcionario ->
+            return FuncionarioMapper.toDTO(funcionario)
         }
 
         throw IllegalArgumentException("Funcionário não encontrado com o ID: $codigo")

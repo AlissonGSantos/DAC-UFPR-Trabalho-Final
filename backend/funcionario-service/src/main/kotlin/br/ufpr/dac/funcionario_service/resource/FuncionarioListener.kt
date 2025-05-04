@@ -6,10 +6,12 @@ import jakarta.validation.Validation
 import jakarta.validation.Validator
 import jakarta.validation.ValidatorFactory
 import org.springframework.amqp.rabbit.annotation.RabbitListener
+import org.springframework.stereotype.Service
 import utils.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
 import utils.dto.RabbitMessageDTO
 
+@Service
 class FuncionarioListener(private val service: FuncionarioService) {
     private val gson = Gson()
     private val factory: ValidatorFactory = Validation.buildDefaultValidatorFactory()
