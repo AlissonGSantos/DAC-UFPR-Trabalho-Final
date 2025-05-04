@@ -34,7 +34,7 @@ class EmailService(private val mailSender: JavaMailSender) {
             helper.setText(emailBody(senha), true)
 
             // Adiciona a imagem como anexo e referência no HTML
-            val logoFile = FileSystemResource(File("src/main/resources/static/emiratadsLogo.png"))
+            val logoFile = ClassPathResource("static/emiratadsLogo.png")
             helper.addInline("emiratadsLogo", logoFile)
 
             mailSender.send(mimeMessage)
