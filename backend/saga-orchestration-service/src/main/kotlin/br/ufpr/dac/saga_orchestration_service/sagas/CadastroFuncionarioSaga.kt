@@ -24,7 +24,7 @@ class CadastroFuncionarioSaga (private val template: RabbitTemplate, @Qualifier(
         val responseFuncionario = requestFuncionario.await()
 
         val funcionario = GsonProcessor.parseJson<FuncionarioOutputDTO>(responseFuncionario)
-        val inputFuncionario = UsuarioInputDTO(funcionario.codigo, funcionario.email, funcionario.senha, UsuarioRole.FUNCIONARIO)
+        val inputFuncionario = UsuarioInputDTO(funcionario.codigo, funcionario.email, funcionarioCadastro.senha, UsuarioRole.FUNCIONARIO)
 
         val requestAuth = async { asyncSendAndReceive(exchange.name, "auth", gson.toJson(inputFuncionario)) }
         val responseAuth = requestAuth.await()
