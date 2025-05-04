@@ -35,28 +35,26 @@ class AuthService(
 ) {
 
     fun login(usuario: loginInputDTO): loginOutputDTO? {
-        val user = repository.findItemByLogin(usuario.login)
-        user?.let {
-            val secrets = it.senha.split(":")
+        repository.findItemByLogin(usuario.login)?.let { user ->
+            val secrets = user.senha.split(":")
             val pass = secrets[0]
             val salt = secrets[1]
 
             if (passwordService.verifyPassword(usuario.senha, salt, pass)) {
-
-                val routingKey = if (it.role == UsuarioRole.CLIENTE) {
+                val routingKey = if (user.role == UsuarioRole.CLIENTE) {
                     "cliente"
                 } else {
                     "funcionario"
                 }
 
                 val userData: UsuarioOutputDTO = runBlocking {
-                    val request = async { asyncSendAndReceive(exchange.name, routingKey, it.code.toString()) }
+                    val request = async { asyncSendAndReceive(exchange.name, routingKey, user.code.toString()) }
                     val response = request.await()
 
-                    processDadosUsuario(response, it.role)
+                    processDadosUsuario(response, user.role)
                 }
 
-                return loginOutputDTO(tokenJWTService.getToken(it), "bearer", it.role.toString(), userData)
+                return loginOutputDTO(tokenJWTService.getToken(user), "bearer", user.role.toString(), userData)
             }
 
             throw IncorrectPasswordException("Senha incorreta")
@@ -66,16 +64,23 @@ class AuthService(
     }
 
     fun cadastro(cadastro : UsuarioInputDTO) {
-        if (cadastro.senha == null){
-            val novaSenha = passwordService.generateRandomPassword()
-            emailService.sendEmail(cadastro.email, novaSenha)
-
-            val salt = passwordService.generateSalt()
-            cadastro.senha = "${passwordService.hashPassword(novaSenha, salt)}:$salt"
+        var senha = cadastro.senha
+        if (senha == null){
+            senha = passwordService.generateRandomPassword()
+            emailService.sendEmail(cadastro.email, senha)
         }
+        val salt = passwordService.generateSalt()
+        cadastro.senha = "${passwordService.hashPassword(senha, salt)}:$salt"
 
         val user = UsuarioMapper.toDomain(cadastro)
         repository.save(user)
+    }
+
+    fun desativarFuncionario(codigo: Long){
+        repository.findFuncionarioByCodigo(codigo)?.let { funcionario ->
+            repository.delete(funcionario)
+        }
+        throw ResourceNotFoundException("Usuário não encontrado")
     }
 
     private suspend fun asyncSendAndReceive(exchange: String, routingKey: String, message: String): String {

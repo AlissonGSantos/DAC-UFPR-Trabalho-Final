@@ -6,13 +6,13 @@ import utils.validators.Cpf
 
 data class FuncionarioInputDTO(
     val codigo: Long = 0L,
-    @NotBlank
-    @Cpf
+    @field:NotBlank
+    @field:Cpf
     val cpf: String,
-    @NotBlank
-    @Email
+    @field:NotBlank
+    @field:Email
     val email: String,
-    @NotBlank
+    @field:NotBlank
     val nome: String,
     val telefone: String,
     val senha: String?

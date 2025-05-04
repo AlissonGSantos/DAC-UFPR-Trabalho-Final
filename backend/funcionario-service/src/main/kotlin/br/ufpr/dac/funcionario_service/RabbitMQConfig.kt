@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class RabbitMQConfig {
+    private val DEFAULT_ROUTING_KEY = "funcionario"
 
     @Bean
     fun autocadastroRequests(): Queue = Queue("emiratads.autocadastro.funcionario")
@@ -23,14 +24,7 @@ class RabbitMQConfig {
     fun sagaLogin(): DirectExchange = DirectExchange("emiratads.login")
 
     @Bean
-    fun bindingAutocadastro(
-        sagaAutocadastro: DirectExchange,
-        autocadastroRequests: Queue
-    ): Binding {
-        return BindingBuilder.bind(autocadastroRequests)
-            .to(sagaAutocadastro)
-            .with("funcionario")
-    }
+    fun deactivateFuncionario(): DirectExchange = DirectExchange("emiratads.deactivate")
 
     @Bean
     fun bindingLogin(
@@ -39,6 +33,16 @@ class RabbitMQConfig {
     ): Binding {
         return BindingBuilder.bind(loginFuncionarios)
             .to(sagaLogin)
-            .with("funcionario")
+            .with(DEFAULT_ROUTING_KEY)
+    }
+
+    @Bean
+    fun bindingAutocadastro(
+        sagaAutocadastro: DirectExchange,
+        autocadastroRequests: Queue
+    ): Binding {
+        return BindingBuilder.bind(autocadastroRequests)
+            .to(sagaAutocadastro)
+            .with(DEFAULT_ROUTING_KEY)
     }
 }

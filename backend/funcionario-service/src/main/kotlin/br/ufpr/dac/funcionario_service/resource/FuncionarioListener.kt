@@ -17,7 +17,7 @@ class FuncionarioListener(private val service: FuncionarioService) {
     private val factory: ValidatorFactory = Validation.buildDefaultValidatorFactory()
     private val validator: Validator = factory.validator
 
-    @RabbitListener(queues = ["emiratads.autocadastro.funcionario"])
+    @RabbitListener(queues = ["emiratads.autocadastro.funcionario"], errorHandler = "customErrorHandler")
     fun cadastrarFuncionarioSaga(obj: String): String {
         val response: RabbitMessageDTO<FuncionarioOutputDTO>
         val funcionarioInput = gson.fromJson(obj, FuncionarioInputDTO::class.java)
@@ -33,7 +33,7 @@ class FuncionarioListener(private val service: FuncionarioService) {
         return gson.toJson(response)
     }
 
-    @RabbitListener(queues = ["emiratads.login.funcionario"])
+    @RabbitListener(queues = ["emiratads.login.funcionario"], errorHandler = "customErrorHandler")
     fun dadosLoginFuncionario(code: String): String {
         val codigo = code.toLong()
         val dadosFuncionario = service.getFuncionarioById(codigo)
