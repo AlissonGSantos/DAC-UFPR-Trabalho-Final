@@ -27,11 +27,20 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
         return voos.map { VooMapper.toDTO(it) }
     }
 
-    fun getVoosByDate(dataLimite: String): List<VooOutputDTO> {
-        val limite = ZonedDateTime.parse(dataLimite)
-        val agora = ZonedDateTime.now()
+    fun getVoosFromDate(data: String): List<VooOutputDTO> {
+        val dataInicio = ZonedDateTime.parse(data)
         val voos = repository.findAll().filter { voo ->
-            voo.data.isAfter(agora) && voo.data.isBefore(limite)
+            voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)
+        }
+        return voos.map { VooMapper.toDTO(it) }
+    }
+
+    fun getVoosByDateRange(dataInicio: String, dataFim: String): List<VooOutputDTO> {
+        val inicio = ZonedDateTime.parse(dataInicio)
+        val fim = ZonedDateTime.parse(dataFim)
+        val voos = repository.findAll().filter { voo ->
+            (voo.data.isAfter(inicio) || voo.data.isEqual(inicio)) &&
+            (voo.data.isBefore(fim) || voo.data.isEqual(fim))
         }
         return voos.map { VooMapper.toDTO(it) }
     }
