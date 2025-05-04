@@ -15,7 +15,7 @@ import useDataTable from "./useDataTable";
 export interface DataTableProps {
   data: any[];
   columns: ColumnDef<any>[];
-  controls?: ButtonProps[];
+  controls?: ButtonProps[] | ((data: any) => ButtonProps[]);
 }
 
 const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
@@ -31,12 +31,14 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
   return (
     <div className={`p-4 ${robotoFont.className}`}>
       <div className="flex items-center justify-end mb-4">
-        <Input
-          type={"search"}
-          placeholder="Pesquisar:"
-          label={""}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
+        <div className="min-w-50">
+          <Input
+            type={"search"}
+            placeholder="Pesquisar:"
+            label={""}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
       </div>
       <table className="w-full border-indigo-950 bg-slate-950 border-2">
         <thead className="bg-slate-950 text-slate-300">
@@ -54,33 +56,50 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, controls }) => {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className={` odd:bg-slate-900 even:bg-slate-800 ${robotoFont.className} text-slate-300`}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="p-2">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-              {controls?.map((control, index) => (
-                <td key={`controls-${control.text ?? index}`} className="p-2">
-                  <Button
-                    text={control.text}
-                    onClick={() =>
-                      control.onClick && control.onClick(currentData[row.index])
-                    }
-                    type={control.type}
-                    size={control.size}
-                    disabled={control.disabled}
-                  >
-                    {control.children}
-                  </Button>
-                </td>
-              ))}
+          {table.getRowModel().rows.length > 0 ? (
+            table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className={` odd:bg-slate-900 even:bg-slate-800 ${robotoFont.className} text-slate-300`}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="p-2">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+                {controls &&
+                  (typeof controls === "function"
+                    ? controls(currentData[row.index])
+                    : controls
+                  ).map((control, index) => (
+                    <td
+                      key={`controls-${control.text ?? index}`}
+                      className="p-2"
+                    >
+                      <Button
+                        {...control}
+                        onClick={() => {
+                          if (control.onClick) {
+                            control.onClick(currentData[row.index]);
+                          }
+                        }}
+                      >
+                        {control.children}
+                      </Button>
+                    </td>
+                  ))}
+              </tr>
+            ))
+          ) : (
+            <tr className=" bg-slate-700">
+              <td
+                colSpan={columns.length + (controls ? 1 : 0)}
+                className="text-center p-4 text-slate-300"
+              >
+                Nenhum dado disponível.
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 

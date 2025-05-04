@@ -23,37 +23,17 @@ class RabbitMQConfig {
     }
 
     @Bean
-    fun sagaAutocadastro(): DirectExchange {
-        return DirectExchange("emiratads.autocadastro")
-    }
+    fun sagaAutocadastro(): DirectExchange = DirectExchange("emiratads.autocadastro")
 
     @Bean
-    fun bindingFuncionario(exchange: DirectExchange, filaFuncionario: Queue): Binding {
-        return BindingBuilder.bind(filaFuncionario)
-            .to(exchange)
-            .with("funcionario") // Routing key compatível com o controller
-    }
+    fun sagaCriarReserva(): DirectExchange = DirectExchange("emiratads.criareserva")
 
     @Bean
-    fun bindingAuth(exchange: DirectExchange, filaAuth: Queue): Binding {
-        return BindingBuilder.bind(filaAuth)
-            .to(exchange)
-            .with("auth") // Routing key compatível com o controller
-    }
+    fun sagaCancelarReserva(): DirectExchange = DirectExchange("emiratads.cancelareserva")
 
     @Bean
-    fun autocadastroRequests(): Queue {
-        return Queue("emiratads.autocadastro.funcionario")
-    }
+    fun sagaCancelarVoo(): DirectExchange = DirectExchange("emiratads.cancelavoo")
 
     @Bean
-    fun bindingAutocadastro(
-        sagaAutocadastro: DirectExchange,
-        autocadastroRequests: Queue
-    ): Binding {
-        return BindingBuilder.bind(autocadastroRequests)
-            .to(sagaAutocadastro)
-            .with("funcionario")
-    }
-
+    fun sagaRealizarVoo(): DirectExchange = DirectExchange("emiratads.realizavoo")
 }

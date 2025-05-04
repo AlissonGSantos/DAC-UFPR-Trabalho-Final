@@ -103,6 +103,10 @@ jobs:
           else
             MATRIX_PROJECTS=$(echo "${{ steps.modified_projects.outputs.projects }}" | sed 's/ /\",\"/g')
           fi
+          if [ -z "$MATRIX_PROJECTS" ]; then
+            echo "Nenhum projeto para build. Finalizando workflow."
+            exit 0
+          fi
           MATRIX_PROJECTS=$(echo "[\"${MATRIX_PROJECTS}\"]")
           echo "Projetos para build: $MATRIX_PROJECTS"
           echo "matrix_projects=$MATRIX_PROJECTS" >> $GITHUB_OUTPUT

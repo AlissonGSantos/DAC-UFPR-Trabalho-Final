@@ -24,8 +24,8 @@ services:
     ports:
       - "5672:5672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASSWORD: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASSWORD: ${RABBITMQ_DEFAULT_PASSWORD}
     networks:
       - emiratads-network
 
@@ -49,6 +49,8 @@ services:
     ports:
       - "8081:8080"
       - "5005:5005"
+    environment:
+      EMAIL_APP_PASSWORD: ${EMAIL_APP_PASSWORD}
     depends_on:
       - mongodb
       - rabbitmq
@@ -89,9 +91,11 @@ services:
       dockerfile: ../Dockerfile
     ports:
       - "8084:8080"
+      - "5008:5005"
     depends_on:
       - autenticacaoservice
       - dbdevelopment
+      - rabbitmq
     networks:
       - emiratads-network
 
@@ -101,6 +105,7 @@ services:
       dockerfile: ../Dockerfile
     ports:
       - "8085:8080"
+      - "5009:5005"
     depends_on:
       - autenticacaoservice
       - dbdevelopment

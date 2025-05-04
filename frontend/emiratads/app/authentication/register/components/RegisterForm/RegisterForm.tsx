@@ -6,13 +6,30 @@ import useRegisterForm from "./useRegisterForm";
 import { maskCPF } from "@/app/utils/cpfMask";
 import cepMask from "@/app/utils/cepMask";
 import { robotoFont } from "@/app/assets/fontsSetup";
+import Modal from "@/app/components/Modal/Modal";
+import Link from "next/link";
+import { CheckCircle } from "phosphor-react";
 
-const RegisterForm = () => {
-  const { register, handleSubmit, errors, onSubmit, handleCepBlur } =
-    useRegisterForm();
+interface RegisterFormProps {
+  setIsToastOpen: (isOpen: boolean) => void;
+  setErrorMessage: (message: string) => void;
+}
+
+const RegisterForm = ({ setIsToastOpen, setErrorMessage }: RegisterFormProps) => {
+  const { register, handleSubmit, errors, onSubmit, handleCepBlur, modalState, setModalState } =
+    useRegisterForm({ setIsToastOpen, setErrorMessage });
 
   return (
     <div className="flex flex-col w-full justify-center py-8">
+      <Modal isOpen={modalState} onClose={() => setModalState(false)} title="Cadastro realizado com sucesso!!!">
+        <div className="py-2 flex items-center gap-4">
+          <h2 className="py-4 text-gray-200 text-lg">Obrigado por se cadastrar!</h2>
+          <CheckCircle size={32} weight="fill" className="text-green-400" />
+        </div>
+        <p className="text-gray-200">Você receberá um e-mail no endereço informado contendo uma senha temporária para acessar a aplicação.</p>
+        <Link className="flex justify-center align-center m-auto mt-8 bg-indigo-600 p-3 w-fit rounded-lg text-xl uppercase font-semibold tracking-widest hover:bg-indigo-500 text-white border-0 delay-50" href={"/authentication/login"}>Login</Link>
+      </Modal>
+
       <h1
         className={`text-5xl font-semibold ${robotoFont.className} my-12 tracking-widest text-indigo-600 mx-auto`}
       >
@@ -79,11 +96,11 @@ const RegisterForm = () => {
                 error={
                   errors.endereco?.cep
                     ? [
-                        {
-                          hasError: true,
-                          message: errors.endereco.cep.message ?? "",
-                        },
-                      ]
+                      {
+                        hasError: true,
+                        message: errors.endereco.cep.message ?? "",
+                      },
+                    ]
                     : []
                 }
               />
@@ -94,11 +111,11 @@ const RegisterForm = () => {
                 error={
                   errors.endereco?.uf
                     ? [
-                        {
-                          hasError: true,
-                          message: errors.endereco.uf.message ?? "",
-                        },
-                      ]
+                      {
+                        hasError: true,
+                        message: errors.endereco.uf.message ?? "",
+                      },
+                    ]
                     : []
                 }
                 disabled
@@ -110,11 +127,11 @@ const RegisterForm = () => {
                 error={
                   errors.endereco?.cidade
                     ? [
-                        {
-                          hasError: true,
-                          message: errors.endereco.cidade.message ?? "",
-                        },
-                      ]
+                      {
+                        hasError: true,
+                        message: errors.endereco.cidade.message ?? "",
+                      },
+                    ]
                     : []
                 }
                 disabled
@@ -128,11 +145,11 @@ const RegisterForm = () => {
                 error={
                   errors.endereco?.bairro
                     ? [
-                        {
-                          hasError: true,
-                          message: errors.endereco.bairro.message ?? "",
-                        },
-                      ]
+                      {
+                        hasError: true,
+                        message: errors.endereco.bairro.message ?? "",
+                      },
+                    ]
                     : []
                 }
                 disabled
@@ -144,11 +161,11 @@ const RegisterForm = () => {
                 error={
                   errors.endereco?.rua
                     ? [
-                        {
-                          hasError: true,
-                          message: errors.endereco.rua.message ?? "",
-                        },
-                      ]
+                      {
+                        hasError: true,
+                        message: errors.endereco.rua.message ?? "",
+                      },
+                    ]
                     : []
                 }
                 disabled
@@ -160,11 +177,11 @@ const RegisterForm = () => {
                 error={
                   errors.endereco?.numero
                     ? [
-                        {
-                          hasError: true,
-                          message: errors.endereco.numero.message ?? "",
-                        },
-                      ]
+                      {
+                        hasError: true,
+                        message: errors.endereco.numero.message ?? "",
+                      },
+                    ]
                     : []
                 }
               />
@@ -177,11 +194,11 @@ const RegisterForm = () => {
             error={
               errors.endereco?.complemento
                 ? [
-                    {
-                      hasError: true,
-                      message: errors.endereco.complemento.message ?? "",
-                    },
-                  ]
+                  {
+                    hasError: true,
+                    message: errors.endereco.complemento.message ?? "",
+                  },
+                ]
                 : []
             }
           />

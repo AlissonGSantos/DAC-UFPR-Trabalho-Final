@@ -13,7 +13,7 @@ export interface Aeroporto {
 
 export interface Flight {
     codigo: string;
-    data: string; // ISO date
+    data: string;
     valor_passagem: number;
     quantidade_poltronas_total: number;
     quantidade_poltronas_ocupadas: number;
@@ -24,7 +24,7 @@ export interface Flight {
 
 export interface FlightUpdateResponse {
     codigo: string;
-    data: string; // ISO date
+    data: string; 
     valor_passagem: number;
     quantidade_poltronas_total: number;
     quantidade_poltronas_ocupadas: number;
