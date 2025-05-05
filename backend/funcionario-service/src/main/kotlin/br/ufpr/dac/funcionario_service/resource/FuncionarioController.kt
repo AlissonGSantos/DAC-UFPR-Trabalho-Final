@@ -1,21 +1,27 @@
 package br.ufpr.dac.funcionario_service.resource
 
-import br.ufpr.dac.funcionario_service.resource.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.DeleteMapping
+import utils.dto.FuncionarioInputDTO
 
 @RestController
-@RequestMapping("/funcionarios")
+@RequestMapping("/v1/funcionarios")
 class FuncionarioController(private val service: FuncionarioService) {
 
     @GetMapping
     fun getFuncionarios(): ResponseEntity<List<FuncionarioOutputDTO>> {
         val funcionarios = service.getAllFuncionarios()
         return ResponseEntity.ok().body(funcionarios)
+    }
+
+    @GetMapping("/{id}")
+    fun getFuncionarioById(@PathVariable id: Long): ResponseEntity<FuncionarioOutputDTO> {
+        val funcionario = service.getFuncionarioById(id)
+        return ResponseEntity.ok().body(funcionario)
     }
 
     @PutMapping("/{id}")

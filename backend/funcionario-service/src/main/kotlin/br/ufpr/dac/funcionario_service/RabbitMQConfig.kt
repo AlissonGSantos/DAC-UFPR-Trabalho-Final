@@ -1,7 +1,5 @@
 package br.ufpr.dac.funcionario_service
 
-import br.ufpr.dac.funcionario_service.resource.FuncionarioListener
-import br.ufpr.dac.funcionario_service.resource.FuncionarioService
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
@@ -10,26 +8,32 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class RabbitMQConfig(private val funcionarioService: FuncionarioService) {
+class RabbitMQConfig {
+    private val DEFAULT_ROUTING_KEY = "funcionario"
 
     @Bean
-    fun autocadastroRequests(): Queue {
-        return Queue("emiratads.autocadastro.funcionario")
-    }
+    fun autocadastroRequests(): Queue = Queue("emiratads.autocadastro.funcionario")
 
     @Bean
-    fun sagaAutocadastro(): DirectExchange {
-        return DirectExchange("emiratads.autocadastro")
-    }
+    fun sagaAutocadastro(): DirectExchange = DirectExchange("emiratads.autocadastro")
 
     @Bean
-    fun loginFuncionarios(): Queue {
-        return Queue("emiratads.login.funcionario")
-    }
+    fun loginFuncionarios(): Queue = Queue("emiratads.login.funcionario")
 
     @Bean
-    fun sagaLogin(): DirectExchange {
-        return DirectExchange("emiratads.login")
+    fun sagaLogin(): DirectExchange = DirectExchange("emiratads.login")
+
+    @Bean
+    fun deactivateFuncionario(): DirectExchange = DirectExchange("emiratads.deactivate")
+
+    @Bean
+    fun bindingLogin(
+        sagaLogin: DirectExchange,
+        loginFuncionarios: Queue
+    ): Binding {
+        return BindingBuilder.bind(loginFuncionarios)
+            .to(sagaLogin)
+            .with(DEFAULT_ROUTING_KEY)
     }
 
     @Bean
@@ -39,23 +43,6 @@ class RabbitMQConfig(private val funcionarioService: FuncionarioService) {
     ): Binding {
         return BindingBuilder.bind(autocadastroRequests)
             .to(sagaAutocadastro)
-            .with("funcionario")
+            .with(DEFAULT_ROUTING_KEY)
     }
-
-    @Bean
-    fun bindingLogin(
-        sagaLogin: DirectExchange,
-        loginFuncionarios: Queue
-    ): Binding {
-        return BindingBuilder.bind(loginFuncionarios)
-            .to(sagaLogin)
-            .with("funcionario")
-    }
-
-    @Bean
-    fun funcionarioListener(): FuncionarioListener {
-        return FuncionarioListener(funcionarioService)
-    }
-
-
 }

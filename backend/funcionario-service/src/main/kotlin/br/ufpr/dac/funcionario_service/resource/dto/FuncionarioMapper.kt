@@ -1,7 +1,9 @@
 package br.ufpr.dac.funcionario_service.resource.dto
 
 import br.ufpr.dac.funcionario_service.domain.Funcionario
+import utils.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
+
 
 class FuncionarioMapper {
     companion object {
@@ -15,7 +17,7 @@ class FuncionarioMapper {
             )
         }
 
-        fun toDomain(funcionario: FuncionarioOutputDTO): Funcionario {
+        fun toDomain(funcionario: FuncionarioInputDTO): Funcionario {
             return Funcionario(
                 funcionario.codigo,
                 funcionario.cpf,

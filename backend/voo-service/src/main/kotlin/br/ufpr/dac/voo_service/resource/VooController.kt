@@ -15,12 +15,19 @@ class VooController(private val service: VooService) {
     fun getVoos(
         @RequestParam(required = false) origem: String?,
         @RequestParam(required = false) destino: String?,
-        @RequestParam(required = false) dataLimite: String?
+        @RequestParam(required = false) data: String?,
+        @RequestParam(required = false) inicio: String?,
+        @RequestParam(required = false) fim: String?
     ): ResponseEntity<List<VooOutputDTO>> {
         val voos = when {
-            origem != null && destino != null -> service.getVoosByAeroportos(origem, destino)
-            dataLimite != null -> service.getVoosByDate(dataLimite)
-            else -> service.getAllVoos()
+            origem != null && destino != null -> 
+                service.getVoosByAeroportos(origem, destino)
+            data != null -> 
+                service.getVoosFromDate(data)
+            inicio != null && fim != null ->
+                service.getVoosByDateRange(inicio, fim)
+            else -> 
+                service.getAllVoos()
         }
         return ResponseEntity.ok().body(voos)
     }
