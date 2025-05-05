@@ -57,36 +57,36 @@ const useFlightDetail = (codigo: string) => {
     }
   };
 
-  // Obter o saldo de milhas do usuário
+
   const userMilesBalance = userData?.usuario.saldo_milhas ?? 0;
 
-  // Calcular desconto baseado nas milhas usadas (1 milha = 5 reais)
+
   const calculateDiscount = (miles: number): number => {
     if (!flight) return 0;
-    // Cada milha vale 5 reais
     const discountValue = miles * 5;
     const maxDiscount = (flight.valor_passagem * sitsQuantity);
-    // Limitar o desconto ao valor total da passagem
     return Math.min(discountValue, maxDiscount);
   };
 
-  // Manipular alteração na quantidade de milhas a serem usadas
   const handleMilesChange = (miles: number) => {
+    if (sitsQuantity === 0) {
+      setErrorMessage("Selecione ao menos um assento antes de utilizar milhas");
+      setIsToastOpen(true);
+      return;
+    }
+    
     const milesNumber = Number(miles);
     if (isNaN(milesNumber) || milesNumber < 0) {
       setMilesToUse(0);
       return;
     }
     
-    // Não permitir usar mais milhas do que o usuário possui
     const validMiles = Math.min(milesNumber, userMilesBalance);
     setMilesToUse(validMiles);
     
-    // Atualizar preço total
     updateTotalPrice(validMiles);
   };
 
-  // Atualizar preço total com desconto de milhas
   const updateTotalPrice = (miles: number) => {
     if (!flight) return;
     
@@ -98,7 +98,7 @@ const useFlightDetail = (codigo: string) => {
   const onBookFlight = async () => {
     try {
       if (!flight) throw new Error("Ocorreu um erro ao executar reserva");
-      if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
+        if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
 
       const updatedFlight = {
         ...flight,
@@ -110,7 +110,6 @@ const useFlightDetail = (codigo: string) => {
         f.codigo === codigo ? updatedFlight : f
       );
 
-      // Atualizar saldo de milhas do usuário se estiver usando milhas
       if (milesToUse > 0 && userData) {
         const newMilesBalance = userMilesBalance - milesToUse;
         updateMilesBalance(newMilesBalance);
@@ -144,12 +143,15 @@ const useFlightDetail = (codigo: string) => {
         flight.quantidade_poltronas_ocupadas;
       setAvailableSits(available);
       
-      // Inicializar preço total sem desconto de milhas
       setTotalPrice(flight.valor_passagem * sitsQuantity);
+      
+      // Resetar milhas quando não houver assentos selecionados
+      if (sitsQuantity === 0) {
+        setMilesToUse(0);
+      }
     }
-  }, [flight]);
+  }, [flight, sitsQuantity]);
 
-  // Atualizar preço total quando a quantidade de assentos mudar
   useEffect(() => {
     if (flight) {
       updateTotalPrice(milesToUse);
@@ -159,7 +161,8 @@ const useFlightDetail = (codigo: string) => {
   const openModal = () => {
     try {
       if (!flight) throw new Error("Ocorreu um erro ao executar reserva");
-      if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
+        if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
+        
       setIsConfirmModalOpen(true);
     } catch (error) {
       if (error instanceof Error) {

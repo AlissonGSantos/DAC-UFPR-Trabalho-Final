@@ -138,6 +138,7 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                       min={0}
                       max={userMilesBalance}
                       extraClasses="w-32"
+                      disabled={sitsQuantity === 0}
                     />
                   </div>
 
