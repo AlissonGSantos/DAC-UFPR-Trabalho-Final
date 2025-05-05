@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { UserAuth } from "../types/AuthTypes";
+import { EmployeeEnum, UserAuth } from "../types/AuthTypes";
 
 type AuthContextType = {
   userData: UserAuth | undefined | null;
@@ -16,6 +16,7 @@ type AuthContextType = {
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
   updateMilesBalance: (miles: number) => void;
+  getUserType: () => EmployeeEnum | null;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,7 +27,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userData, setUserData] = useState<UserAuth | undefined | null>(null);
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
-  const saveToCookies = (key: string, value: string) => {
+  const saveToCookies = async (key: string, value: string) => {
     document.cookie = `${key}=${value}; path=/; max-age=3600; secure; samesite=strict`;
   };
 
@@ -63,6 +64,13 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     window.location.href = "/authentication/login";
   };
 
+  const getUserType = (): EmployeeEnum | null => {
+    if (userData) {
+      return userData.tipo;
+    }
+    return null;
+  };
+
   useEffect(() => {
     const token = getFromCookies("token");
     const user = getFromCookies("user");
@@ -85,6 +93,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       isLogged,
       setIsLogged,
       updateMilesBalance,
+      getUserType,
     }),
     [userData, isLogged]
   );

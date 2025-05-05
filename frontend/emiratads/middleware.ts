@@ -2,29 +2,34 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const isAuthorizedRoute =
-    !request.nextUrl.pathname.startsWith("/authentication");
   const token = request.cookies.get("token")?.value;
+  const userCookie = request.cookies.get("user")?.value;
+  const user = userCookie ? JSON.parse(userCookie) : null;
 
-  if (!token && isAuthorizedRoute) {
+  const isClientRoute = request.nextUrl.pathname.startsWith("/client");
+  const isEmployeeRoute = request.nextUrl.pathname.startsWith("/employee");
+  const isAuthRoute = request.nextUrl.pathname.startsWith("/authentication");
+
+  if (!token && !isAuthRoute) {
     return NextResponse.redirect(new URL("/authentication/login", request.url));
   }
 
-  if (!isAuthorizedRoute) {
-    const isLoginPage = request.nextUrl.pathname.startsWith(
-      "/authentication/login"
-    );
-    const isRegisterPage = request.nextUrl.pathname.startsWith(
-      "/authentication/register"
-    );
+  if (user) {
+    const userType = user.tipo;
 
-    if (token && (isLoginPage || isRegisterPage)) {
-      return NextResponse.redirect(new URL("/", request.url));
+    if (userType === "CLIENTE" && isEmployeeRoute) {
+      return NextResponse.redirect(new URL("/client/home", request.url));
+    }
+
+    if (userType === "FUNCIONARIO" && isClientRoute) {
+      console.log("Redirecting employee to home page");
+      return NextResponse.redirect(new URL("/employee/home", request.url));
     }
   }
 
   return NextResponse.next();
 }
+
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/client/:path*", "/employee/:path*", "/authentication/:path*"],
 };
