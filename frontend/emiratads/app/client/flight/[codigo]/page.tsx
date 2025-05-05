@@ -32,6 +32,9 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
     milesToUse,
     handleMilesChange,
     totalPrice,
+    register,
+    errors,
+    inputError,
   } = useFlightDetail(codigo);
 
   if (!codigo) {
@@ -132,13 +135,26 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                     <Input
                       type={"number"}
                       label={""}
+                      {...register("miles", {
+                        onChange: (e) => handleMilesChange(Number(e.target.value)),
+                        valueAsNumber: true,
+                      })}
                       value={milesToUse}
-                      onChange={(e) => handleMilesChange(Number(e.target.value))}
                       placeholder="0"
                       min={0}
                       max={userMilesBalance}
                       extraClasses="w-32"
                       disabled={sitsQuantity === 0}
+                      error={
+                        (errors.miles || inputError) 
+                          ? [
+                              {
+                                hasError: true,
+                                message: errors.miles?.message || inputError || "",
+                              },
+                            ]
+                          : []
+                      }
                     />
                   </div>
 

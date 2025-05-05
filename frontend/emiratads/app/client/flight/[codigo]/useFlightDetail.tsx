@@ -2,6 +2,10 @@ import { useState, useEffect, useMemo } from "react";
 import useFlightContext from "@/app/contexts/flight";
 import { Flight } from "@/app/types/FlightTypes";
 import { useAuthContext } from "@/app/contexts/auth";
+import { validateMilesInput } from "./schema/schema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UsePointsSchema, UsePointsData } from "./schema/schema";
 
 const useFlightDetail = (codigo: string) => {
   const { flightList, setFlightList } = useFlightContext();
@@ -16,6 +20,16 @@ const useFlightDetail = (codigo: string) => {
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [milesToUse, setMilesToUse] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [inputError, setInputError] = useState<string | null>(null);
+
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<UsePointsData>({
+    resolver: zodResolver(UsePointsSchema),
+    defaultValues: {
+      miles: 0
+    }
+  });
+
+  const userMilesBalance = userData?.usuario.saldo_milhas ?? 0;
 
   const fetchFlight = async () => {
     try {
@@ -57,10 +71,6 @@ const useFlightDetail = (codigo: string) => {
     }
   };
 
-
-  const userMilesBalance = userData?.usuario.saldo_milhas ?? 0;
-
-
   const calculateDiscount = (miles: number): number => {
     if (!flight) return 0;
     const discountValue = miles * 5;
@@ -69,20 +79,28 @@ const useFlightDetail = (codigo: string) => {
   };
 
   const handleMilesChange = (miles: number) => {
-    if (sitsQuantity === 0) {
-      setErrorMessage("Selecione ao menos um assento antes de utilizar milhas");
-      setIsToastOpen(true);
+    const ticketValue = flight?.valor_passagem ?? 0;
+    const validation = validateMilesInput(miles, userMilesBalance, sitsQuantity, ticketValue);
+    
+    if (!validation.isValid) {
+      setInputError(validation.message || null);
+      if (validation.validValue !== undefined) {
+        setMilesToUse(validation.validValue);
+        setValue("miles", validation.validValue);
+      }
+      
+      if (validation.message && validation.message.includes("assento")) {
+        setErrorMessage(validation.message);
+        setIsToastOpen(true);
+      }
+      
       return;
     }
     
-    const milesNumber = Number(miles);
-    if (isNaN(milesNumber) || milesNumber < 0) {
-      setMilesToUse(0);
-      return;
-    }
-    
-    const validMiles = Math.min(milesNumber, userMilesBalance);
+    setInputError(null);
+    const validMiles = validation.validValue || 0;
     setMilesToUse(validMiles);
+    setValue("miles", validMiles);
     
     updateTotalPrice(validMiles);
   };
@@ -148,9 +166,14 @@ const useFlightDetail = (codigo: string) => {
       // Resetar milhas quando não houver assentos selecionados
       if (sitsQuantity === 0) {
         setMilesToUse(0);
+        setValue("miles", 0);
+        setInputError(null);
+      } else if (milesToUse > 0) {
+        // Revalidar as milhas se o número de assentos mudou
+        handleMilesChange(milesToUse);
       }
     }
-  }, [flight, sitsQuantity]);
+  }, [flight, sitsQuantity, setValue]);
 
   useEffect(() => {
     if (flight) {
@@ -209,6 +232,9 @@ const useFlightDetail = (codigo: string) => {
     milesToUse,
     handleMilesChange,
     totalPrice,
+    register,
+    errors,
+    inputError,
   };
 };
 
