@@ -3,12 +3,15 @@ import Button from "@/app/components/Button/Button";
 import Input from "@/app/components/Input/Input";
 import React from "react";
 import useLoginForm from "./useLoginForm";
+import Loader from "@/app/components/Loader/Loader";
 
 const LoginForm = () => {
-  const { handleSubmit, register, onSubmit, errors } = useLoginForm();
+  const { handleSubmit, register, onSubmit, errors, error, isLoading } =
+    useLoginForm();
 
   return (
     <div className="flex flex-col w-2/3 mx-auto mt-6">
+      <Loader loading={isLoading} />
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <Input
           type={"email"}
@@ -30,6 +33,9 @@ const LoginForm = () => {
               : []
           }
         ></Input>
+        {error && (
+          <span className="text-red-500 text-sm text-center">{error}</span>
+        )}
         <div className="flex w-1/3 mx-auto mt-6">
           <Button
             text={"Acessar"}

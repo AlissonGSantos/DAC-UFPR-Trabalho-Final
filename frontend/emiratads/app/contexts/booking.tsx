@@ -7,15 +7,15 @@ import { statusFlightEnum } from "../types/FlightTypes";
 const bookingListMock: Booking[] = [
   {
     codigo: "BKG001",
-    data: "2025-04-15T10:00:00Z",
+    data: "2025-05-04T10:00:00Z",
     valor: 500.0,
     milhas_utilizadas: 1000,
     quantidade_poltronas: 2,
     codigo_cliente: 1,
-    estado: statusBookingEnum.CRIADA,
+    estado: statusBookingEnum.CRIADA, // Estado CRIADA para check-in
     voo: {
       codigo: "FL001",
-      data: "2025-04-15T08:00:00Z",
+      data: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Data dentro de 24 horas
       valor_passagem: 500.0,
       quantidade_poltronas_total: 180,
       quantidade_poltronas_ocupadas: 120,
@@ -36,7 +36,7 @@ const bookingListMock: Booking[] = [
   },
   {
     codigo: "BKG002",
-    data: "2025-05-20T15:30:00Z",
+    data: "2025-05-06T15:30:00Z",
     valor: 300.0,
     milhas_utilizadas: 500,
     quantidade_poltronas: 1,
