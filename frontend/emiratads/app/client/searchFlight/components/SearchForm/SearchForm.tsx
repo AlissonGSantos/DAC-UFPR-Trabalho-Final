@@ -5,6 +5,7 @@ import React from "react";
 import useSearchForm from "./useSearchForm";
 import { Aeroporto, Flight } from "@/app/types/FlightTypes";
 import { useSearchParams } from "next/navigation";
+import { AirplaneInFlight, MagnifyingGlass } from "phosphor-react";
 
 interface SearchFormProps {
   onFindFlights: (flights: Flight[]) => void;
@@ -42,11 +43,11 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
   return (
     <form
-      className="flex flex-col h-full w-full bg-slate-800 rounded-lg p-4 gap-12"
+      className="flex flex-col md:flex-row items-center w-full bg-slate-800 rounded-lg p-4 gap-4"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="flex gap-16 px-8">
-        <div className="flex-1">
+      <div className="flex flex-col md:flex-row items-center gap-4 md:gap-2 w-full">
+        <div className="w-full md:w-5/12">
           <SelectInput
             options={airportsOptions}
             label="Aeroporto de Origem"
@@ -56,7 +57,14 @@ const SearchForm: React.FC<SearchFormProps> = ({
             })}
           />
         </div>
-        <div className="flex-1">
+        <div className="flex items-center justify-center mx-1">
+          <AirplaneInFlight
+            size={24}
+            weight="fill"
+            className="text-indigo-500"
+          />
+        </div>
+        <div className="w-full md:w-5/12">
           <SelectInput
             options={airportsOptions}
             label="Aeroporto de Destino"
@@ -67,14 +75,16 @@ const SearchForm: React.FC<SearchFormProps> = ({
             })}
           />
         </div>
-      </div>
-      <div className="flex w-full justify-end">
-        <Button
-          text="Buscar"
-          typeButton="submit"
-          size="SMALL"
-          extraClass="w-1/4 mr-8"
-        />
+        <div className="w-full md:w-2/12 mt-4 md:mt-0 md:ml-2">
+          <Button
+            text="Buscar"
+            typeButton="submit"
+            size="SMALL"
+            iconPosition="RIGHT"
+            children={<MagnifyingGlass size={18} weight="bold"/>}
+            extraClass="w-full"
+          />
+        </div>
       </div>
     </form>
   );

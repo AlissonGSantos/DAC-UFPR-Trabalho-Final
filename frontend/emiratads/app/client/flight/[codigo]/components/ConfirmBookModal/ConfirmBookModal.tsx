@@ -1,4 +1,5 @@
 import Modal from "@/app/components/Modal/Modal";
+import Button from "@/app/components/Button/Button";
 import React from "react";
 
 interface ConfirmBookModalProps {
@@ -6,8 +7,9 @@ interface ConfirmBookModalProps {
   onClose: () => void;
   onConfirm: () => void;
   onCancel: () => void;
-  value?: string;
-  quantity?: number;
+  value: string;
+  quantity: number;
+  milesUsed: number;
 }
 
 const ConfirmBookModal: React.FC<ConfirmBookModalProps> = ({
@@ -17,13 +19,14 @@ const ConfirmBookModal: React.FC<ConfirmBookModalProps> = ({
   onCancel,
   value,
   quantity,
+  milesUsed,
 }) => {
   return (
-    <Modal
-      title="Confirmar reserva"
-      isOpen={isOpen}
-      onClose={onClose}
-      controls={[
+    <Modal 
+    title="Confirmar reserva"
+    isOpen={isOpen} 
+    onClose={onClose}
+    controls={[
         {
           text: "Cancelar",
           onClick: onCancel,
@@ -36,10 +39,21 @@ const ConfirmBookModal: React.FC<ConfirmBookModalProps> = ({
         },
       ]}
     >
-      <div className="flex flex-col gap-4 text-slate-300">
-        <p>Tem certeza que deseja reservar este voo?</p>
-        <p>Valor: {value}</p>
-        <p>Quantidade de passagens: {quantity}</p>
+      <div className="bg-slate-800 px-8 py-2 max-w-md mx-auto">
+        <div className="mb-4">
+          <p className="text-slate-300 mb-2">
+            Você está prestes a reservar <strong>{quantity}</strong>{" "}
+            {quantity > 1 ? "assentos" : "assento"}.
+          </p>
+          <p className="text-slate-300">
+            Valor total da reserva: <strong>{value}</strong>
+          </p>
+          {milesUsed > 0 && (
+            <p className="text-slate-300 mt-2">
+              Utilizando <strong>{milesUsed}</strong> milhas para esta reserva.
+            </p>
+          )}
+        </div>
       </div>
     </Modal>
   );
