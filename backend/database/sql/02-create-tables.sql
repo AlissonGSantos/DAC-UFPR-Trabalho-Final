@@ -15,7 +15,9 @@ CREATE TABLE emiratads_funcionario.funcionario (
     email varchar(30) NOT NULL,
     telefone varchar(14),
     ativo boolean NOT NULL DEFAULT true,
-    CONSTRAINT funcionario_pkey PRIMARY KEY (codigo)
+    CONSTRAINT funcionario_pkey PRIMARY KEY (codigo),
+    CONSTRAINT funcionario_unique_cpf UNIQUE (cpf),
+    CONSTRAINT funcionario_unique_email UNIQUE (email)
 );
 
 -- Serviço de cliente --

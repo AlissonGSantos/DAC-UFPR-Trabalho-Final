@@ -9,15 +9,18 @@ import utils.dto.UsuarioInputDTO
 
 @Service
 class AutenticacaoListener(private val authService: AuthService) {
+    val gson = Gson()
 
     @RabbitListener(queues = ["emiratads.autocadastro.autenticacao"])
     fun autocadastroSaga(obj: String): String {
-        val gson = Gson()
-
         val cadastro = gson.fromJson(obj, UsuarioInputDTO::class.java)
         authService.cadastro(cadastro)
 
         return "Sucesso"
     }
 
+    @RabbitListener(queues = ["emiratads.deactivate.funcionario"])
+    fun deactivateFuncionario(codigo: String) {
+        authService.desativarFuncionario(codigo.toLong())
+    }
 }
