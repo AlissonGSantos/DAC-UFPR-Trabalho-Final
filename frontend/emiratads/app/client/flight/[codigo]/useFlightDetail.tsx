@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import useFlightContext from "@/app/contexts/flight";
 import { Flight } from "@/app/types/FlightTypes";
+import { useAuthContext } from "@/app/contexts/auth";
 
 const useFlightDetail = (codigo: string) => {
   const { flightList, setFlightList } = useFlightContext();
+  const { userData, updateMilesBalance } = useAuthContext();
 
   const [flight, setFlight] = useState<Flight | null>(null);
   const [sitsQuantity, setSitsQuantity] = useState<number>(0);
@@ -12,6 +14,8 @@ const useFlightDetail = (codigo: string) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isToastOpen, setIsToastOpen] = useState(false);
+  const [milesToUse, setMilesToUse] = useState<number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const fetchFlight = async () => {
     try {
@@ -53,6 +57,44 @@ const useFlightDetail = (codigo: string) => {
     }
   };
 
+  // Obter o saldo de milhas do usuário
+  const userMilesBalance = userData?.usuario.saldo_milhas ?? 0;
+
+  // Calcular desconto baseado nas milhas usadas (1 milha = 5 reais)
+  const calculateDiscount = (miles: number): number => {
+    if (!flight) return 0;
+    // Cada milha vale 5 reais
+    const discountValue = miles * 5;
+    const maxDiscount = (flight.valor_passagem * sitsQuantity);
+    // Limitar o desconto ao valor total da passagem
+    return Math.min(discountValue, maxDiscount);
+  };
+
+  // Manipular alteração na quantidade de milhas a serem usadas
+  const handleMilesChange = (miles: number) => {
+    const milesNumber = Number(miles);
+    if (isNaN(milesNumber) || milesNumber < 0) {
+      setMilesToUse(0);
+      return;
+    }
+    
+    // Não permitir usar mais milhas do que o usuário possui
+    const validMiles = Math.min(milesNumber, userMilesBalance);
+    setMilesToUse(validMiles);
+    
+    // Atualizar preço total
+    updateTotalPrice(validMiles);
+  };
+
+  // Atualizar preço total com desconto de milhas
+  const updateTotalPrice = (miles: number) => {
+    if (!flight) return;
+    
+    const subtotal = flight.valor_passagem * sitsQuantity;
+    const discount = calculateDiscount(miles);
+    setTotalPrice(subtotal - discount);
+  };
+
   const onBookFlight = async () => {
     try {
       if (!flight) throw new Error("Ocorreu um erro ao executar reserva");
@@ -68,11 +110,18 @@ const useFlightDetail = (codigo: string) => {
         f.codigo === codigo ? updatedFlight : f
       );
 
+      // Atualizar saldo de milhas do usuário se estiver usando milhas
+      if (milesToUse > 0 && userData) {
+        const newMilesBalance = userMilesBalance - milesToUse;
+        updateMilesBalance(newMilesBalance);
+      }
+
       setFlight(updatedFlight);
       setFlightList(updatedFlightList);
 
       setSitsQuantity(0);
       setSelectedSits([]);
+      setMilesToUse(0);
 
       setIsConfirmModalOpen(false);
 
@@ -94,8 +143,18 @@ const useFlightDetail = (codigo: string) => {
         flight.quantidade_poltronas_total -
         flight.quantidade_poltronas_ocupadas;
       setAvailableSits(available);
+      
+      // Inicializar preço total sem desconto de milhas
+      setTotalPrice(flight.valor_passagem * sitsQuantity);
     }
   }, [flight]);
+
+  // Atualizar preço total quando a quantidade de assentos mudar
+  useEffect(() => {
+    if (flight) {
+      updateTotalPrice(milesToUse);
+    }
+  }, [sitsQuantity, flight]);
 
   const openModal = () => {
     try {
@@ -113,6 +172,7 @@ const useFlightDetail = (codigo: string) => {
       setIsToastOpen(true);
     }
   };
+  
   const closeModal = () => {
     setIsConfirmModalOpen(false);
   };
@@ -142,6 +202,10 @@ const useFlightDetail = (codigo: string) => {
     setErrorMessage,
     isToastOpen,
     setIsToastOpen,
+    userMilesBalance,
+    milesToUse,
+    handleMilesChange,
+    totalPrice,
   };
 };
 
