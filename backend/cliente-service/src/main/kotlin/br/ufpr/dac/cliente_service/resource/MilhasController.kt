@@ -16,6 +16,7 @@ import utils.dto.ClienteOutputDTO
 @RequestMapping("/clientes/{codigo}/milhas")
 class MilhasController(private val service: MilhasService) {
 
+    @CrossOrigin
     @PutMapping
     fun comprarMilhas(@PathVariable codigo: Long, @RequestBody milhas: MilhasCompraDTO): ResponseEntity<ClienteOutputDTO> {
         val response = service.comprarMilhas(codigo, milhas)

@@ -13,7 +13,7 @@ const registerServices = {
     },
     registerUser: async (data: RegisterFormData) => {
         try {
-            const res = await axios.post<RegisterFormData>(`http://localhost:8080/clientes`, data);
+            const res = await axios.post<RegisterFormData>(`http://localhost:8080/v1/clientes`, data);
             return res.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {

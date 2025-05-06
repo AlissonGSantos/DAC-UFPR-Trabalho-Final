@@ -9,6 +9,7 @@ import {
   MileagePurchaseSchema,
   MileagePurchaseFormData,
 } from "../../schema/schema";
+import milesServices from "@/app/authentication/services/milesServices";
 
 const useMileagePurchase = () => {
   const fixedPrice = 5.0;
@@ -43,9 +44,13 @@ const useMileagePurchase = () => {
     setIsModalOpen(true);
   };
 
-  const onConfirmBuy = () => {
+  const onConfirmBuy = async () => {
     try {
-      updateMilesBalance(mileageAmount + miles);
+      const data = await fetchMileageService(miles);
+      if (!data) {
+        throw new Error("Erro ao comprar milhas.");
+      }
+      updateMilesBalance(data.saldo_milhas); // Atualiza o saldo de milhas no AuthContext
       setSuccessToast(true);
       reset();
     } catch (error) {
@@ -60,6 +65,20 @@ const useMileagePurchase = () => {
     setIsModalOpen(false);
     reset();
   };
+
+  const fetchMileageService = async (miles: number) => {
+    try {
+      const codigo = userData?.usuario.codigo
+
+      if (codigo) {
+        const response = await milesServices.buyMiles(codigo, { quantidade: miles });
+        return response;
+      }
+    } catch (error) {
+      console.error("Erro ao comprar milhas:", error);
+    }
+
+  }
 
   const modalControls: ButtonProps[] = [
     { text: "Cancelar", type: "DANGER", size: "SMALL", onClick: onCancelBuy },

@@ -26,7 +26,7 @@ const Invoice = () => {
     { value: "lastMonth", label: "Último mês" },
     { value: "lastYear", label: "Último ano" },
   ];
-
+  
   return (
     <div className="flex flex-col">
       <div className="flex flex-col p-10">
