@@ -32,7 +32,7 @@ const Invoice = () => {
                             Seu saldo em milhas: {milescore}
                         </h1>
                         <Link
-                            href={`/client/buyMiles`}
+                            href={`/mileage/home`}
                             className="text-xs text-indigo-400 underline">
                             Comprar milhas
                         </Link>

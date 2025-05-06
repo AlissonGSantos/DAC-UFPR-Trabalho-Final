@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import useHomeHeader from "./useHomeHeader";
 
 const HomeHeader = () => {
@@ -15,10 +16,15 @@ const HomeHeader = () => {
           ofertas!
         </p>
       </div>
-      <div className="flex justify-center items-center flex-1">
+      <div className="flex flex-col justify-center items-end flex-1">
         <h1 className="text-xl font-bold text-slate-300">
           Seu saldo em milhas: {milescore}
         </h1>
+        <Link
+          href={`/mileage/home`}
+          className="text-xs text-indigo-400 underline">
+          Comprar milhas
+        </Link>
       </div>
     </div>
   );
