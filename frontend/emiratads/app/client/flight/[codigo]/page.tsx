@@ -38,7 +38,7 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
   } = useFlightDetail(codigo);
 
   if (!codigo) {
-    return <p>Parâmetro "codigo" não encontrado na URL.</p>;
+    return <p>{'Parâmetro "codigo" não encontrado na URL.'}</p>;
   }
 
   return (
@@ -52,41 +52,53 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
         <div className="flex flex-col h-full w-full bg-slate-900 rounded-lg px-8 pb-8">
           <div className="flex items-center h-full w-full bg-slate-800 rounded-lg py-8">
             <div className="flex flex-col h-full w-1/3">
-              <div className="flex flex-col w-8/10 p-4 bg-slate-850 rounded-lg border border-indigo-700 shadow-md mx-auto">
-
+              <div className="flex flex-col w-8/10 p-4 bg-slate-850 rounded-lg border-2 border-indigo-700 shadow-md mx-auto">
                 <h2 className="text-xl text-slate-300 mb-4">
                   Informações do voo
                 </h2>
-                
-                <div className="border-b-2 border-indigo-700 mb-3"/>
+
+                <div className="border-b-2 border-indigo-700 mb-3" />
 
                 <div className="flex flex-col w-full h-full gap-4">
-                  
                   <p className="text-slate-300 p-1 transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Código: </span> 
-                    <span className="border-b border-indigo-600 flex-auto border-dashed">{flight?.codigo}</span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Código:{" "}
+                    </span>
+                    <span className="border-b border-indigo-600 flex-auto border-dashed">
+                      {flight?.codigo}
+                    </span>
                   </p>
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Origem: </span> 
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Origem:{" "}
+                    </span>
                     <span className="border-b border-indigo-600 flex-auto border-dashed">
-                      {flight?.aeroporto_origem.cidade}{"/"}
-                      {flight?.aeroporto_origem.uf}{" - "}
+                      {flight?.aeroporto_origem.cidade}
+                      {"/"}
+                      {flight?.aeroporto_origem.uf}
+                      {" - "}
                       {flight?.aeroporto_origem.codigo}
                     </span>
                   </p>
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Destino: </span> 
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Destino:{" "}
+                    </span>
                     <span className="border-b border-indigo-600 flex-auto border-dashed">
-                      {flight?.aeroporto_destino.cidade}{"/"}
-                      {flight?.aeroporto_destino.uf}{" - "}
+                      {flight?.aeroporto_destino.cidade}
+                      {"/"}
+                      {flight?.aeroporto_destino.uf}
+                      {" - "}
                       {flight?.aeroporto_destino.codigo}
                     </span>
                   </p>
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Data: </span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Data:{" "}
+                    </span>
                     <span className="border-b border-indigo-600 flex-auto border-dashed">
                       {flight?.data
                         ? new Date(flight.data).toLocaleString("pt-BR", {
@@ -102,41 +114,67 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                   </p>
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Assentos disponíveis: </span> 
-                    <span className="border-b border-indigo-600 flex-auto border-dashed">{availableSits}</span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Assentos disponíveis:{" "}
+                    </span>
+                    <span className="border-b border-indigo-600 flex-auto border-dashed">
+                      {availableSits}
+                    </span>
                   </p>
 
-                  <div className="border-b-2 border-indigo-700 "/>
+                  <div className="border-b-2 border-indigo-700 " />
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Assentos selecionados: </span> 
-                    <span className="border-b border-indigo-600 flex-auto border-dashed">{sitsQuantity}</span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Assentos selecionados:{" "}
+                    </span>
+                    <span className="border-b border-indigo-600 flex-auto border-dashed">
+                      {sitsQuantity}
+                    </span>
                   </p>
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Subtotal: </span>
-                    <span className="border-b border-indigo-600 flex-auto border-dashed">{maskCurrency((flight?.valor_passagem ?? 0) * sitsQuantity)}</span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Subtotal:{" "}
+                    </span>
+                    <span className="border-b border-indigo-600 flex-auto border-dashed">
+                      {maskCurrency(
+                        (flight?.valor_passagem ?? 0) * sitsQuantity
+                      )}
+                    </span>
                   </p>
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1">Total em milhas: </span>
-                    <span className="border-b border-indigo-600 flex-auto border-dashed">{((flight?.valor_passagem ?? 0) * sitsQuantity / 5)}</span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      Total em milhas:{" "}
+                    </span>
+                    <span className="border-b border-indigo-600 flex-auto border-dashed">
+                      {((flight?.valor_passagem ?? 0) * sitsQuantity) / 5}
+                    </span>
                   </p>
 
-                  <div className="border-b-2 border-indigo-700"/> 
-                  
+                  <div className="border-b-2 border-indigo-700" />
+
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1"> Seu saldo de milhas: </span>
-                    <span className="border-b border-indigo-600 flex-auto border-dashed font-semibold">{userMilesBalance}</span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      {" "}
+                      Seu saldo de milhas:{" "}
+                    </span>
+                    <span className="border-b border-indigo-600 flex-auto border-dashed font-semibold">
+                      {userMilesBalance}
+                    </span>
                   </p>
 
                   <div className="flex items-baseline text-slate-300 p-1">
-                    <span className="font-semibold text-indigo-400 flex-none pe-2">Quantas milhas deseja usar?</span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-2">
+                      Quantas milhas deseja usar?
+                    </span>
                     <Input
                       type={"number"}
                       label={""}
                       {...register("miles", {
-                        onChange: (e) => handleMilesChange(Number(e.target.value)),
+                        onChange: (e) =>
+                          handleMilesChange(Number(e.target.value)),
                         valueAsNumber: true,
                       })}
                       value={milesToUse}
@@ -146,11 +184,12 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                       extraClasses="w-32"
                       disabled={sitsQuantity === 0}
                       error={
-                        (errors.miles || inputError) 
+                        errors.miles || inputError
                           ? [
                               {
                                 hasError: true,
-                                message: errors.miles?.message ?? inputError ?? "",
+                                message:
+                                  errors.miles?.message ?? inputError ?? "",
                               },
                             ]
                           : []
@@ -159,13 +198,16 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                   </div>
 
                   <p className="text-slate-300 p-1 rounded transition-colors flex flex-row">
-                    <span className="font-semibold text-indigo-400 flex-none pe-1"> Valor total: </span>
+                    <span className="font-semibold text-indigo-400 flex-none pe-1">
+                      {" "}
+                      Valor total:{" "}
+                    </span>
                     <span className="font-semibold text-emerald-500 border-b border-indigo-600 flex-auto border-dashed">
                       {maskCurrency(totalPrice > 0 ? totalPrice : 0)}
                     </span>
                   </p>
 
-                  <div className="border-b-2 border-indigo-700"/> 
+                  <div className="border-b-2 border-indigo-700" />
 
                   <div className="mt-2">
                     <Button
@@ -175,11 +217,10 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                       size="SMALL"
                     />
                   </div>
-
                 </div>
               </div>
             </div>
-            
+
             <div className="w-0.5 bg-indigo-800 h-11/12"></div>
 
             <div className="flex flex-col flex-1 w-full h-full px-8">
