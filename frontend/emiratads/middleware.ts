@@ -31,7 +31,7 @@ function handleAuthenticatedUser(
   isRootRoute: boolean,
   request: NextRequest
 ) {
-  const userType = user.tipo;
+  const userType = user?.tipo;
 
   if (userType === "CLIENTE" && isEmployeeRoute) {
     return NextResponse.redirect(new URL("/client/home", request.url));
