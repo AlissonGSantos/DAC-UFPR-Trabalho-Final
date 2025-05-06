@@ -150,7 +150,7 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                           ? [
                               {
                                 hasError: true,
-                                message: errors.miles?.message || inputError || "",
+                                message: errors.miles?.message ?? inputError ?? "",
                               },
                             ]
                           : []

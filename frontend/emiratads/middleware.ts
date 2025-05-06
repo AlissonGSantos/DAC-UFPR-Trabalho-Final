@@ -9,27 +9,53 @@ export function middleware(request: NextRequest) {
   const isClientRoute = request.nextUrl.pathname.startsWith("/client");
   const isEmployeeRoute = request.nextUrl.pathname.startsWith("/employee");
   const isAuthRoute = request.nextUrl.pathname.startsWith("/authentication");
+  const isRootRoute = request.nextUrl.pathname === "/";
 
-  if (!token && !isAuthRoute) {
-    return NextResponse.redirect(new URL("/authentication/login", request.url));
+  if (!token || !user) {
+    if(!isAuthRoute) {
+     return redirectToLogin(request);
+    }
   }
 
-  if (user) {
-    const userType = user.tipo;
+  return handleAuthenticatedUser(user, isClientRoute, isEmployeeRoute, isRootRoute, request);
+}
 
-    if (userType === "CLIENTE" && isEmployeeRoute) {
-      return NextResponse.redirect(new URL("/client/home", request.url));
-    }
+function redirectToLogin(request: NextRequest) {
+  return NextResponse.redirect(new URL("/authentication/login", request.url));
+}
 
-    if (userType === "FUNCIONARIO" && isClientRoute) {
-      console.log("Redirecting employee to home page");
-      return NextResponse.redirect(new URL("/employee/home", request.url));
-    }
+function handleAuthenticatedUser(
+  user: any,
+  isClientRoute: boolean,
+  isEmployeeRoute: boolean,
+  isRootRoute: boolean,
+  request: NextRequest
+) {
+  const userType = user.tipo;
+
+  if (userType === "CLIENTE" && isEmployeeRoute) {
+    return NextResponse.redirect(new URL("/client/home", request.url));
+  }
+
+  if (userType === "FUNCIONARIO" && isClientRoute) {
+    return NextResponse.redirect(new URL("/employee/home", request.url));
+  }
+
+  if (isRootRoute) {
+    return redirectToHome(userType, request);
   }
 
   return NextResponse.next();
 }
 
+function redirectToHome(userType: string, request: NextRequest) {
+  if (userType === "CLIENTE") {
+    return NextResponse.redirect(new URL("/client/home", request.url));
+  } else if (userType === "FUNCIONARIO") {
+    return NextResponse.redirect(new URL("/employee/home", request.url));
+  }
+}
+
 export const config = {
-  matcher: ["/client/:path*", "/employee/:path*", "/authentication/:path*"],
+  matcher: ["/", "/mileage/:path", "/customer/:path*","/client/:path*", "/employee/:path*", "/authentication/:path*"],
 };
