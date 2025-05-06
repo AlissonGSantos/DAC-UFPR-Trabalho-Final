@@ -155,21 +155,25 @@ const useFlightTable = () => {
         onClick: handleConfirmBoard,
         type: "PRIMARY",
         size: "SMALL",
-        children: <Check size={16} weight="bold" />,
+        children: <Check size={24} weight="bold" />,
+        extraClass: "text-xs",
       },
       {
         text: "Cancelar Voo",
         onClick: handleCancelFlight,
         type: "DANGER",
         size: "SMALL",
-        children: <X size={16} weight="bold" />,
+        children: <X size={24} weight="bold" />,
+        extraClass: "text-xs",
       },
       {
         text: "Finalizar Voo",
         onClick: handleFinishFlight,
         type: "SUCCESS",
         size: "SMALL",
-        children: <AirplaneLanding size={16} weight="bold" />,
+        children: <AirplaneLanding size={24} weight="bold" />,
+        extraClass: "text-xs",
+
       },
     ],
     []

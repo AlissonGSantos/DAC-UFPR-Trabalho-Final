@@ -81,9 +81,10 @@ const SearchForm: React.FC<SearchFormProps> = ({
             typeButton="submit"
             size="SMALL"
             iconPosition="RIGHT"
-            children={<MagnifyingGlass size={18} weight="bold"/>}
             extraClass="w-full"
-          />
+          >
+            <MagnifyingGlass size={18} weight="bold" />
+          </Button>
         </div>
       </div>
     </form>

@@ -1,42 +1,92 @@
 "use client";
 
+import { ButtonProps } from "@/app/components/Button/Button";
 import { useAuthContext } from "@/app/contexts/auth";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  MileagePurchaseSchema,
+  MileagePurchaseFormData,
+} from "../../schema/schema";
 
 const useMileagePurchase = () => {
-  const fixedPrice = 5.00;
-  const [miles, setMiles] = useState(0);
-  const [message, setMessage] = useState("");
-  const { userData } = useAuthContext;
+  const fixedPrice = 5.0;
+  const { userData, updateMilesBalance } = useAuthContext();
 
-  const calculatePrice = (amount: number) => {
-    return amount * fixedPrice;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    reset,
+  } = useForm<MileagePurchaseFormData>({
+    resolver: zodResolver(MileagePurchaseSchema),
+    defaultValues: {
+      miles: 0,
+    },
+  });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successToast, setSuccessToast] = useState(false);
+  const [errorToast, setErrorToast] = useState(false);
+
+  const miles = watch("miles");
+  const mileageAmount = userData?.usuario.saldo_milhas ?? 0;
+  const buyAmount = miles * fixedPrice;
+
+  const realizaCompra = (data: MileagePurchaseFormData) => {
+    if (data.miles <= 0) {
+      return;
+    }
+
+    setIsModalOpen(true);
   };
 
-  const saldo_milhas = userData.saldo_milhas
-
-  const realizaCompra = async () =>{
+  const onConfirmBuy = () => {
     try {
-      const response = await fetch("/clinte/${id}/milhas", { //wip: confirmar endpoint de compra de milhas
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({quantidade: miles }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Compra de milhas sem sucesso.");
-      }
-      
-      const data = await response.json();
-      setMessage(`Compra realizada com sucesso! Saldo atual: ${data.saldo_milhas}`);
-    } catch(error: any) {
-      setMessage("Erro ao comprar Milhas");
+      updateMilesBalance(mileageAmount + miles);
+      setSuccessToast(true);
+      reset();
+    } catch (error) {
+      console.error("Erro ao realizar a compra:", error);
+      setErrorToast(true);
+    } finally {
+      setIsModalOpen(false);
     }
   };
- 
-  return {calculatePrice,fixedPrice,miles,message,saldo_milhas,realizaCompra}
+
+  const onCancelBuy = () => {
+    setIsModalOpen(false);
+    reset();
+  };
+
+  const modalControls: ButtonProps[] = [
+    { text: "Cancelar", type: "DANGER", size: "SMALL", onClick: onCancelBuy },
+    {
+      text: "Confirmar",
+      type: "SUCCESS",
+      size: "SMALL",
+      onClick: onConfirmBuy,
+    },
+  ];
+
+  return {
+    register,
+    handleSubmit,
+    errors,
+    fixedPrice,
+    mileageAmount,
+    buyAmount,
+    realizaCompra,
+    isModalOpen,
+    setIsModalOpen,
+    modalControls,
+    successToast,
+    setSuccessToast,
+    errorToast,
+    setErrorToast,
+  };
 };
 
 export default useMileagePurchase;

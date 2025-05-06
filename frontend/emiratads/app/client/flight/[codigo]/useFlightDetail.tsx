@@ -2,10 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import useFlightContext from "@/app/contexts/flight";
 import { Flight } from "@/app/types/FlightTypes";
 import { useAuthContext } from "@/app/contexts/auth";
-import { validateMilesInput } from "./schema/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UsePointsSchema, UsePointsData } from "./schema/schema";
+import {
+  UsePointsSchema,
+  UsePointsData,
+  validateMilesInput,
+} from "./schema/schema";
 
 const useFlightDetail = (codigo: string) => {
   const { flightList, setFlightList } = useFlightContext();
@@ -22,11 +25,15 @@ const useFlightDetail = (codigo: string) => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [inputError, setInputError] = useState<string | null>(null);
 
-  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<UsePointsData>({
+  const {
+    register,
+    formState: { errors },
+    setValue,
+  } = useForm<UsePointsData>({
     resolver: zodResolver(UsePointsSchema),
     defaultValues: {
-      miles: 0
-    }
+      miles: 0,
+    },
   });
 
   const userMilesBalance = userData?.usuario.saldo_milhas ?? 0;
@@ -74,40 +81,45 @@ const useFlightDetail = (codigo: string) => {
   const calculateDiscount = (miles: number): number => {
     if (!flight) return 0;
     const discountValue = miles * 5;
-    const maxDiscount = (flight.valor_passagem * sitsQuantity);
+    const maxDiscount = flight.valor_passagem * sitsQuantity;
     return Math.min(discountValue, maxDiscount);
   };
 
   const handleMilesChange = (miles: number) => {
     const ticketValue = flight?.valor_passagem ?? 0;
-    const validation = validateMilesInput(miles, userMilesBalance, sitsQuantity, ticketValue);
-    
+    const validation = validateMilesInput(
+      miles,
+      userMilesBalance,
+      sitsQuantity,
+      ticketValue
+    );
+
     if (!validation.isValid) {
-      setInputError(validation.message || null);
+      setInputError(validation.message ?? null);
       if (validation.validValue !== undefined) {
         setMilesToUse(validation.validValue);
         setValue("miles", validation.validValue);
       }
-      
-      if (validation.message && validation.message.includes("assento")) {
+
+      if (validation.message?.includes("assento")) {
         setErrorMessage(validation.message);
         setIsToastOpen(true);
       }
-      
+
       return;
     }
-    
+
     setInputError(null);
-    const validMiles = validation.validValue || 0;
+    const validMiles = validation.validValue ?? 0;
     setMilesToUse(validMiles);
     setValue("miles", validMiles);
-    
+
     updateTotalPrice(validMiles);
   };
 
   const updateTotalPrice = (miles: number) => {
     if (!flight) return;
-    
+
     const subtotal = flight.valor_passagem * sitsQuantity;
     const discount = calculateDiscount(miles);
     setTotalPrice(subtotal - discount);
@@ -116,7 +128,7 @@ const useFlightDetail = (codigo: string) => {
   const onBookFlight = async () => {
     try {
       if (!flight) throw new Error("Ocorreu um erro ao executar reserva");
-        if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
+      if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
 
       const updatedFlight = {
         ...flight,
@@ -142,7 +154,7 @@ const useFlightDetail = (codigo: string) => {
 
       setIsConfirmModalOpen(false);
 
-      window.location.href = "/client/home"
+      window.location.href = "/client/home";
     } catch (error) {
       console.error(error);
     }
@@ -160,9 +172,9 @@ const useFlightDetail = (codigo: string) => {
         flight.quantidade_poltronas_total -
         flight.quantidade_poltronas_ocupadas;
       setAvailableSits(available);
-      
+
       setTotalPrice(flight.valor_passagem * sitsQuantity);
-      
+
       // Resetar milhas quando não houver assentos selecionados
       if (sitsQuantity === 0) {
         setMilesToUse(0);
@@ -184,8 +196,8 @@ const useFlightDetail = (codigo: string) => {
   const openModal = () => {
     try {
       if (!flight) throw new Error("Ocorreu um erro ao executar reserva");
-        if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
-        
+      if (sitsQuantity === 0) throw new Error("Selecione ao menos um assento");
+
       setIsConfirmModalOpen(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -198,7 +210,7 @@ const useFlightDetail = (codigo: string) => {
       setIsToastOpen(true);
     }
   };
-  
+
   const closeModal = () => {
     setIsConfirmModalOpen(false);
   };
