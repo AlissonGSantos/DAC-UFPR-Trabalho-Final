@@ -15,9 +15,9 @@ export function middleware(request: NextRequest) {
     if(!isAuthRoute) {
      return redirectToLogin(request);
     }
+  } else {
+    return handleAuthenticatedUser(user, isClientRoute, isEmployeeRoute, isRootRoute, request);
   }
-
-  return handleAuthenticatedUser(user, isClientRoute, isEmployeeRoute, isRootRoute, request);
 }
 
 function redirectToLogin(request: NextRequest) {

@@ -3,6 +3,31 @@ export enum EmployeeEnum {
     CLIENTE = 'CLIENTE'
 }
 
+export type Client = {
+    codigo: string,
+    cpf: string,
+    email: string,
+    nome: string,
+    saldo_milhas: number,
+    endereco: {
+        cep: string,
+        uf: string,
+        cidade: string,
+        bairro: string,
+        rua: string,
+        numero: string,
+        complemento: string
+    }
+}
+
+export type Employee = {
+    codigo: string,
+    cpf: string,
+    email: string,
+    nome: string,
+    telefone: string
+}
+
 export type UserAuth = {
     access_token: string,
     token_type: string,
@@ -14,27 +39,27 @@ export type UserAuth = {
         nome: string,
         saldo_milhas: number,
         endereco: {
-        cep: string,
-        uf: string,
-        cidade: string,
-        bairro: string,
-        rua: string,
-        numero: string,
-        complemento: string
+            cep: string,
+            uf: string,
+            cidade: string,
+            bairro: string,
+            rua: string,
+            numero: string,
+            complemento: string
         }
-      }
+    }
 }
 
-export interface LoginRequest{
+export interface LoginRequest {
     login: string,
     senha: string
 }
 
-export interface LogoutRequest{
+export interface LogoutRequest {
     login: string
 }
 
-export interface RegisterRequest{
+export interface RegisterRequest {
     cpf: string,
     email: string,
     nome: string,
@@ -49,7 +74,7 @@ export interface RegisterRequest{
     }
 }
 
-export interface CEPResponse{
+export interface CEPResponse {
     cep: string,
     logradouro: string,
     complemento: string,

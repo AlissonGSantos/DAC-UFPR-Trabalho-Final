@@ -7,9 +7,9 @@ import { maskCPF } from "@/app/utils/cpfMask";
 import cepMask from "@/app/utils/cepMask";
 import { robotoFont } from "@/app/assets/fontsSetup";
 import Modal from "@/app/components/Modal/Modal";
-import Link from "next/link";
 import { CheckCircle } from "phosphor-react";
 import { useRouter } from "next/navigation";
+import Loader from "@/app/components/Loader/Loader";
 
 interface RegisterFormProps {
   setIsToastOpen: (isOpen: boolean) => void;
@@ -17,25 +17,26 @@ interface RegisterFormProps {
 }
 
 const RegisterForm = ({ setIsToastOpen, setErrorMessage }: RegisterFormProps) => {
-  const { register, handleSubmit, errors, onSubmit, handleCepBlur, modalState, setModalState } =
+  const { register, handleSubmit, errors, onSubmit, handleCepBlur, modalState, setModalState, isLoading } =
     useRegisterForm({ setIsToastOpen, setErrorMessage });
 
   const router = useRouter();
 
   return (
     <div className="flex flex-col w-full justify-center py-8">
+      <Loader loading={isLoading} />
       <Modal isOpen={modalState} onClose={() => setModalState(false)} title="Cadastro realizado com sucesso!!!">
         <div className="py-2 flex items-center gap-4">
           <h2 className="py-4 text-gray-200 text-lg">Obrigado por se cadastrar!</h2>
           <CheckCircle size={32} weight="fill" className="text-green-400" />
         </div>
         <p className="text-gray-200">Você receberá um e-mail no endereço informado contendo uma senha temporária para acessar a aplicação.</p>
-        <Link className="flex justify-center align-center m-auto mt-8 bg-indigo-600 p-3 w-fit rounded-lg text-xl uppercase font-semibold tracking-widest hover:bg-indigo-500 text-white border-0 delay-50" href={""}>Login</Link>
         <Button
           onClick={() => router.push("/authentication/login")}
           type="PRIMARY"
           text="Login"
-          size="SMALL"
+          size="MEDIUM"
+          extraClass="m-auto mt-8 uppercase"
         />
       </Modal>
 
