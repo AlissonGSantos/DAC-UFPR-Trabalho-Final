@@ -35,8 +35,10 @@ const useRegisterForm = ({ setIsToastOpen, setErrorMessage }: UseRegisterFormPro
     },
   });
   const [modalState, setModalState] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: RegisterFormData) => {
+    setIsLoading(true);
     try {
       await registerServices.registerUser(data);
       setModalState(true);
@@ -49,6 +51,8 @@ const useRegisterForm = ({ setIsToastOpen, setErrorMessage }: UseRegisterFormPro
         );
       }
       setIsToastOpen(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,6 +80,7 @@ const useRegisterForm = ({ setIsToastOpen, setErrorMessage }: UseRegisterFormPro
     handleCepBlur,
     modalState,
     setModalState,
+    isLoading
   };
 };
 
