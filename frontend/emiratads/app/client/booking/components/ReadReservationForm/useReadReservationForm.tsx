@@ -15,7 +15,9 @@ interface ReadReservationFormProps {
 
 const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -66,6 +68,8 @@ const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
     showSuccess,
     setShowSuccess,
     canCheckIn,
+    isCancelModalOpen, 
+    setIsCancelModalOpen
   };
 };
 

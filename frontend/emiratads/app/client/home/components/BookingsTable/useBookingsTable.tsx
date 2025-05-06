@@ -1,12 +1,16 @@
 import { ButtonProps } from "@/app/components/Button/Button";
 import { useAuthContext } from "@/app/contexts/auth";
 import useBookingContext from "@/app/contexts/booking";
+import { useRouter } from "next/navigation";
 import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
+
 const useBookingsTable = () => {
   const { bookingList, setBookingList } = useBookingContext();
   const { userData, updateMilesBalance } = useAuthContext();
+
+  const router = useRouter();
 
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -89,7 +93,7 @@ const useBookingsTable = () => {
         text: "Ver Reserva",
         type: "PRIMARY",
         onClick: (row: Booking) => {
-          console.log("Detalhes do booking:", row);
+          router.push(`/client/booking/${row.codigo}`)
         },
         size: "SMALL",
       },
