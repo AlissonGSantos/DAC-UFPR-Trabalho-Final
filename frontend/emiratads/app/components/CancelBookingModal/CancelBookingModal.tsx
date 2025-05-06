@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Modal from "@/app/components/Modal/Modal";
-import Button from "@/app/components/Button/Button";
+import Modal from "../Modal/Modal";
+import Button from "../Button/Button";
 import { Booking } from "@/app/types/BookingTypes";
 
 export interface CancelModalProps {

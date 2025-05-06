@@ -22,6 +22,7 @@ const useNavbar = () => {
           { name: "Início", link: "/client/home", enabled: true },
           { name: "Milhas", link: "/client/invoice", enabled: true },
           { name: "Voos", link: "/client/searchFlight", enabled: true },
+          { name: "Reservas", link: "/client/booking", enabled: true },
           { name: "Check-in", link: "/client/checkin", enabled: true },
         ]
       : [

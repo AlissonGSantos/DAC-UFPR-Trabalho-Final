@@ -32,7 +32,7 @@ const TransactionCard: React.FC<transactionProps> = ({ transaction }) => {
             </div>
             {transaction.codigo_reserva && (
                 <Link
-                    href={`/client/reserva/${transaction.codigo_reserva}`}
+                    href={`/client/booking/${transaction.codigo_reserva}`}
                     className="text-xs text-indigo-400 underline">
                     Ver reserva
                 </Link>

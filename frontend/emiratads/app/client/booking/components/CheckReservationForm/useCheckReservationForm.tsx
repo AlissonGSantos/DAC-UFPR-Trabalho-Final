@@ -46,6 +46,13 @@ const useCheckReservationForm = () => {
   };
 
   const onCancel = () => {
+    if (selectedBooking != null && !["CRIADA", "CHECK-IN"].includes(selectedBooking.estado)) {
+      alert(
+        "Apenas reservas nos estados CRIADA ou CHECK-IN podem ser canceladas."
+      );
+      return;
+    }
+
     setShowSuccess(false);
     setValue("CodeReservation", "");
     setSelectedBooking(null);

@@ -3,7 +3,7 @@
 import React from "react";
 import DataTable from "@/app/components/DataTable/DataTable";
 import useBookingsTable from "./useBookingsTable";
-import CancelBookingModal from "../CancelBookingModal/CancelBookingModal";
+import CancelBookingModal from "@/app/components/CancelBookingModal/CancelBookingModal";
 
 const BookingTable: React.FC = () => {
   const {

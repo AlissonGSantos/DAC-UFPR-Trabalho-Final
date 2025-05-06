@@ -1,7 +1,7 @@
 import React from "react";
 import CheckReservationForm from "./components/CheckReservationForm/CheckReservationForm";
 
-const CheckReservation = () => {
+const Booking = () => {
   return (
     <div className="flex w-full p-4">
       <div className="flex justify-center flex-col mx-auto">
@@ -16,4 +16,4 @@ const CheckReservation = () => {
   );
 };
 
-export default CheckReservation;
+export default Booking;
