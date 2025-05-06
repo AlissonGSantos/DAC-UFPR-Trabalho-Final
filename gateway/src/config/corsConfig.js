@@ -2,9 +2,26 @@ const cors = require('cors');
 
 const ALLOWED_ORIGINS = ['http://localhost:3000']
 const corsMappings = {
-    '/funcionarios': { methods: ['GET', 'POST', 'PUT', 'DELETE'] },
+    '/v1/login': { methods: ['POST'] },
+    '/v1/logout': { methods: ['POST'] },
 
-    // Adicionar aqui outras URLs e seus respectivos serviços e métodos aceitos
+    '/v1/funcionarios': { methods: ['GET', 'POST'] },
+    '/v1/funcionarios/:codigo': { methods: ['GET', 'PUT', 'DELETE'] },
+
+    '/v1/clientes': { methods: ['GET', 'POST'] },
+    '/v1/clientes/:codigo': { methods: ['GET'] },
+    '/v1/clientes/:codigo/reservas': { methods: ['GET'] },
+    '/v1/clientes/:codigo/milhas': { methods: ['GET', 'PUT'] },
+
+    '/v1/voos': { methods: ['GET', 'POST'] },
+    '/v1/voos/:codigo': { methods: ['GET', 'DELETE'] },
+    '/v1/voos/:codigo/estado': { methods: ['PATCH'] },
+
+    '/v1/reservas': { methods: ['POST'] },
+    '/v1/reservas/:codigo': { methods: ['GET', 'DELETE'] },
+    '/v1/reservas/:codigo/estado': { methods: ['PATCH'] },
+
+    '/v1/aeroportos': { methods: ['GET'] }
 }
 
 function getCorsOptions(path) {
