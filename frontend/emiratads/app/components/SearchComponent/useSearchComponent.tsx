@@ -1,7 +1,7 @@
-import { Aeroporto, Flight } from "@/app/types/FlightTypes";
+import { Aeroporto, Flight, statusFlightEnum } from "@/app/types/FlightTypes";
 import { useState } from "react";
 
-const useSearchComponent = () => {
+const useSearchComponent = (fromHome: boolean) => {
   const [activeFlightList, setActiveFlightList] = useState<Flight[]>([]);
   const [showFlightTable, setShowFlightTable] = useState(false);
   const [originAirport, setOriginAirport] = useState<Aeroporto>(
@@ -11,7 +11,7 @@ const useSearchComponent = () => {
     {} as Aeroporto
   );
   const redirectToSearchFlight = () => {
-    window.location.href = `/client/searchFlight?origin=${originAirport.codigo}&destination=${destinationAirport.codigo}`;
+    window.location.href = `/client/searchFlight?origin=${originAirport?.codigo}&destination=${destinationAirport?.codigo}`;
   };
 
   const onChangeOrigin = (origin: Aeroporto) => {
@@ -23,7 +23,14 @@ const useSearchComponent = () => {
   };
 
   const onFindFlights = (flights: Flight[]) => {
-    setActiveFlightList(flights);
+    let filteredFlights = flights;
+
+    if (fromHome) {
+      filteredFlights = flights.filter(
+        (flight) => flight.estado != statusFlightEnum.CONFIRMADO
+      );
+    }
+    setActiveFlightList(filteredFlights);
     setShowFlightTable(true);
   };
 
