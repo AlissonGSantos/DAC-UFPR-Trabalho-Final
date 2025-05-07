@@ -47,11 +47,13 @@ const useMileagePurchase = () => {
   const onConfirmBuy = async () => {
     try {
       const data = await fetchMileageService(miles);
+      console.log("Dados da compra:", data);
       if (!data) {
         throw new Error("Erro ao comprar milhas.");
       }
-      updateMilesBalance(data.saldo_milhas); // Atualiza o saldo de milhas no AuthContext
+      updateMilesBalance(data.saldo_milhas);
       setSuccessToast(true);
+      window.location.href = "/client/invoice";
       reset();
     } catch (error) {
       console.error("Erro ao realizar a compra:", error);
@@ -68,17 +70,18 @@ const useMileagePurchase = () => {
 
   const fetchMileageService = async (miles: number) => {
     try {
-      const codigo = userData?.usuario.codigo
+      const codigo = userData?.usuario.codigo;
 
       if (codigo) {
-        const response = await milesServices.buyMiles(codigo, { quantidade: miles });
+        const response = await milesServices.buyMiles(codigo, {
+          quantidade: miles,
+        });
         return response;
       }
     } catch (error) {
       console.error("Erro ao comprar milhas:", error);
     }
-
-  }
+  };
 
   const modalControls: ButtonProps[] = [
     { text: "Cancelar", type: "DANGER", size: "SMALL", onClick: onCancelBuy },
@@ -86,7 +89,9 @@ const useMileagePurchase = () => {
       text: "Confirmar",
       type: "SUCCESS",
       size: "SMALL",
-      onClick: onConfirmBuy,
+      onClick: () => {
+        onConfirmBuy();
+      },
     },
   ];
 
@@ -105,6 +110,7 @@ const useMileagePurchase = () => {
     setSuccessToast,
     errorToast,
     setErrorToast,
+    miles,
   };
 };
 

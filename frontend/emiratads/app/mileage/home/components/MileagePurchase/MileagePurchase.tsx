@@ -23,6 +23,7 @@ const MileagePurchase = () => {
     errorToast,
     setSuccessToast,
     setErrorToast,
+    miles,
   } = useMileagePurchase();
 
   return (
@@ -76,7 +77,7 @@ const MileagePurchase = () => {
       >
         <div className="flex flex-col gap-4">
           <p className="text-slate-200">
-            Tem certeza que deseja realizar a compra de {buyAmount} milhas?
+            Tem certeza que deseja realizar a compra de {miles} milhas?
           </p>
           <p className="text-sm text-slate-300">
             Total da sua compra é: {maskCurrency(buyAmount)}

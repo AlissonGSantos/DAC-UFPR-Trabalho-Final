@@ -8,29 +8,46 @@ import { Flight } from "@/app/types/FlightTypes";
 import FinishFlightModal from "../FinishFlightModal/FinishFlightModal";
 
 const FlightTable: React.FC = () => {
-  const { 
-    data, 
-    columns, 
-    controls, 
-    cancelFlight, 
-    setIsCancelModalOpen, 
-    isBoardModalOpen, 
-    isCancelModalOpen, 
-    closeConfirmBoard, 
-    selectedFlight, 
+  const {
+    data,
+    columns,
+    controls,
+    cancelFlight,
+    setIsCancelModalOpen,
+    isBoardModalOpen,
+    isCancelModalOpen,
+    closeConfirmBoard,
+    selectedFlight,
     isFinishModalOpen,
-    setIsFinishModalOpen
+    setIsFinishModalOpen,
+    onConfirmBoard,
+    confirmFinishFlight,
   } = useFlightTable();
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full justify-center items-center gap-4">
       <DataTable data={data} columns={columns} controls={controls} />
-      <ConfirmBoardModal onClose={closeConfirmBoard} isOpen={isBoardModalOpen} onConfirm={() => {}} />
-      <CancelFlightModal flight={selectedFlight ?? {} as Flight} isOpen={isCancelModalOpen} onClose={() => {
-        setIsCancelModalOpen(false);
-      } } 
-      onDelete={cancelFlight} />
-      <FinishFlightModal flight={selectedFlight ?? {} as Flight} isOpen={isFinishModalOpen} onClose={() => {setIsFinishModalOpen(false)}} onConfirm={() => {}} />
+      <ConfirmBoardModal
+        onClose={closeConfirmBoard}
+        isOpen={isBoardModalOpen}
+        onConfirm={onConfirmBoard}
+      />
+      <CancelFlightModal
+        flight={selectedFlight ?? ({} as Flight)}
+        isOpen={isCancelModalOpen}
+        onClose={() => {
+          setIsCancelModalOpen(false);
+        }}
+        onDelete={cancelFlight}
+      />
+      <FinishFlightModal
+        flight={selectedFlight ?? ({} as Flight)}
+        isOpen={isFinishModalOpen}
+        onClose={() => {
+          setIsFinishModalOpen(false);
+        }}
+        onConfirm={confirmFinishFlight}
+      />
     </div>
   );
 };

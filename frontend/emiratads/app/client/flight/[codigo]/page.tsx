@@ -35,6 +35,7 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
     register,
     errors,
     inputError,
+    milesTotal,
   } = useFlightDetail(codigo);
 
   if (!codigo) {
@@ -149,7 +150,7 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                       Total em milhas:{" "}
                     </span>
                     <span className="border-b border-indigo-600 flex-auto border-dashed">
-                      {((flight?.valor_passagem ?? 0) * sitsQuantity) / 5}
+                      {milesTotal}
                     </span>
                   </p>
 
