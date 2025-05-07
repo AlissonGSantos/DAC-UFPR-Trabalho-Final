@@ -1,13 +1,8 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const SearchFlightSchema = z.object({
-  OriginAirport: z
-    .string()
-    .nonempty({ message: 'O aeroporto de origem é obrigatório' })
-,
-  DestinationAirport: z
-    .string()
-    .nonempty({ message: 'O aeroporto de destino é obrigatório' })
+  OriginAirport: z.string().optional(),
+  DestinationAirport: z.string().optional(),
 });
 
 export type SearchFlightSchemaFormData = z.infer<typeof SearchFlightSchema>;

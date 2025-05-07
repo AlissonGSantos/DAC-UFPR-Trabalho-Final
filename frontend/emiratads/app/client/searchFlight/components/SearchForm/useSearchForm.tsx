@@ -111,15 +111,32 @@ const useSearchForm = ({
     }
   };
 
+  const onClearInput = (type: "ORIGIN" | "DESTINATION") => {
+    if (type === "ORIGIN") {
+      setOriginAirport(null);
+      setValue("OriginAirport", "");
+    } else {
+      setDestinationAirport(null);
+      setValue("DestinationAirport", "");
+    }
+  };
+
   const onSubmit = (data: SearchFlightSchemaFormData) => {
     if (onRedirect) {
       return onRedirect();
     }
-    const selectedFlights = flightList.filter(
-      (flight) =>
-        flight.aeroporto_origem.codigo === data.OriginAirport &&
-        flight.aeroporto_destino.codigo === data.DestinationAirport
-    );
+
+    const selectedFlights = flightList.filter((flight) => {
+      const matchesOrigin = data.OriginAirport
+        ? flight.aeroporto_origem.codigo === data.OriginAirport
+        : true;
+      const matchesDestination = data.DestinationAirport
+        ? flight.aeroporto_destino.codigo === data.DestinationAirport
+        : true;
+
+      return matchesOrigin && matchesDestination;
+    });
+
     setFlights(selectedFlights);
     onFindFlights(selectedFlights);
   };
@@ -138,6 +155,7 @@ const useSearchForm = ({
     errors,
     register,
     flights,
+    onClearInput,
   };
 };
 

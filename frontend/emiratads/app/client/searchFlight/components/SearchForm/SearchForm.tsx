@@ -32,6 +32,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
     register,
     handleSubmit,
     onSubmit,
+    onClearInput,
   } = useSearchForm({
     onFindFlights,
     onChangeDestination,
@@ -55,6 +56,9 @@ const SearchForm: React.FC<SearchFormProps> = ({
             {...register("OriginAirport", {
               onChange: (e) => handleAirportChange(e.target.value, "ORIGIN"),
             })}
+            onClear={() => {
+              onClearInput("ORIGIN");
+            }}
           />
         </div>
         <div className="flex items-center justify-center mx-1">
@@ -73,6 +77,9 @@ const SearchForm: React.FC<SearchFormProps> = ({
               onChange: (e) =>
                 handleAirportChange(e.target.value, "DESTINATION"),
             })}
+            onClear={() => {
+              onClearInput("DESTINATION");
+            }}
           />
         </div>
         <div className="w-full md:w-2/12 mt-4 md:mt-0 md:ml-2">
