@@ -70,231 +70,74 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
     },
   ];
   const [flightList, setFlightList] = useState<Flight[]>([
+    // Voo confirmado, com assentos disponíveis, para teste de reserva
     {
       codigo: "FL001",
-      data: "2025-04-15T08:00:00Z",
+      data: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Dentro de 24h
       valor_passagem: 500.0,
       quantidade_poltronas_total: 180,
       quantidade_poltronas_ocupadas: 120,
       estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GRU"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GIG"
-      )!,
+      aeroporto_origem: aeroportos.find((aeroporto) => aeroporto.codigo === "GRU")!,
+      aeroporto_destino: aeroportos.find((aeroporto) => aeroporto.codigo === "GIG")!,
     },
+    // Voo confirmado, com assentos disponíveis, para teste de check-in
     {
       codigo: "FL002",
-      data: "2025-04-15T10:00:00Z",
+      data: new Date(Date.now() + 36 * 60 * 60 * 1000).toISOString(), // Dentro de 48h
       valor_passagem: 450.0,
       quantidade_poltronas_total: 150,
       quantidade_poltronas_ocupadas: 100,
       estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "BSB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CNF"
-      )!,
+      aeroporto_origem: aeroportos.find((aeroporto) => aeroporto.codigo === "CWB")!,
+      aeroporto_destino: aeroportos.find((aeroporto) => aeroporto.codigo === "SSA")!,
     },
+    // Voo realizado, para teste de histórico de voos
     {
       codigo: "FL003",
-      data: "2025-04-15T12:00:00Z",
+      data: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Já ocorreu
       valor_passagem: 600.0,
       quantidade_poltronas_total: 200,
       quantidade_poltronas_ocupadas: 180,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "POA"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "REC"
-      )!,
+      estado: statusFlightEnum.REALIZADO,
+      aeroporto_origem: aeroportos.find((aeroporto) => aeroporto.codigo === "POA")!,
+      aeroporto_destino: aeroportos.find((aeroporto) => aeroporto.codigo === "REC")!,
     },
+    // Voo cancelado, para teste de cancelamento de reservas
     {
       codigo: "FL004",
-      data: "2025-04-15T14:00:00Z",
+      data: new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString(), // Futuro
       valor_passagem: 550.0,
       quantidade_poltronas_total: 170,
       quantidade_poltronas_ocupadas: 150,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "SSA"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GRU"
-      )!,
+      estado: statusFlightEnum.CANCELADO,
+      aeroporto_origem: aeroportos.find((aeroporto) => aeroporto.codigo === "SSA")!,
+      aeroporto_destino: aeroportos.find((aeroporto) => aeroporto.codigo === "GRU")!,
     },
+    // Voo confirmado, com assentos disponíveis, para teste de cadastro de voo
     {
       codigo: "FL005",
-      data: "2025-04-15T16:00:00Z",
+      data: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Daqui a 7 dias
       valor_passagem: 700.0,
       quantidade_poltronas_total: 190,
-      quantidade_poltronas_ocupadas: 170,
+      quantidade_poltronas_ocupadas: 0, // Nenhum assento ocupado
       estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GIG"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "BSB"
-      )!,
+      aeroporto_origem: aeroportos.find((aeroporto) => aeroporto.codigo === "GIG")!,
+      aeroporto_destino: aeroportos.find((aeroporto) => aeroporto.codigo === "BSB")!,
     },
+    // Voo confirmado, com assentos disponíveis, para teste de embarque
     {
       codigo: "FL006",
-      data: "2025-06-15T08:00:00Z",
+      data: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(), // Dentro de 12h
       valor_passagem: 1500.0,
       quantidade_poltronas_total: 180,
       quantidade_poltronas_ocupadas: 120,
       estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GRU"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GIG"
-      )!,
-    },
-    {
-      codigo: "FL007",
-      data: "2025-07-01T08:00:00Z",
-      valor_passagem: 400.0,
-      quantidade_poltronas_total: 180,
-      quantidade_poltronas_ocupadas: 100,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GRU"
-      )!,
-    },
-    {
-      codigo: "FL008",
-      data: "2025-07-02T10:00:00Z",
-      valor_passagem: 350.0,
-      quantidade_poltronas_total: 150,
-      quantidade_poltronas_ocupadas: 80,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GIG"
-      )!,
-    },
-    {
-      codigo: "FL009",
-      data: "2025-07-03T12:00:00Z",
-      valor_passagem: 500.0,
-      quantidade_poltronas_total: 200,
-      quantidade_poltronas_ocupadas: 150,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "BSB"
-      )!,
-    },
-    {
-      codigo: "FL010",
-      data: "2025-07-04T14:00:00Z",
-      valor_passagem: 450.0,
-      quantidade_poltronas_total: 170,
-      quantidade_poltronas_ocupadas: 120,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "SSA"
-      )!,
-    },
-    {
-      codigo: "FL011",
-      data: "2025-07-05T16:00:00Z",
-      valor_passagem: 600.0,
-      quantidade_poltronas_total: 190,
-      quantidade_poltronas_ocupadas: 160,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "REC"
-      )!,
-    },
-    {
-      codigo: "FL012",
-      data: "2025-07-06T08:00:00Z",
-      valor_passagem: 550.0,
-      quantidade_poltronas_total: 180,
-      quantidade_poltronas_ocupadas: 140,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CNF"
-      )!,
-    },
-    {
-      codigo: "FL013",
-      data: "2025-07-07T10:00:00Z",
-      valor_passagem: 700.0,
-      quantidade_poltronas_total: 200,
-      quantidade_poltronas_ocupadas: 180,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "POA"
-      )!,
-    },
-    {
-      codigo: "FL014",
-      data: "2025-07-08T12:00:00Z",
-      valor_passagem: 650.0,
-      quantidade_poltronas_total: 170,
-      quantidade_poltronas_ocupadas: 150,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GRU"
-      )!,
-    },
-    {
-      codigo: "FL015",
-      data: "2025-07-09T14:00:00Z",
-      valor_passagem: 480.0,
-      quantidade_poltronas_total: 160,
-      quantidade_poltronas_ocupadas: 120,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "GIG"
-      )!,
-    },
-    {
-      codigo: "FL016",
-      data: "2025-07-10T16:00:00Z",
-      valor_passagem: 520.0,
-      quantidade_poltronas_total: 180,
-      quantidade_poltronas_ocupadas: 130,
-      estado: statusFlightEnum.CONFIRMADO,
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "CWB"
-      )!,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === "SSA"
-      )!,
+      aeroporto_origem: aeroportos.find((aeroporto) => aeroporto.codigo === "GRU")!,
+      aeroporto_destino: aeroportos.find((aeroporto) => aeroporto.codigo === "GIG")!,
     },
   ]);
+
   const [flightListLoading, setFlightListLoading] = useState<boolean>(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 

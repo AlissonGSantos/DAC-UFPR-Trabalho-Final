@@ -24,6 +24,7 @@ const useFlightDetail = (codigo: string) => {
   const [milesToUse, setMilesToUse] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [inputError, setInputError] = useState<string | null>(null);
+  const [milesTotal, setMilesTotal] = useState<number>(0);
 
   const {
     register,
@@ -140,10 +141,15 @@ const useFlightDetail = (codigo: string) => {
         f.codigo === codigo ? updatedFlight : f
       );
 
-      if (milesToUse > 0 && userData) {
-        const newMilesBalance = userMilesBalance - milesToUse;
-        updateMilesBalance(newMilesBalance);
-      }
+      const newMilesBalance = userMilesBalance - milesToUse + milesTotal;
+      console.log({
+        userMilesBalance,
+        milesToUse,
+        milesTotal,
+        newMilesBalance,
+      })
+      console.log(newMilesBalance)
+      updateMilesBalance(newMilesBalance);
 
       setFlight(updatedFlight);
       setFlightList(updatedFlightList);
@@ -167,6 +173,10 @@ const useFlightDetail = (codigo: string) => {
   }, [codigo]);
 
   useEffect(() => {
+    setMilesTotal(((flight?.valor_passagem ?? 0) * sitsQuantity) / 5);
+  }, [sitsQuantity, flight]);
+
+  useEffect(() => {
     if (flight) {
       const available =
         flight.quantidade_poltronas_total -
@@ -174,14 +184,11 @@ const useFlightDetail = (codigo: string) => {
       setAvailableSits(available);
 
       setTotalPrice(flight.valor_passagem * sitsQuantity);
-
-      // Resetar milhas quando não houver assentos selecionados
       if (sitsQuantity === 0) {
         setMilesToUse(0);
         setValue("miles", 0);
         setInputError(null);
       } else if (milesToUse > 0) {
-        // Revalidar as milhas se o número de assentos mudou
         handleMilesChange(milesToUse);
       }
     }
@@ -247,6 +254,7 @@ const useFlightDetail = (codigo: string) => {
     register,
     errors,
     inputError,
+    milesTotal,
   };
 };
 

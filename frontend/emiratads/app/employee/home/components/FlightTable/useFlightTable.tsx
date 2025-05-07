@@ -1,83 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { ButtonProps } from "@/app/components/Button/Button";
-import { statusFlightEnum, Flight } from "@/app/types/FlightTypes";
+import { Flight, statusFlightEnum } from "@/app/types/FlightTypes";
 import { AirplaneLanding, Check, X } from "phosphor-react";
+import useFlightContext from "@/app/contexts/flight";
 
 const useFlightTable = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
-
-  const data: Flight[] = useMemo(() => {
-    return [
-      {
-        codigo: "FL001",
-        data: "2023-12-01T10:00:00Z",
-        valor_passagem: 500,
-        quantidade_poltronas_total: 150,
-        quantidade_poltronas_ocupadas: 100,
-        estado: statusFlightEnum.CONFIRMADO,
-        aeroporto_origem: {
-          codigo: "GRU",
-          nome: "Aeroporto Internacional de São Paulo",
-          cidade: "São Paulo",
-          uf: "SP",
-        },
-        aeroporto_destino: {
-          codigo: "GIG",
-          nome: "Aeroporto Internacional do Rio de Janeiro",
-          cidade: "Rio de Janeiro",
-          uf: "RJ",
-        },
-      },
-      {
-        codigo: "FL002",
-        data: "2023-12-02T15:30:00Z",
-        valor_passagem: 600,
-        quantidade_poltronas_total: 200,
-        quantidade_poltronas_ocupadas: 150,
-        estado: statusFlightEnum.CANCELADO,
-        aeroporto_origem: {
-          codigo: "BRC",
-          nome: "Aeroporto Internacional de Brasília",
-          cidade: "Brasília",
-          uf: "DF",
-        },
-        aeroporto_destino: {
-          codigo: "SSA",
-          nome: "Aeroporto Internacional de Salvador",
-          cidade: "Salvador",
-          uf: "BA",
-        },
-      },
-      {
-        codigo: "FL003",
-        data: "2023-12-03T08:45:00Z",
-        valor_passagem: 700,
-        quantidade_poltronas_total: 180,
-        quantidade_poltronas_ocupadas: 120,
-        estado: statusFlightEnum.REALIZADO,
-        aeroporto_origem: {
-          codigo: "POA",
-          nome: "Aeroporto Internacional de Porto Alegre",
-          cidade: "Porto Alegre",
-          uf: "RS",
-        },
-        aeroporto_destino: {
-          codigo: "REC",
-          nome: "Aeroporto Internacional do Recife",
-          cidade: "Recife",
-          uf: "PE",
-        },
-      },
-    ];
-  }, []);
-
-  const [flightList, setFlightList] = useState<Flight[]>(data);
+  const { flightList, setFlightList } = useFlightContext();
+  const [flightListState, setFlightListState] = useState<Flight[]>([]);
 
   const columns: ColumnDef<Flight>[] = useMemo(
     () => [
@@ -122,8 +58,46 @@ const useFlightTable = () => {
     []
   );
 
-  const cancelFlight = (flight: Flight) => {
+  const filterRecentFlights = (flights: Flight[]) => {
+    const currentDate = new Date();
+    const filteredFlights: Flight[] = flights.filter((flight) => {
+      const flightDate = new Date(flight.data);
+
+      const hoursDifference =
+        Math.abs(flightDate.getTime() - currentDate.getTime()) /
+        (1000 * 60 * 60); // Convert milliseconds to hours
+      // Filter out flights that are cancelled or completed and are within 24 hours of the current date
+
+      return (
+        flight.estado !== statusFlightEnum.CANCELADO &&
+        flight.estado !== statusFlightEnum.REALIZADO &&
+        hoursDifference <= 48
+      );
+    });
+
+    console.log("Filtered Flights:", filteredFlights);
+    return filteredFlights;
+  };
+
+  useEffect(() => {
+    setFlightListState(filterRecentFlights(flightList));
+  }, [flightList]);
+
+  const cancelFlight = () => {
     setIsCancelModalOpen(false);
+    if (!selectedFlight?.codigo) {
+      console.error("Selected flight or its codigo is undefined.");
+      return;
+    }
+
+    const newFlight: Flight = {
+      ...selectedFlight,
+      estado: statusFlightEnum.CANCELADO,
+    };
+    const newFlightList: Flight[] = flightList.map((f) =>
+      f.codigo === selectedFlight?.codigo ? newFlight : f
+    );
+    setFlightList(newFlightList);
   };
 
   const handleCancelFlight = (flight: Flight) => {
@@ -135,17 +109,38 @@ const useFlightTable = () => {
     setIsBoardModalOpen(false);
   };
 
-  const handleConfirmBoard = () => {
+  const handleConfirmBoard = (flight: Flight) => {
     setIsBoardModalOpen(true);
+    setSelectedFlight(flight);
   };
 
-  const handleFinishFlight = () => {
+  const handleFinishFlight = (flight: Flight) => {
     setIsFinishModalOpen(true);
+    setSelectedFlight(flight);
+  };
+
+  const confirmBoard = () => {
+    setIsBoardModalOpen(false);
+    const newFlight: Flight = {
+      ...selectedFlight!,
+      estado: statusFlightEnum.CONFIRMADO,
+    };
+    const newFlightList: Flight[] = flightList.map((f) =>
+      f.codigo === selectedFlight?.codigo ? newFlight : f
+    );
+    setFlightList(newFlightList);
   };
 
   const confirmFinishFlight = () => {
     setIsFinishModalOpen(false);
-    console.log("Voo finalizado com sucesso!");
+    const newFlight: Flight = {
+      ...selectedFlight!,
+      estado: statusFlightEnum.REALIZADO,
+    };
+    const newFlightList: Flight[] = flightList.map((f) =>
+      f.codigo === selectedFlight?.codigo ? newFlight : f
+    );
+    setFlightList(newFlightList);
   };
 
   const controls: ButtonProps[] = useMemo(
@@ -173,14 +168,13 @@ const useFlightTable = () => {
         size: "SMALL",
         children: <AirplaneLanding size={24} weight="bold" />,
         extraClass: "text-xs",
-
       },
     ],
     []
   );
 
   return {
-    data,
+    data: flightListState,
     columns,
     controls,
     cancelFlight,
@@ -196,6 +190,7 @@ const useFlightTable = () => {
     isFinishModalOpen,
     confirmFinishFlight,
     setIsFinishModalOpen,
+    onConfirmBoard: confirmBoard,
   };
 };
 

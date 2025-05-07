@@ -10,6 +10,39 @@ const useEmployeeTable = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [hasError, setHasError] = useState(false);
 
+  const sortEmployeesByName = (employees: Employee[]) => {
+    return employees.sort((a, b) => a.nome.localeCompare(b.nome));
+  };
+
+  const [data, setData] = useState<Employee[]>(
+    sortEmployeesByName([
+      {
+        codigo: 1,
+        cpf: "123.456.789-09", // CPF válido
+        nome: "João Silva",
+        email: "joao.silva@example.com",
+        telefone: "(41) 99999-9999",
+        ativo: true,
+      },
+      {
+        codigo: 2,
+        cpf: "987.654.321-00",
+        nome: "Maria Oliveira",
+        email: "maria.oliveira@example.com",
+        telefone: "(41) 98888-8888",
+        ativo: false,
+      },
+      {
+        codigo: 3,
+        cpf: "496.611.080-72",
+        nome: "Carlos Santos",
+        email: "carlos.santos@example.com",
+        telefone: "(41) 97777-7777",
+        ativo: true,
+      },
+    ])
+  );
+
   const handleEdit = (employee: Employee) => {
     setEmployeeValue(employee);
     setIsModalOpen(true);
@@ -27,32 +60,50 @@ const useEmployeeTable = () => {
     setIsEditing(false);
   };
 
-  const [data, setData] = useState<Employee[]>([
-    {
-      codigo: 1,
-      cpf: "123.456.789-00",
-      nome: "João Silva",
-      email: "joao.silva@example.com",
-      telefone: "(41) 99999-9999",
-      ativo: true,
-    },
-    {
-      codigo: 2,
-      cpf: "987.654.321-00",
-      nome: "Maria Oliveira",
-      email: "maria.oliveira@example.com",
-      telefone: "(41) 98888-8888",
-      ativo: false,
-    },
-    {
-      codigo: 3,
-      cpf: "456.789.123-00",
-      nome: "Carlos Santos",
-      email: "carlos.santos@example.com",
-      telefone: "(41) 97777-7777",
-      ativo: true,
-    },
-  ]);
+  const onSubmit = async (employee: Employee) => {
+    try {
+      if (isEditing) {
+        setData((prevData) =>
+          sortEmployeesByName(
+            prevData.map((item) =>
+              item.codigo === employee.codigo ? { ...item, ...employee } : item
+            )
+          )
+        );
+      } else {
+        setData((prevData) =>
+          sortEmployeesByName([
+            ...prevData,
+            { ...employee, codigo: prevData.length + 1 },
+          ])
+        );
+      }
+
+      if (!hasError) {
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      setData((prevData) =>
+        sortEmployeesByName(
+          prevData.map((employee) => {
+            if (employee.codigo === employeeValue?.codigo) {
+              return { ...employee, ativo: false };
+            }
+            return employee;
+          })
+        )
+      );
+      setDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+    }
+  };
 
   const columns: ColumnDef<Employee>[] = [
     {
@@ -91,40 +142,6 @@ const useEmployeeTable = () => {
         ),
     },
   ];
-
-  const onSubmit = async (data: Employee) => {
-    try {
-      if (isEditing) {
-        setData((prevData) =>
-          prevData.map((item) =>
-            item.codigo === data.codigo ? { ...item, ...data } : item
-          )
-        );
-      } else {
-        setData((prevData) => [
-          ...prevData,
-          { ...data, codigo: prevData.length + 1 },
-        ]);
-      }
-
-      if (!hasError) {
-        setIsModalOpen(false);
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
-
-  const onDelete = async () => {
-    try {
-      setData((prevData) =>
-        prevData.filter((item) => item.codigo !== employeeValue?.codigo)  
-      );
-      setDeleteModalOpen(false);
-    } catch (error) {
-      console.error("Error deleting employee:", error);
-    }
-  };
 
   return {
     data,
