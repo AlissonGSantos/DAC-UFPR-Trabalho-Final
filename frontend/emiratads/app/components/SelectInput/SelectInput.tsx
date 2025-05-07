@@ -67,7 +67,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
               </option>
             ))}
           </select>
-          {
+          {onClear && !disabled && (
             <button
               type="button"
               className="ml-2 text-slate-300 hover:text-indigo -500"
@@ -75,7 +75,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
             >
               ✕
             </button>
-          }
+          )}
         </div>
       </div>
 
