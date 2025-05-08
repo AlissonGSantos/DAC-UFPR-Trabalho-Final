@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <div className="flex flex-col h-full w-full gap-8">
       <HomeHeader />
-      <div className="flex px-10">
+      <div className="flex flex-col px-10">
         <SearchComponent fromHome />
       </div>
       <div className="flex px-10">

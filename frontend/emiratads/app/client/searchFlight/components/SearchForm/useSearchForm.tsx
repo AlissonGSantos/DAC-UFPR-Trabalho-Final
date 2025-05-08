@@ -56,13 +56,6 @@ const useSearchForm = ({
       onChangeDestination?.(destinationAirport as Aeroporto);
       onChangeOrigin?.(originAirport as Aeroporto);
     }
-
-    if (origin && destination) {
-      onSubmit({
-        OriginAirport: origin,
-        DestinationAirport: destination,
-      });
-    }
   }, [originAirport, destinationAirport, origin, destination]);
 
   const {
@@ -121,25 +114,41 @@ const useSearchForm = ({
     }
   };
 
-  const onSubmit = (data: SearchFlightSchemaFormData) => {
-    if (onRedirect) {
-      return onRedirect();
-    }
-
-    const selectedFlights = flightList.filter((flight) => {
-      const matchesOrigin = data.OriginAirport
-        ? flight.aeroporto_origem.codigo === data.OriginAirport
+  const filterFlights = (
+    flightList: Flight[],
+    originAirportCode?: string,
+    destinationAirportCode?: string
+  ) => {
+    const filteredFlights = flightList.filter((flight) => {
+      const matchesOrigin = originAirportCode
+        ? flight.aeroporto_origem.codigo === originAirportCode
         : true;
-      const matchesDestination = data.DestinationAirport
-        ? flight.aeroporto_destino.codigo === data.DestinationAirport
+      const matchesDestination = destinationAirportCode
+        ? flight.aeroporto_destino.codigo === destinationAirportCode
         : true;
 
       return matchesOrigin && matchesDestination;
     });
 
-    setFlights(selectedFlights);
-    onFindFlights(selectedFlights);
+    setFlights(filteredFlights);
+    onFindFlights(filteredFlights);
   };
+
+  const onSubmit = (data: SearchFlightSchemaFormData) => {
+    if (onRedirect) {
+      return onRedirect();
+    }
+
+    filterFlights(
+      flightList,
+      data.OriginAirport,
+      data.DestinationAirport
+    );
+  };
+
+  useEffect(() => {
+    filterFlights(flightList, originAirport?.codigo, destinationAirport?.codigo)
+  }, []);
 
   return {
     aeroportos,

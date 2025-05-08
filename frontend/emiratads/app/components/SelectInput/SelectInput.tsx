@@ -70,7 +70,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
           {onClear && !disabled && (
             <button
               type="button"
-              className="ml-2 text-slate-300 hover:text-indigo -500"
+              className="ml-2 text-slate-300 hover:text-indigo -500 cursor-pointer hover:text-indigo-500 rounded-full p-1 transition duration-300 ease"
               onClick={onClear}
             >
               ✕
