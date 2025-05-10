@@ -2,27 +2,27 @@ const cors = require('cors');
 
 const ALLOWED_ORIGINS = ['http://localhost:3000']
 const corsMappings = {
-    '/v1/login': { methods: ['POST'] },
-    '/v1/logout': { methods: ['POST'] },
+    '/login': { methods: ['POST'] },
+    '/logout': { methods: ['POST'] },
 
-    '/v1/funcionarios': { methods: ['GET', 'POST'] },
-    '/v1/funcionarios/:codigo': { methods: ['GET', 'PUT', 'DELETE'] },
+    '/funcionarios': { methods: ['GET', 'POST'] },
+    '/funcionarios/:codigo': { methods: ['GET', 'PUT', 'DELETE'] },
 
-    '/v1/clientes': { methods: ['GET', 'POST'] },
-    '/v1/clientes/:codigo': { methods: ['GET'] },
-    '/v1/clientes/:codigo/reservas': { methods: ['GET'] },
-    '/v1/clientes/:codigo/milhas': { methods: ['GET', 'PUT'] },
+    '/clientes': { methods: ['GET', 'POST'] },
+    '/clientes/:codigo': { methods: ['GET', 'PUT'] },
+    '/clientes/:codigo/reservas': { methods: ['GET'] },
+    '/clientes/:codigo/milhas': { methods: ['GET', 'PUT'] },
 
-    '/v1/voos': { methods: ['GET', 'POST'] },
-    '/v1/voos/:codigo': { methods: ['GET', 'DELETE'] },
-    '/v1/voos/:codigo/estado': { methods: ['PATCH'] },
+    '/voos': { methods: ['GET', 'POST'] },
+    '/voos/:codigo': { methods: ['GET', 'DELETE'] },
+    '/voos/:codigo/estado': { methods: ['PATCH'] },
 
-    '/v1/reservas': { methods: ['POST'] },
-    '/v1/reservas/:codigo': { methods: ['GET', 'DELETE'] },
-    '/v1/reservas/:codigo/estado': { methods: ['PATCH'] },
+    '/reservas': { methods: ['POST'] },
+    '/reservas/:codigo': { methods: ['GET', 'DELETE'] },
+    '/reservas/:codigo/estado': { methods: ['PATCH'] },
 
-    '/v1/aeroportos': { methods: ['GET'] }
-}
+    '/aeroportos': { methods: ['GET'] }
+};
 
 function getCorsOptions(path) {
     const config = corsMappings[path]
