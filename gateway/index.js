@@ -2,7 +2,7 @@ require('dotenv').config()
 const cors = require('cors')
 const express = require('express')
 const getCorsOptions = require('./src/config/corsConfig.js')
-const funcionarioRoutes = require('./src/routes/funcionarioRoutes.js')
+const routes = require('./src/routes/routes.js')
 const BASE_URL = '/api/v1'
 
 const app = express()
@@ -17,7 +17,7 @@ app.use(BASE_URL, (req, res, next) => {
     }
 });
 
-app.use(BASE_URL, funcionarioRoutes)
+app.use(BASE_URL, routes)
 
 app.listen(3030, () => {
     console.log('API Gateway rodando na porta 3030')
