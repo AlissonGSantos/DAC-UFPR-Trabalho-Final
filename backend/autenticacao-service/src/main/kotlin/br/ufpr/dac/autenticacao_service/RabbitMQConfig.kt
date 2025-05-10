@@ -1,6 +1,5 @@
 package br.ufpr.dac.autenticacao_service
 
-import br.ufpr.dac.autenticacao_service.resource.AutenticacaoListener
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
@@ -9,22 +8,22 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class RabbitMQConfig {
+class RabbitMQConfig() {
 
     @Bean
-    fun autocadastroRequests(): Queue {
-        return Queue("emiratads.autocadastro.autenticacao")
-    }
+    fun autocadastroRequests(): Queue = Queue("emiratads.autocadastro.autenticacao")
 
     @Bean
-    fun sagaAutocadastro(): DirectExchange {
-        return DirectExchange("emiratads.autocadastro")
-    }
+    fun sagaAutocadastro(): DirectExchange = DirectExchange("emiratads.autocadastro")
 
     @Bean
-    fun sagaLogin(): DirectExchange {
-        return DirectExchange("emiratads.login")
-    }
+    fun sagaLogin(): DirectExchange = DirectExchange("emiratads.login")
+
+    @Bean
+    fun deactivateFuncionario(): Queue = Queue("emiratads.deactivate.funcionario")
+
+    @Bean
+    fun deactivateFuncionarioExchange(): DirectExchange = DirectExchange("emiratads.deactivate")
 
     @Bean
     fun binding(
@@ -37,8 +36,13 @@ class RabbitMQConfig {
     }
 
     @Bean
-    fun autenticacaoListener(): AutenticacaoListener {
-        return AutenticacaoListener()
+    fun bindingFuncionario(
+        deactivateFuncionarioExchange: DirectExchange,
+        deactivateFuncionario: Queue
+    ): Binding {
+        return BindingBuilder.bind(deactivateFuncionario)
+            .to(deactivateFuncionarioExchange)
+            .with("funcionario")
     }
 
 }

@@ -9,7 +9,8 @@ export type InputType =
   | "email"
   | "number"
   | "tel"
-  | "url";
+  | "url"
+  | "datetime-local";
 
 export interface InputError {
   hasError: boolean;
@@ -36,28 +37,32 @@ const Input: React.FC<InputProps> = ({
   const hasError = error?.some((err) => err.hasError);
 
   return (
-    <div className="flex flex-col gap-2">
-      {label && <label className={`text-sm ${hasError ? "text-red-700" : "text-slate-300"}`}>{label}</label>}
+    <div className="flex flex-1 flex-col gap-2">
+      {label && <label className={`text-sm ${hasError ? "text-red-500" : "text-slate-300"}`}>{label}</label>}
       <input
         className={`w-full bg-transparent placeholder:text-slate-400 text-slate-300 text-sm border-2 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none ${
           hasError
             ? "border-red-700 focus:border-red-500 hover:border-red-900"
             : "border-indigo-700 focus:border-indigo-800 hover:border-indigo-500"
-        }  shadow-sm focus:shadow ${extraClasses}`}
+        } shadow-sm focus:shadow ${extraClasses} ${
+          rest.disabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
         type={type}
         placeholder={placeholder}
         {...rest}
       />
+      <div className="min-h-4 text-sm mt-1">
       {error
         ?.filter((err) => err.hasError)
         .map((err, index) => (
           <li
-            key={`${err.message}-${index}`}
-            className="text-xs ml-4 text-red-800"
+          key={`${err.message}-${index}`}
+          className="text-xs ml-4 text-red-500"
           >
             {err.message}
           </li>
         ))}
+        </div>
     </div>
   );
 };

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: reserva-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://dbdevelopment:5432/postgres
+    username: emiratads_reserva_user
+    password: senha4
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        type: trace
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: guest

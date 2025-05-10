@@ -1,6 +1,7 @@
 "use client";
 import { useAuthContext } from "@/app/contexts/auth";
 import { useState } from "react";
+import { EmployeeEnum } from "@/app/types/AuthTypes";
 
 interface Shortcut {
   name: string;
@@ -10,18 +11,36 @@ interface Shortcut {
 
 const useNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLogged } = useAuthContext();
+  const { isLogged, userData, logout, getUserType } = useAuthContext();
   const toggle = () => setIsOpen(!isOpen);
 
-  const shortcuts: Shortcut[] = [
-    { name: "Home", link: "/" },
-    { name: "About", link: "/about" },
-    { name: "Services", link: "/services" },
-    { name: "Contact", link: "/contact" },
-    !isLogged ? { name: "Login", link: "/login" } : null,
-  ].filter((shortcut): shortcut is Shortcut => shortcut !== null);
+  const userType = getUserType() ?? EmployeeEnum.CLIENTE;
 
-  return { isOpen, toggle, shortcuts, isLogged };
+  const shortcuts: Shortcut[] =
+    userType === EmployeeEnum.CLIENTE
+      ? [
+          { name: "Início", link: "/client/home", enabled: true },
+          { name: "Milhas", link: "/client/invoice", enabled: true },
+          { name: "Voos", link: "/client/searchFlight", enabled: true },
+          { name: "Reservas", link: "/client/booking", enabled: true },
+          { name: "Check-in", link: "/client/checkin", enabled: true },
+        ]
+      : [
+          { name: "Início", link: "/employee/home", enabled: true },
+          { name: "Voos", link: "/employee/registerFlight", enabled: true },
+          { name: "Funcionários", link: "/employee/dashboard", enabled: true },
+        ];
+
+  return {
+    isOpen,
+    toggle,
+    shortcuts,
+    isLogged,
+    username: userData?.usuario?.nome,
+    milescore: userData?.usuario?.saldo_milhas,
+    isClient: userType === EmployeeEnum.CLIENTE,
+    logout,
+  };
 };
 
 export { useNavbar };

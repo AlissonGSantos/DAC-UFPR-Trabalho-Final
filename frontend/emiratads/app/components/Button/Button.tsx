@@ -10,18 +10,23 @@ export type ButtonType =
   | "DANGER"
   | "SUCCESS"
   | "WARNING"
-  | "QUATERNARY";
+  | "QUATERNARY"
+  | "DISABLED";
 
 export type ButtonSize = "SMALL" | "MEDIUM" | "LARGE";
 
+export type IconPosition = "LEFT" | "RIGHT";
+
 export interface ButtonProps {
-  text: string;
-  onClick?: () => void;
+  text?: string;
+  onClick?: (param?: any) => void;
   type?: ButtonType;
   disabled?: boolean;
   extraClass?: string;
   size?: ButtonSize;
   typeButton?: "button" | "submit" | "reset";
+  children?: React.ReactNode;
+  iconPosition?: IconPosition; 
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -32,17 +37,21 @@ const Button: React.FC<ButtonProps> = ({
   size = "MEDIUM",
   extraClass = "",
   typeButton,
+  children,
+  iconPosition = "LEFT", 
 }) => {
   const { getButtonColor, getButtonSize } = useButton(type, size);
 
   return (
     <button
-      className={`cursor-pointer ${getButtonColor()} ${getButtonSize()} rounded-lg ${extraClass}`}
+      className={`cursor-pointer flex items-center justify-center gap-2 ${getButtonColor()} ${getButtonSize()} rounded-lg ${extraClass}`}
       onClick={onClick}
       disabled={disabled}
       type={typeButton ?? "button"}
     >
-      {text}
+      {iconPosition === "LEFT" && children}
+      {text && <span>{text}</span>}
+      {iconPosition === "RIGHT" && children}
     </button>
   );
 };

@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository
 
 
 @Repository
-interface IVooRepository : JpaRepository<Voo, String>{
-    fun findByAtivoTrue(): List<Voo>
-}
+interface IVooRepository : JpaRepository<Voo, String>{}

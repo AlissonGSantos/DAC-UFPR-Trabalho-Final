@@ -9,6 +9,11 @@ import java.util.*
 @Service
 class PasswordService {
 
+    fun generateRandomPassword(): String {
+        val random = Random()
+        return String.format("%04d", random.nextInt(10000))
+    }
+
     fun generateSalt(): String {
         val random = SecureRandom()
         val salt = ByteArray(16)
