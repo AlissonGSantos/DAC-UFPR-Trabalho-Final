@@ -4,6 +4,7 @@
 import { CEPResponse } from "@/app/types/AuthTypes";
 import axios from "axios";
 import { RegisterFormData } from "../register/schema/schema";
+import apiRoutes from "@/app/utils/apiRoutes";
 
 const registerServices = {
     getCep: async (cep: string): Promise<CEPResponse> => {
@@ -13,11 +14,11 @@ const registerServices = {
     },
     registerUser: async (data: RegisterFormData) => {
         try {
-            const res = await axios.post<RegisterFormData>(`http://localhost:8080/v1/clientes`, data);
+            const res = await axios.post<RegisterFormData>(`${process.env.NEXT_PUBLIC_API_URL}${apiRoutes.authentication.register}`, data);
             return res.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                throw new Error(error.response?.data.message || "Erro ao registrar usuário");
+                throw new Error(error.response?.data.message ?? "Erro ao registrar usuário");
             }
             throw new Error("Erro ao registrar usuário");
         }

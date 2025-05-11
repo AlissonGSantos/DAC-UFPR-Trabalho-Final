@@ -1,8 +1,11 @@
 const apiRoutes = {
     authentication: {
-        login: '/auth/login',
-        register: '/auth/register',
-        logout: '/auth/logout',
+        login: '/login',
+        register: '/clientes',
+        logout: '/logout',
+    },
+    miles: {
+        miles: (clientId: string) => `/clientes/${clientId}/milhas`,
     }
 }
 
