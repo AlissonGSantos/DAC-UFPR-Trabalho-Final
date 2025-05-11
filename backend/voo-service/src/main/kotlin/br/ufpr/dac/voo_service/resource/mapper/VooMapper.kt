@@ -1,8 +1,11 @@
 package br.ufpr.dac.voo_service.resource.mapper
 
+import br.ufpr.dac.voo_service.domain.Aeroporto
 import utils.dto.VooOutputDTO
 import br.ufpr.dac.voo_service.domain.Voo
 import br.ufpr.dac.voo_service.resource.dto.VooInputDTO
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class VooMapper {
     companion object {
@@ -19,16 +22,17 @@ class VooMapper {
             )
         }
 
-        fun toDomain(voo: VooInputDTO): Voo {
+        fun toDomain(voo: VooInputDTO, aeroportoOrigem: Aeroporto, aeroportoDestino: Aeroporto): Voo {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
             return Voo(
                 voo.codigo ?: "",
-                voo.data,
+                ZonedDateTime.parse(voo.data.replace("Z", ""), formatter),
                 voo.valor_passagem,
                 voo.quantidade_poltronas_total,
                 0,
                 null,
-                AeroportoMapper.toDomain(voo.aeroporto_origem),
-                AeroportoMapper.toDomain(voo.aeroporto_destino)
+                aeroportoOrigem,
+                aeroportoDestino
             )
         }
     }
