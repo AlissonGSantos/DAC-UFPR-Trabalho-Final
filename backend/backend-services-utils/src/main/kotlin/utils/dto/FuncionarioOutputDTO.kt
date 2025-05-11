@@ -5,5 +5,6 @@ data class FuncionarioOutputDTO(
     val cpf: String,
     val nome: String,
     val email: String,
-    val telefone: String
+    val telefone: String,
+    val ativo: Boolean
 ) : UsuarioOutputDTO

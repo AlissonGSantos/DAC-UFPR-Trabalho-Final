@@ -25,17 +25,29 @@ const corsMappings = {
 };
 
 function getCorsOptions(path) {
-    const config = corsMappings[path]
+    let config = corsMappings[path];
 
     if (!config) {
-        throw new Error(`CORS não configurado para o caminho: ${path}`)
+        // Tenta encontrar um caminho dinâmico correspondente
+        const dynamicPath = Object.keys(corsMappings).find((key) => {
+            const regex = new RegExp(`^${key.replace(/:\w+/g, '\\w+')}$`);
+            return regex.test(path);
+        });
+
+        if (dynamicPath) {
+            config = corsMappings[dynamicPath];
+        }
+    }
+
+    if (!config) {
+        throw new Error(`CORS não configurado para o caminho: ${path}`);
     }
 
     return {
         origin: ALLOWED_ORIGINS,
         methods: config.methods,
-        allowedHeaders: ['Content-Type', 'Authorization']
-    }
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    };
 }
 
 module.exports = getCorsOptions

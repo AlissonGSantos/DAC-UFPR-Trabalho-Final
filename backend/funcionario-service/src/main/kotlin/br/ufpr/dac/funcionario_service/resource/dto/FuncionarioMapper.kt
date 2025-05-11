@@ -13,7 +13,8 @@ class FuncionarioMapper {
                 funcionario.cpf,
                 funcionario.nome,
                 funcionario.email,
-                funcionario.telefone
+                funcionario.telefone,
+                funcionario.ativo
             )
         }
 
@@ -24,7 +25,7 @@ class FuncionarioMapper {
                 funcionario.nome,
                 funcionario.email,
                 funcionario.telefone,
-                true
+                funcionario.ativo ?: true
             )
         }
     }
