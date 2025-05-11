@@ -9,8 +9,9 @@ async function getAllVoos(queryParams) {
 }
 
 async function getVooById(id) {
-  const response = await axios.get(`${BASE_URL}/voos/${id}`);
-  return response.data;
+  const vooResponse = await axios.get(`${BASE_URL}/voos/${id}`);
+  const poltronasResponse = await axios.get(`http://localhost:8084/v1/reservas/poltronas/${id}`);
+  return { ...vooResponse.data, poltronas_ocupadas: poltronasResponse.data.poltronasReservadas };
 }
 
 async function createVoo(dados) {

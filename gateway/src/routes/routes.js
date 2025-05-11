@@ -5,6 +5,7 @@ const clienteController = require("../controllers/clienteController.js");
 const autenticacaoController = require("../controllers/autenticacaoController.js");
 const verifyJWT = require("../middlewares/verifyJWT.js");
 const vooController = require("../controllers/vooController.js");
+const reservaController = require("../controllers/reservaController.js");
 
 // Rotas de autenticação
 router.post("/login", autenticacaoController.login);
@@ -16,6 +17,7 @@ router.get("/clientes", verifyJWT(["CLIENTE"]), clienteController.getAllClientes
 router.get("/clientes/:id", verifyJWT(["CLIENTE"]), clienteController.getClienteById);
 router.put("/clientes/:id/milhas", verifyJWT(["CLIENTE"]), clienteController.updateClienteMilhas);
 router.get("/clientes/:id/milhas", verifyJWT(["CLIENTE"]), clienteController.getClienteMilhas);
+router.get("/clientes/:id/reservas", verifyJWT(["CLIENTE"]), clienteController.getClienteReservas);
 
 // Rotas de Voos
 router.get("/voos", verifyJWT(["CLIENTE", "FUNCIONARIO"]), vooController.getAllVoos);
@@ -26,10 +28,10 @@ router.delete("/voos/:id", verifyJWT(["FUNCIONARIO"]), vooController.deleteVoo);
 router.get("/aeroportos", verifyJWT(["CLIENTE", "FUNCIONARIO"]), vooController.getAllAeroportos);
 
 // Rotas de reservas
-router.post("/reservas", verifyJWT(["CLIENTE"]));
-router.delete("/reservas/:id", verifyJWT(["CLIENTE"]));
-router.get("/reservas/:id", verifyJWT(["CLIENTE"]));
-router.patch("/reservas/:id/estado", verifyJWT(["CLIENTE"]));
+router.post("/reservas", verifyJWT(["CLIENTE"]), reservaController.createReserva);
+router.delete("/reservas/:id", verifyJWT(["CLIENTE"]), reservaController.deleteReserva);
+router.get("/reservas/:id", verifyJWT(["CLIENTE"]), reservaController.getReservaById);
+router.patch("/reservas/:id/estado", verifyJWT(["CLIENTE", "FUNCIONARIO"]), reservaController.updateReservaEstado);
 
 // Rotas de funcionários
 router.get("/funcionarios", verifyJWT(["FUNCIONARIO"]), funcionarioController.getAllFuncionarios);

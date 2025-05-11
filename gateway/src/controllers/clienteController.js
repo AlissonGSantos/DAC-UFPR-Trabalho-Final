@@ -1,4 +1,5 @@
 const clienteService = require("../services/clienteService.js");
+const reservaService = require("../services/reservaService.js");
 
 async function getAllClientes(req, res) {
   try {
@@ -68,10 +69,24 @@ async function getClienteMilhas(req, res) {
   }
 }
 
+async function getClienteReservas(req, res) {
+  try {
+    const reservas = await reservaService.getClienteReservas(req.params.id);
+    res.status(200).json(reservas);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: true,
+      status: error.response?.status || 500,
+      message: error.response?.message || error.response?.data?.message || "Erro ao buscar reservas do cliente",
+    });
+  }
+}
+
 module.exports = {
   getAllClientes,
   getClienteById,
   createCliente,
   updateClienteMilhas,
   getClienteMilhas,
+  getClienteReservas,
 };
