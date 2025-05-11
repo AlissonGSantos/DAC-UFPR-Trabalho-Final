@@ -56,7 +56,7 @@ class ClienteListener(private val service: ClienteService, private val milhasSer
         val dadosCliente = service.getClienteByID(dadosReserva.codigo_cliente)
 
         if (dadosReserva.milhas_utilizadas > dadosCliente.saldo_milhas){
-            throw IllegalArgumentException("Saldo de milhas insuficiente para realizar operação")
+            throw IllegalArgumentException("Saldo de milhas insuficiente")
         }
 
         return gson.toJson(RabbitMessageDTO(true, dadosCliente))
