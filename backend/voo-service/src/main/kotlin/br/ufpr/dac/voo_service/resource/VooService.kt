@@ -12,6 +12,7 @@ import utils.exceptions.ResourceNotFoundException
 import utils.exceptions.ResourcesConflictException
 import java.lang.IllegalArgumentException
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class VooService(private val repository: IVooRepository, private val estadoVooRepository: IEstadoVooRepository) {
@@ -81,17 +82,18 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
         fim: String?
     ): List<VooOutputDTO> {
         val voos = repository.findAll()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
 
         val filteredVoos = voos.filter { voo ->
             val matchesOrigem = origem?.let { voo.aeroporto_origem.codigo == it } ?: true
             val matchesDestino = destino?.let { voo.aeroporto_destino.codigo == it } ?: true
-            val matchesData = data?.let { 
-                val dataInicio = ZonedDateTime.parse(it)
+            val matchesData = data?.let {
+                val dataInicio = ZonedDateTime.parse(it.replace("Z", ""), formatter)
                 voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)
             } ?: true
             val matchesDateRange = if (inicio != null && fim != null) {
-                val dataInicio = ZonedDateTime.parse(inicio)
-                val dataFim = ZonedDateTime.parse(fim)
+                val dataInicio = ZonedDateTime.parse(inicio.replace("Z", ""), formatter)
+                val dataFim = ZonedDateTime.parse(fim.replace("Z", ""), formatter)
                 (voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)) &&
                 (voo.data.isBefore(dataFim) || voo.data.isEqual(dataFim))
             } else true

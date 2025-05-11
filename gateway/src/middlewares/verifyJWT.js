@@ -15,7 +15,7 @@ function verifyJWT (requiredProfiles = []) {
                 if (err.name === 'TokenExpiredError') {
                   return res.status(401).json({ message: 'Sessão expirada. Faça login novamente.' });
                 }
-                return res.status(403).json({ message: 'Token inválido.' });
+                return res.status(401).json({ message: 'Token inválido.' });
             }
 
             req.user = decoded

@@ -4,7 +4,7 @@ async function getAllVoos(req, res) {
   try {
     const queryParams = req.query;
     const voos = await vooService.getAllVoos(queryParams);
-    res.status(200).json(voos);
+    res.status(200).json({...queryParams, voos});
   } catch (error) {
     res.status(error.response?.status || 500).json({
       error: true,

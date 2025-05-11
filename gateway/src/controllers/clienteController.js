@@ -72,6 +72,10 @@ async function getClienteMilhas(req, res) {
 async function getClienteReservas(req, res) {
   try {
     const reservas = await reservaService.getClienteReservas(req.params.id);
+    if (!reservas || reservas.length === 0) {
+      res.status(204).json({ message: "Nenhuma reserva encontrada para o cliente" });
+      return;
+    }
     res.status(200).json(reservas);
   } catch (error) {
     res.status(error.response?.status || 500).json({

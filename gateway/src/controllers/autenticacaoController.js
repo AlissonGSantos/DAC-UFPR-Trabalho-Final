@@ -3,7 +3,7 @@ const autenticacaoService = require("../services/autenticacaoService.js");
 async function login(req, res) {
   try {
     const data = await autenticacaoService.login(req.body);
-    res.status(200).json({ data });
+    res.status(200).json(data);
   } catch (error) {
     res.status(error.response?.status || 500).json({
       error: true,
