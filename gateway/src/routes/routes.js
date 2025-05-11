@@ -10,12 +10,11 @@ router.post("/login", autenticacaoController.login);
 router.post("/logout", verifyJWT(["CLIENTE", "FUNCIONARIO"]), autenticacaoController.logout);
 
 // Rotas de clientes
+router.post("/clientes", clienteController.createCliente);
 router.get("/clientes", verifyJWT(["CLIENTE"]), clienteController.getAllClientes);
 router.get("/clientes/:id", verifyJWT(["CLIENTE"]), clienteController.getClienteById);
-router.post("/clientes", verifyJWT(["CLIENTE"]), clienteController.createCliente);
-router.get("/clientes/:id/reservas", verifyJWT(["CLIENTE"]));
-router.put("/clientes/:id/milhas", verifyJWT(["CLIENTE"]));
-router.get("/clientes/:id/milhas", verifyJWT(["CLIENTE"]));
+router.put("/clientes/:id/milhas", verifyJWT(["CLIENTE"]), clienteController.updateClienteMilhas);
+router.get("/clientes/:id/milhas", verifyJWT(["CLIENTE"]), clienteController.getClienteMilhas);
 
 // Rotas de Voos
 router.get("/voos", verifyJWT(["CLIENTE"]));

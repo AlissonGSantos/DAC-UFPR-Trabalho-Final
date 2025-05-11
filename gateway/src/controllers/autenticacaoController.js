@@ -8,7 +8,7 @@ async function login(req, res) {
     res.status(error.response?.status || 500).json({
       error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || "Erro ao realizar login"
+      message: error.response?.message || error.response?.data?.message || "Erro ao realizar login"
     });
   }
 }

@@ -13,7 +13,7 @@ async function getFuncionarioById(id) {
 }
 
 async function createFuncionario(dados) {
-  const response = await axios.post(`${BASE_URL}/v1/funcionarios`, dados);
+  const response = await axios.post(`http://localhost:8080/v1/funcionarios`, dados);
   return response.data;
 }
 

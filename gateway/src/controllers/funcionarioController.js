@@ -8,7 +8,7 @@ async function getAllFuncionarios(req, res) {
     res.status(error.response?.status || 500).json({
       error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || "Erro ao buscar funcionários"
+      message: error.response?.message || error.response?.data?.message || "Erro ao buscar funcionários"
     });
   }
 }
@@ -21,7 +21,7 @@ async function getFuncionarioById(req, res) {
     res.status(error.response?.status || 500).json({
       error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || "Funcionário não encontrado"
+      message: error.response?.message || error.response?.data?.message || "Funcionário não encontrado"
     });
   }
 }
@@ -34,7 +34,7 @@ async function createFuncionario(req, res) {
     res.status(error.response?.status || 500).json({
       error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || "Erro ao criar funcionário"
+      message: error.response?.message || error.response?.data?.message || "Erro ao criar funcionário"
     });
   }
 }
@@ -47,7 +47,7 @@ async function updateFuncionario(req, res) {
     res.status(error.response?.status || 500).json({
       error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || "Erro ao atualizar funcionário"
+      message: error.response?.message || error.response?.data?.message || "Erro ao atualizar funcionário"
     });
   }
 }
@@ -60,7 +60,7 @@ async function deleteFuncionario(req, res) {
     res.status(error.response?.status || 500).json({
       error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || "Erro ao excluir funcionário"
+      message: error.response?.message || error.response?.data?.message || "Erro ao excluir funcionário"
     });
   }
 }
