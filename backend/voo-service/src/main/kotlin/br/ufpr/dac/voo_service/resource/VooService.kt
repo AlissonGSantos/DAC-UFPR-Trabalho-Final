@@ -12,38 +12,10 @@ import utils.exceptions.ResourceNotFoundException
 import utils.exceptions.ResourcesConflictException
 import java.lang.IllegalArgumentException
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class VooService(private val repository: IVooRepository, private val estadoVooRepository: IEstadoVooRepository) {
-    fun getAllVoos(): List<VooOutputDTO> {
-        return repository.findAll().map { VooMapper.toDTO(it) }
-    }
-
-    fun getVoosByAeroportos(origem: String, destino: String): List<VooOutputDTO> {
-        val voos = repository.findAll().filter { voo ->
-            (voo.aeroporto_origem.codigo == origem) &&
-            (voo.aeroporto_destino.codigo == destino)
-        }
-        return voos.map { VooMapper.toDTO(it) }
-    }
-
-    fun getVoosFromDate(data: String): List<VooOutputDTO> {
-        val dataInicio = ZonedDateTime.parse(data)
-        val voos = repository.findAll().filter { voo ->
-            voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)
-        }
-        return voos.map { VooMapper.toDTO(it) }
-    }
-
-    fun getVoosByDateRange(dataInicio: String, dataFim: String): List<VooOutputDTO> {
-        val inicio = ZonedDateTime.parse(dataInicio)
-        val fim = ZonedDateTime.parse(dataFim)
-        val voos = repository.findAll().filter { voo ->
-            (voo.data.isAfter(inicio) || voo.data.isEqual(inicio)) &&
-            (voo.data.isBefore(fim) || voo.data.isEqual(fim))
-        }
-        return voos.map { VooMapper.toDTO(it) }
-    }
 
     fun getVooById(id: String): Voo {
         return repository.findById(id).orElseThrow { ResourceNotFoundException("Voo não encontrado com o id ${id}") }
@@ -100,5 +72,35 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
         voo.quantidade_poltronas_ocupadas -= quantidadePoltronas
 
         return VooMapper.toDTO(repository.save(voo))
+    }
+
+    fun getFilteredVoos(
+        origem: String?,
+        destino: String?,
+        data: String?,
+        inicio: String?,
+        fim: String?
+    ): List<VooOutputDTO> {
+        val voos = repository.findAll()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
+
+        val filteredVoos = voos.filter { voo ->
+            val matchesOrigem = origem?.let { voo.aeroporto_origem.codigo == it } ?: true
+            val matchesDestino = destino?.let { voo.aeroporto_destino.codigo == it } ?: true
+            val matchesData = data?.let {
+                val dataInicio = ZonedDateTime.parse(it.replace("Z", ""), formatter)
+                voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)
+            } ?: true
+            val matchesDateRange = if (inicio != null && fim != null) {
+                val dataInicio = ZonedDateTime.parse(inicio.replace("Z", ""), formatter)
+                val dataFim = ZonedDateTime.parse(fim.replace("Z", ""), formatter)
+                (voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)) &&
+                (voo.data.isBefore(dataFim) || voo.data.isEqual(dataFim))
+            } else true
+
+            matchesOrigem && matchesDestino && matchesData && matchesDateRange
+        }
+
+        return filteredVoos.map { VooMapper.toDTO(it) }
     }
 }

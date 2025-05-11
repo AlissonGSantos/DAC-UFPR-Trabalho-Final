@@ -15,5 +15,6 @@ data class FuncionarioInputDTO(
     @field:NotBlank
     val nome: String,
     val telefone: String,
-    val senha: String?
+    val senha: String?,
+    val ativo: Boolean?
 )

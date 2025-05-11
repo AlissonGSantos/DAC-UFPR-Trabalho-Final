@@ -7,7 +7,6 @@ class EnderecoDTO (
     @field:NotBlank
     val cep: String,
 
-    @field:Uf
     @field:NotBlank
     val uf: String,
 

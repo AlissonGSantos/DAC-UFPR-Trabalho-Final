@@ -23,15 +23,14 @@ class FuncionarioService(
     }
 
     fun updateFuncionario(codigo: Long, funcionarioDTO: FuncionarioInputDTO): FuncionarioOutputDTO {
-        repository.findByCodigoAndAtivoTrue(codigo)?.let { funcionario ->
-            funcionario.nome = funcionarioDTO.nome
-            funcionario.email = funcionarioDTO.email
-            funcionario.telefone = funcionarioDTO.telefone
+        val funcionario = repository.findById(codigo)
+            .orElseThrow { ResourceNotFoundException("Funcionário não encontrado com o ID: ${funcionarioDTO.codigo}") }
+        funcionario.nome = funcionarioDTO.nome
+        funcionario.email = funcionarioDTO.email
+        funcionario.telefone = funcionarioDTO.telefone
+        funcionario.ativo = funcionarioDTO.ativo ?: funcionario.ativo
 
-            return FuncionarioMapper.toDTO(repository.save(funcionario))
-        }
-
-        throw ResourceNotFoundException("Funcionário não encontrado com o ID: ${funcionarioDTO.codigo}")
+        return FuncionarioMapper.toDTO(repository.save(funcionario))
     }
 
     fun saveFuncionario(funcionario: FuncionarioInputDTO): FuncionarioOutputDTO {

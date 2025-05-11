@@ -8,11 +8,11 @@ INSERT INTO emiratads_funcionario.funcionario (cpf, nome, email, telefone) VALUE
 
 -- Inserts para a tabela endereco
 INSERT INTO emiratads_cliente.endereco (cep, uf, cidade, bairro, rua, numero, complemento) VALUES
-    ('80000000', 'PR', 'Curitiba', 'Centro', 'Rua 1', '123', 'Apto 101'),
-    ('80010000', 'PR', 'Curitiba', 'Batel', 'Rua 2', '456', 'Apto 202'),
-    ('80020000', 'PR', 'Curitiba', 'Água Verde', 'Rua 3', '789', 'Casa 1'),
-    ('80030000', 'PR', 'Curitiba', 'Juvevê', 'Rua 4', '101', 'Casa 2'),
-    ('80040000', 'PR', 'Curitiba', 'Cabral', 'Rua 5', '202', 'Apto 303');
+    ('80000000', 'Paraná', 'Curitiba', 'Centro', 'Rua 1', '123', 'Apto 101'),
+    ('80010000', 'Paraná', 'Curitiba', 'Batel', 'Rua 2', '456', 'Apto 202'),
+    ('80020000', 'Paraná', 'Curitiba', 'Água Verde', 'Rua 3', '789', 'Casa 1'),
+    ('80030000', 'Paraná', 'Curitiba', 'Juvevê', 'Rua 4', '101', 'Casa 2'),
+    ('80040000', 'Paraná', 'Curitiba', 'Cabral', 'Rua 5', '202', 'Apto 303');
 
 -- Inserts para a tabela cliente
 INSERT INTO emiratads_cliente.cliente (cpf, nome, email, saldo_milhas, endereco_codigo) VALUES

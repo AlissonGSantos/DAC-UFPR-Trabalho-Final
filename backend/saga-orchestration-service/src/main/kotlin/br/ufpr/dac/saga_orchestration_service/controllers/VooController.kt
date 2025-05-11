@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*
 import utils.dto.AlternaEstadoDTO
 import utils.dto.VooOutputDTO
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1/voos")
 class VooController(

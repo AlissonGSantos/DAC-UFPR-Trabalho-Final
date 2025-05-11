@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1/voos")
 class VooController(private val service: VooService) {
@@ -19,16 +20,7 @@ class VooController(private val service: VooService) {
         @RequestParam(required = false) inicio: String?,
         @RequestParam(required = false) fim: String?
     ): ResponseEntity<List<VooOutputDTO>> {
-        val voos = when {
-            origem != null && destino != null -> 
-                service.getVoosByAeroportos(origem, destino)
-            data != null -> 
-                service.getVoosFromDate(data)
-            inicio != null && fim != null ->
-                service.getVoosByDateRange(inicio, fim)
-            else -> 
-                service.getAllVoos()
-        }
+        val voos = service.getFilteredVoos(origem, destino, data, inicio, fim)
         return ResponseEntity.ok().body(voos)
     }
 

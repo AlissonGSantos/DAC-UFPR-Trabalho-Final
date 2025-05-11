@@ -16,6 +16,7 @@ import utils.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
 import java.net.URI
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1")
 class CadastroController(

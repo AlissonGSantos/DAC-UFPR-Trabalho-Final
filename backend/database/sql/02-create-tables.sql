@@ -49,7 +49,7 @@ CREATE SEQUENCE emiratads_cliente.transacoes_seq
 CREATE TABLE emiratads_cliente.endereco (
     codigo bigserial NOT NULL,
     cep varchar(8) NOT NULL,
-    uf varchar(2) NOT NULL,
+    uf varchar(16) NOT NULL,
     cidade varchar(30) NOT NULL,
     bairro varchar(30) NOT NULL,
     rua varchar(30) NOT NULL,
