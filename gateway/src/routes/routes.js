@@ -4,6 +4,7 @@ const funcionarioController = require("../controllers/funcionarioController.js")
 const clienteController = require("../controllers/clienteController.js");
 const autenticacaoController = require("../controllers/autenticacaoController.js");
 const verifyJWT = require("../middlewares/verifyJWT.js");
+const vooController = require("../controllers/vooController.js");
 
 // Rotas de autenticação
 router.post("/login", autenticacaoController.login);
@@ -17,12 +18,12 @@ router.put("/clientes/:id/milhas", verifyJWT(["CLIENTE"]), clienteController.upd
 router.get("/clientes/:id/milhas", verifyJWT(["CLIENTE"]), clienteController.getClienteMilhas);
 
 // Rotas de Voos
-router.get("/voos", verifyJWT(["CLIENTE"]));
-router.get("/voos/:id", verifyJWT(["CLIENTE"]));
-router.post("/voos", verifyJWT(["CLIENTE"]));
-router.patch("/voos/:id/estado", verifyJWT(["CLIENTE"]));
-router.delete("/voos/:id", verifyJWT(["CLIENTE"]));
-router.get("/aeroportos", verifyJWT(["CLIENTE"]));
+router.get("/voos", verifyJWT(["CLIENTE", "FUNCIONARIO"]), vooController.getAllVoos);
+router.get("/voos/:id", verifyJWT(["CLIENTE", "FUNCIONARIO"]), vooController.getVooById);
+router.post("/voos", verifyJWT(["FUNCIONARIO"]), vooController.createVoo);
+router.patch("/voos/:id/estado", verifyJWT(["FUNCIONARIO"]), vooController.updateVooEstado);
+router.delete("/voos/:id", verifyJWT(["FUNCIONARIO"]), vooController.deleteVoo);
+router.get("/aeroportos", verifyJWT(["CLIENTE", "FUNCIONARIO"]), vooController.getAllAeroportos);
 
 // Rotas de reservas
 router.post("/reservas", verifyJWT(["CLIENTE"]));
