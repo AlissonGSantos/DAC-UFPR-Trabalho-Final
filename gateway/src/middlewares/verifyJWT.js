@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = process.env.SECRET_KEY
+const SECRET_KEY = process.env.SECRET_API_KEY;
 
 function verifyJWT (requiredProfiles = []) {
     return (req, res, next) => {

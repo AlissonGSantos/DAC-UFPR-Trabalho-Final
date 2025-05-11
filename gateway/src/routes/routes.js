@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const funcionarioController = require("../controllers/funcionarioController.js");
 const clienteController = require("../controllers/clienteController.js");
+const autenticacaoController = require("../controllers/autenticacaoController.js");
 const verifyJWT = require("../middlewares/verifyJWT.js");
 
 // Rotas de autenticação
-router.post("/login");
-router.post("/logout", verifyJWT(["CLIENTE"]));
+router.post("/login", autenticacaoController.login);
+router.post("/logout", verifyJWT(["CLIENTE", "FUNCIONARIO"]), autenticacaoController.logout);
 
 // Rotas de clientes
 router.get("/clientes", verifyJWT(["CLIENTE"]), clienteController.getAllClientes);

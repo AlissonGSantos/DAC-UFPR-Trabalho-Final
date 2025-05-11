@@ -28,4 +28,4 @@ spring:
 api:
   security:
     token:
-      secret: 12345678
+      secret: ${SECRET_API_KEY}

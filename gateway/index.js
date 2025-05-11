@@ -13,8 +13,17 @@ app.use(BASE_URL, (req, res, next) => {
         const corsOptions = getCorsOptions(req.path)
         cors(corsOptions)(req, res, next)
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao configurar CORS' + error.message })
+        res.status(500).json({ message: 'Erro ao configurar CORS ' + error.message })
     }
+});
+
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - Status: ${res.statusCode} - ${duration}ms`);
+    });
+    next();
 });
 
 app.use(BASE_URL, routes)
