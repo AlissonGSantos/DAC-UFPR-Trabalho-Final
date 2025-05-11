@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.DeleteMapping
 import utils.dto.FuncionarioInputDTO
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1/funcionarios")
 class FuncionarioController(private val service: FuncionarioService) {

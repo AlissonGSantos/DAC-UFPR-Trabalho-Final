@@ -6,6 +6,7 @@ import utils.dto.ClienteOutputDTO
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.HttpStatus
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/clientes")
 class ClienteController(private val service: ClienteService) {

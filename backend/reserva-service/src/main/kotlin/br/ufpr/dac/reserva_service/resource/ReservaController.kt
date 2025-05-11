@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*
 import utils.dto.AlternaEstadoDTO
 import utils.dto.ReservaOutputDTO
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("v1/reservas")
 class ReservaController(private val service: ReservaService) {

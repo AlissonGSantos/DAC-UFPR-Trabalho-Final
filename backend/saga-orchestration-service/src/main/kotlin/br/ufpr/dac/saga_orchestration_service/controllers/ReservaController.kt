@@ -5,6 +5,7 @@ import br.ufpr.dac.saga_orchestration_service.sagas.CriarReservaSaga
 import jakarta.validation.constraints.NotBlank
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,6 +16,7 @@ import utils.dto.ReservaInputDTO
 import utils.dto.ReservaOutputDTO
 import java.net.URI
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("v1/reservas")
 class ReservaController(private val sagaCriar: CriarReservaSaga, private val sagaCancelar: CancelarReservaSaga) {

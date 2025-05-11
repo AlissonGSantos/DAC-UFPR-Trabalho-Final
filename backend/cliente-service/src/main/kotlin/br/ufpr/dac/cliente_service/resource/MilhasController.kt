@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.CrossOrigin
 import utils.dto.ClienteOutputDTO
 
+@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/clientes/{codigo}/milhas")
 class MilhasController(private val service: MilhasService) {
