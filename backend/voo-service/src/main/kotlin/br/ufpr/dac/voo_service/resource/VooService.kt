@@ -6,16 +6,22 @@ import org.springframework.stereotype.Service
 import utils.dto.VooOutputDTO
 import br.ufpr.dac.voo_service.resource.dto.VooInputDTO
 import br.ufpr.dac.voo_service.domain.Voo
+import br.ufpr.dac.voo_service.repository.IAeroportoRepository
 import br.ufpr.dac.voo_service.repository.IEstadoVooRepository
 import br.ufpr.dac.voo_service.resource.mapper.VooMapper
 import utils.exceptions.ResourceNotFoundException
 import utils.exceptions.ResourcesConflictException
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
-class VooService(private val repository: IVooRepository, private val estadoVooRepository: IEstadoVooRepository) {
+class VooService(
+    private val repository: IVooRepository,
+    private val aeroporoRepository: IAeroportoRepository,
+    private val estadoVooRepository: IEstadoVooRepository
+) {
 
     fun getVooById(id: String): Voo {
         return repository.findById(id).orElseThrow { ResourceNotFoundException("Voo não encontrado com o id ${id}") }
@@ -24,7 +30,13 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
     fun saveVoo(input: VooInputDTO): Voo {
         input.codigo = "TADS" + (repository.count() + 1).toString().padStart(4, '0')
         val estado = estadoVooRepository.findById(EstadoVooEnum.CONFIMADO.codigo).get()
-        val voo = VooMapper.toDomain(input)
+        val aeroporto_origem = aeroporoRepository.findById(input.codigo_aeroporto_origem).orElseThrow{
+            ResourceNotFoundException("Aeroporto de origem inválido")
+        }
+        val aeroporto_destino = aeroporoRepository.findById(input.codigo_aeroporto_destino).orElseThrow{
+            ResourceNotFoundException("Aeroporto de destino inválido")
+        }
+        val voo = VooMapper.toDomain(input, aeroporto_origem, aeroporto_destino)
         voo.estado = estado
         return repository.save(voo)
     }
@@ -56,7 +68,7 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
             .orElseThrow { ResourceNotFoundException("Voo não encontrado com o id: ${codigoVoo}") }
 
         val poltronasLivres = voo.quantidade_poltronas_total - voo.quantidade_poltronas_ocupadas
-        if (poltronasLivres < quantidadePoltronas){
+        if (poltronasLivres < quantidadePoltronas) {
             throw ResourcesConflictException("Não há poltronas suficientes disponíveis para a reserva.")
         }
 
@@ -75,11 +87,7 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
     }
 
     fun getFilteredVoos(
-        origem: String?,
-        destino: String?,
-        data: String?,
-        inicio: String?,
-        fim: String?
+        origem: String?, destino: String?, data: String?, inicio: String?, fim: String?
     ): List<VooOutputDTO> {
         val voos = repository.findAll()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -92,10 +100,11 @@ class VooService(private val repository: IVooRepository, private val estadoVooRe
                 voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)
             } ?: true
             val matchesDateRange = if (inicio != null && fim != null) {
-                val dataInicio = ZonedDateTime.parse(inicio.replace("Z", ""), formatter)
-                val dataFim = ZonedDateTime.parse(fim.replace("Z", ""), formatter)
-                (voo.data.isAfter(dataInicio) || voo.data.isEqual(dataInicio)) &&
-                (voo.data.isBefore(dataFim) || voo.data.isEqual(dataFim))
+                val dataInicio = LocalDate.parse(inicio)
+                val dataFim = LocalDate.parse(fim)
+                (voo.data.toLocalDate().isAfter(dataInicio) || voo.data.toLocalDate()
+                    .isEqual(dataInicio)) && (voo.data.toLocalDate().isBefore(dataFim) || voo.data.toLocalDate()
+                    .isEqual(dataFim))
             } else true
 
             matchesOrigem && matchesDestino && matchesData && matchesDateRange

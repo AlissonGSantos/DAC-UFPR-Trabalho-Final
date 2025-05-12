@@ -7,9 +7,8 @@ async function getAllVoos(req, res) {
     res.status(200).json({...queryParams, voos});
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao buscar voos"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao buscar voos"
     });
   }
 }
@@ -20,9 +19,8 @@ async function getVooById(req, res) {
     res.status(200).json(voo);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Voo não encontrado"
+      erro: error.response?.message || error.response?.data?.message || "Voo não encontrado"
     });
   }
 }
@@ -33,9 +31,8 @@ async function createVoo(req, res) {
     res.status(201).json(novoVoo);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao criar voo"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao criar voo"
     });
   }
 }
@@ -46,9 +43,8 @@ async function updateVooEstado(req, res) {
     res.status(200).json(vooAtualizado);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao atualizar estado do voo"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao atualizar estado do voo"
     });
   }
 }
@@ -59,9 +55,8 @@ async function deleteVoo(req, res) {
     res.status(200).json(vooDeletado);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao excluir voo"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao excluir voo"
     });
   }
 }
@@ -72,9 +67,8 @@ async function getAllAeroportos(req, res) {
     res.status(200).json(aeroportos);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao buscar aeroportos"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao buscar aeroportos"
     });
   }
 }
