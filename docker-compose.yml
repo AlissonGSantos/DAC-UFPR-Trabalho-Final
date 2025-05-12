@@ -130,15 +130,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3030:3030"
-    environment:
-      SECRET_API_KEY: ${SECRET_API_KEY}
-      FRONTEND_URL: ${FRONTEND_URL}
-      SAGA_ORCHESTRATOR_URL: ${SAGA_ORCHESTRATOR_URL}
-      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
-      CLIENTE_SERVICE_URL: ${CLIENTE_SERVICE_URL}
-      FUNCIONARIO_SERVICE_URL: ${FUNCIONARIO_SERVICE_URL}
-      RESERVA_SERVICE_URL: ${RESERVA_SERVICE_URL}
-      VOO_SERVICE_URL: ${VOO_SERVICE_URL}
     depends_on:
       - sagaorchestrator
       - autenticacaoservice
@@ -147,6 +138,8 @@ services:
       - vooservice
     networks:
       - emiratads-network
+    env_file:
+      - .env
 
 networks:
   emiratads-network:
