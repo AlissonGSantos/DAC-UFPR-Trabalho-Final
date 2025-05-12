@@ -1,6 +1,7 @@
 const axios = require("axios");
 
-const BASE_URL = "http://localhost:8082";
+const BASE_URL = process.env.CLIENTE_SERVICE_URL;
+const SAGA_URL = process.env.SAGA_ORCHESTRATOR_URL;
 
 async function getAllClientes() {
   const response = await axios.get(`${BASE_URL}/clientes`);
@@ -13,7 +14,7 @@ async function getClienteById(id) {
 }
 
 async function createCliente(dados) {
-  const response = await axios.post(`http://localhost:8080/v1/clientes`, dados);
+  const response = await axios.post(`${SAGA_URL}/clientes`, dados);
   return response.data;
 }
 
