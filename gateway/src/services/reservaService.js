@@ -1,7 +1,8 @@
 const axios = require("axios");
 
-const SAGA_URL = "http://localhost:8080/v1";
-const BASE_URL = "http://localhost:8084/v1";
+const BASE_URL = process.env.RESERVA_SERVICE_URL;
+const SAGA_URL = process.env.SAGA_ORCHESTRATOR_URL;
+const VOO_SERVICE_URL = process.env.VOO_SERVICE_URL;
 
 async function createReserva(dados) {
     const response = await axios.post(`${SAGA_URL}/reservas`, dados);
@@ -15,13 +16,13 @@ async function deleteReserva(id) {
 
 async function getReservaById(id) {
     const reservaResponse = await axios.get(`${BASE_URL}/reservas/${id}`);
-    const vooResponse = await axios.get(`http://localhost:8085/v1/voos/${reservaResponse.data.voo_codigo}`);
+    const vooResponse = await axios.get(`${VOO_SERVICE_URL}/voos/${reservaResponse.data.voo_codigo}`);
     return { ...reservaResponse.data, voo: vooResponse.data };
 }
 
 async function updateReservaEstado(id, dados) {
     const reservaResponse = await axios.patch(`${BASE_URL}/reservas/${id}/estado`, dados);
-    const vooResponse = await axios.get(`http://localhost:8085/v1/voos/${reservaResponse.data.voo_codigo}`);
+    const vooResponse = await axios.get(`${VOO_SERVICE_URL}/voos/${reservaResponse.data.voo_codigo}`);
     return { ...reservaResponse.data, voo: vooResponse.data };
 }
 
@@ -29,7 +30,7 @@ async function getClienteReservas(clienteId) {
     const reservaResponse = await axios.get(`${BASE_URL}/reservas/cliente/${clienteId}`);
     const reservas = await Promise.all(
         reservaResponse.data.map(async (reserva) => {
-            const vooResponse = await axios.get(`http://localhost:8085/v1/voos/${reserva.voo_codigo}`);
+            const vooResponse = await axios.get(`${VOO_SERVICE_URL}/voos/${reserva.voo_codigo}`);
             return { ...reserva, voo: vooResponse.data };
         })
     );

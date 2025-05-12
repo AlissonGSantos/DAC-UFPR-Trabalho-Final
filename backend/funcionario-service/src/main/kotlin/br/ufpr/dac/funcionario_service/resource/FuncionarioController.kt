@@ -7,10 +7,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.DeleteMapping
 import utils.dto.FuncionarioInputDTO
+import org.springframework.beans.factory.annotation.Value
 
-@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1/funcionarios")
+@CrossOrigin(origins = ["\${gateway.url}"])
 class FuncionarioController(private val service: FuncionarioService) {
 
     @GetMapping

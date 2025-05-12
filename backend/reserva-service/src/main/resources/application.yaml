@@ -17,3 +17,5 @@ spring:
     host: rabbitmq
     username: guest
     password: guest
+gateway:
+  url: ${GATEWAY_URL:http://localhost:3030}
