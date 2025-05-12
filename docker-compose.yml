@@ -1,7 +1,7 @@
 services:
   dbdevelopment:
     build:
-      context: ./database
+      context: ./backend/database
       dockerfile: Dockerfile
     restart: always
     environment:
@@ -31,11 +31,13 @@ services:
 
   sagaorchestrator:
     build:
-      context: ./saga-orchestration-service
+      context: ./backend/saga-orchestration-service
       dockerfile: ../Dockerfile
     ports:
       - "8080:8080"
       - "5004:5005"
+    environment:
+      GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
       - rabbitmq
     networks:
@@ -44,12 +46,13 @@ services:
   autenticacaoservice:
     platform: linux/amd64
     build:
-      context: ./autenticacao-service
+      context: ./backend/autenticacao-service
       dockerfile: ../Dockerfile
     ports:
       - "8081:8080"
       - "5005:5005"
     environment:
+      GATEWAY_URL: ${GATEWAY_URL}
       EMAIL_APP_PASSWORD: ${EMAIL_APP_PASSWORD}
       SECRET_API_KEY: ${SECRET_API_KEY}
     depends_on:
@@ -60,11 +63,13 @@ services:
 
   clienteservice:
     build:
-      context: ./cliente-service
+      context: ./backend/cliente-service
       dockerfile: ../Dockerfile
     ports:
       - "8082:8080"
       - "5006:5005"
+    environment:
+      GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
       - autenticacaoservice
       - dbdevelopment
@@ -74,11 +79,13 @@ services:
 
   funcionarioservice:
     build:
-      context: ./funcionario-service
+      context: ./backend/funcionario-service
       dockerfile: ../Dockerfile
     ports:
       - "8083:8080"
       - "5007:5005"
+    environment:
+      GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
       - autenticacaoservice
       - dbdevelopment
@@ -88,11 +95,13 @@ services:
 
   reservaservice:
     build:
-      context: ./reserva-service
+      context: ./backend/reserva-service
       dockerfile: ../Dockerfile
     ports:
       - "8084:8080"
       - "5008:5005"
+    environment:
+      GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
       - autenticacaoservice
       - dbdevelopment
@@ -102,14 +111,40 @@ services:
 
   vooservice:
     build:
-      context: ./voo-service
+      context: ./backend/voo-service
       dockerfile: ../Dockerfile
     ports:
       - "8085:8080"
       - "5009:5005"
+    environment:
+      GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
       - autenticacaoservice
       - dbdevelopment
+    networks:
+      - emiratads-network
+
+  apigateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3030:3030"
+    environment:
+      SECRET_API_KEY: ${SECRET_API_KEY}
+      FRONTEND_URL: ${FRONTEND_URL}
+      SAGA_ORCHESTRATOR_URL: ${SAGA_ORCHESTRATOR_URL}
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
+      CLIENTE_SERVICE_URL: ${CLIENTE_SERVICE_URL}
+      FUNCIONARIO_SERVICE_URL: ${FUNCIONARIO_SERVICE_URL}
+      RESERVA_SERVICE_URL: ${RESERVA_SERVICE_URL}
+      VOO_SERVICE_URL: ${VOO_SERVICE_URL}
+    depends_on:
+      - sagaorchestrator
+      - autenticacaoservice
+      - funcionarioservice
+      - reservaservice
+      - vooservice
     networks:
       - emiratads-network
 

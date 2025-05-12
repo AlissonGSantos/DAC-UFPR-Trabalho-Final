@@ -15,17 +15,17 @@ import utils.dto.ClienteOutputDTO
 import utils.dto.FuncionarioInputDTO
 import utils.dto.FuncionarioOutputDTO
 import java.net.URI
+import org.springframework.beans.factory.annotation.Value
 
-@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1")
+@CrossOrigin(origins = ["\${gateway.url}"])
 class CadastroController(
     private val autocadastroSaga: AutocadastroSaga,
     private val cadastroFuncionarioSaga: CadastroFuncionarioSaga
 ) {
 
     @PostMapping("/clientes")
-    @CrossOrigin
     fun autocadastro(@RequestBody @Valid body: ClienteInputDTO): ResponseEntity<ClienteOutputDTO> {
         val cliente = runBlocking {
             autocadastroSaga.executeSaga(body)
@@ -35,7 +35,6 @@ class CadastroController(
     }
 
     @PostMapping("/funcionarios")
-    @CrossOrigin
     fun cadastrarFuncionario (@RequestBody @Valid body: FuncionarioInputDTO): ResponseEntity<FuncionarioOutputDTO> {
         val funcionario = runBlocking {
             cadastroFuncionarioSaga.executeSaga(body)

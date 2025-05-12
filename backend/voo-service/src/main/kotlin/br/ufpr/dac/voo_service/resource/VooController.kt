@@ -6,10 +6,11 @@ import br.ufpr.dac.voo_service.resource.mapper.VooMapper
 import org.springframework.http.ResponseEntity
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.beans.factory.annotation.Value
 
-@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1/voos")
+@CrossOrigin(origins = ["\${gateway.url}"])
 class VooController(private val service: VooService) {
 
     @GetMapping

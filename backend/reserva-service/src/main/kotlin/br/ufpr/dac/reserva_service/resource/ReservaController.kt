@@ -5,10 +5,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import utils.dto.AlternaEstadoDTO
 import utils.dto.ReservaOutputDTO
+import org.springframework.beans.factory.annotation.Value
 
-@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("v1/reservas")
+@CrossOrigin(origins = ["\${gateway.url}"])
 class ReservaController(private val service: ReservaService) {
 
     @GetMapping("/poltronas/{voo}")

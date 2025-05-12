@@ -3,6 +3,7 @@
 set -e  # Interrompe o script em caso de erro
 
 echo "Iniciando a execução do Maven clean install nos projetos..."
+cd ./backend
 
 for dir in backend-services-utils saga-orchestration-service autenticacao-service cliente-service reserva-service voo-service funcionario-service
 do
@@ -17,9 +18,12 @@ do
 done
 
 echo "Maven clean install concluído com sucesso em todos os projetos."
+cd ..
 
 echo "Iniciando o Docker Compose..."
+docker compose down
 docker compose up --build -d
+docker compose up --build -d --force-recreate dbdevelopment
 if [ $? -ne 0 ]; then
     echo "Erro ao executar o Docker Compose. Saindo..."
     exit 1
