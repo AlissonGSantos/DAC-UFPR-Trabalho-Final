@@ -8,6 +8,17 @@ import React, {
 } from "react";
 import { EmployeeEnum, UserAuth } from "../types/AuthTypes";
 
+export const getFromCookies = (key: string): string | null => {
+  const cookies = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${key}=`));
+  return cookies ? cookies.split("=")[1] : null;
+};
+
+export const saveToCookies = async (key: string, value: string) => {
+  document.cookie = `${key}=${value}; path=/; max-age=3600; secure; samesite=strict`;
+};
+
 type AuthContextType = {
   userData: UserAuth | undefined | null;
   setUserData: (data: UserAuth) => void;
@@ -27,10 +38,6 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userData, setUserData] = useState<UserAuth | undefined | null>(null);
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
-  const saveToCookies = async (key: string, value: string) => {
-    document.cookie = `${key}=${value}; path=/; max-age=3600; secure; samesite=strict`;
-  };
-
   const updateMilesBalance = (miles: number) => {
     if (userData) {
       const updatedUserData: UserAuth = {
@@ -40,13 +47,6 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setUserData(updatedUserData);
       saveToCookies("user", JSON.stringify(updatedUserData));
     }
-  };
-
-  const getFromCookies = (key: string): string | null => {
-    const cookies = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith(`${key}=`));
-    return cookies ? cookies.split("=")[1] : null;
   };
 
   const login = (data: UserAuth) => {

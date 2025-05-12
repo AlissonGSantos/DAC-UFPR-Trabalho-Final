@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
-import { Booking, statusBookingEnum } from "../types/BookingTypes";
-import { statusFlightEnum } from "../types/FlightTypes";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Booking } from "../types/BookingTypes";
+import clientService from "../client/services/clientService";
+import { useAuthContext } from "./auth";
 
-const bookingListMock: Booking[] = [
+/* const bookingListMock: Booking[] = [
   {
     codigo: "BKG001",
     data: "2025-05-04T10:00:00Z",
@@ -92,7 +93,7 @@ const bookingListMock: Booking[] = [
       },
     },
   },
-];
+]; */
 
 type BookingContextType = {
   bookingList: Booking[];
@@ -109,12 +110,31 @@ export const BookingContext = createContext<BookingContextType>(
 export const BookingContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [bookingList, setBookingList] = useState<Booking[]>(bookingListMock);
+  const [bookingList, setBookingList] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
   const getBookingById = (id: string): Booking | undefined => {
     return bookingList.find((booking) => booking.codigo === id);
   };
+
+  const { userData } = useAuthContext();
+
+  const fetchBookings = async () => {
+    if (userData?.usuario.codigo) {
+      try {
+        const bookings = await clientService.getBookings(
+          userData.usuario.codigo
+        );
+        setBookingList(bookings);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, [userData?.usuario.codigo]);
 
   const contextValue = useMemo(
     () => ({

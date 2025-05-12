@@ -9,6 +9,8 @@ import {
   UsePointsData,
   validateMilesInput,
 } from "./schema/schema";
+import flightServices from "@/app/services/flightServices";
+import bookingService from "../../services/bookingService";
 
 const useFlightDetail = (codigo: string) => {
   const { flightList, setFlightList } = useFlightContext();
@@ -41,7 +43,7 @@ const useFlightDetail = (codigo: string) => {
 
   const fetchFlight = async () => {
     try {
-      const flightData = flightList.find((flight) => flight.codigo === codigo);
+      const flightData = await flightServices.getFlight(codigo);
       if (flightData) {
         setFlight(flightData);
       } else {
@@ -142,13 +144,20 @@ const useFlightDetail = (codigo: string) => {
       );
 
       const newMilesBalance = userMilesBalance - milesToUse + milesTotal;
-      console.log({
-        userMilesBalance,
-        milesToUse,
-        milesTotal,
-        newMilesBalance,
-      })
-      console.log(newMilesBalance)
+
+      const createBookingResponse = await bookingService.createBooking({
+        valor: totalPrice,
+        milhas_utilizadas: milesToUse,
+        quantidade_poltronas: sitsQuantity,
+        poltronas_reservadas: selectedSits,
+        codigo_voo: flight.codigo,
+        codigo_cliente: Number(userData?.usuario.codigo),
+      });
+
+      if (!createBookingResponse) {
+        throw new Error("Erro ao criar reserva");
+      }
+
       updateMilesBalance(newMilesBalance);
 
       setFlight(updatedFlight);

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
 import { Booking } from "@/app/types/BookingTypes";
+import { maskCurrency } from "@/app/utils/currencyMask";
 
 type ReadReservationFormData = z.infer<typeof ReadReservationSchema>;
 
@@ -36,8 +37,8 @@ const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
       }),
       OriginAirport: reservation.voo.aeroporto_origem.codigo,
       DestinationAirport: reservation.voo.aeroporto_destino.codigo,
-      ticketValue: reservation.valor.toString(),
-      miles: reservation.milhas_utilizadas.toString(),
+      ticketValue: reservation?.valor?.toString() ?? maskCurrency("0"),
+      miles: reservation.quantidade_milhas.toString(),
       flightStatus: reservation.voo.estado,
     },
   });
@@ -68,8 +69,8 @@ const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
     showSuccess,
     setShowSuccess,
     canCheckIn,
-    isCancelModalOpen, 
-    setIsCancelModalOpen
+    isCancelModalOpen,
+    setIsCancelModalOpen,
   };
 };
 

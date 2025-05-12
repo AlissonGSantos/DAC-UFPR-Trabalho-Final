@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
+import bookingService from "@/app/client/services/bookingService";
 
 const useBookingsTable = () => {
   const { bookingList, setBookingList } = useBookingContext();
@@ -26,7 +27,7 @@ const useBookingsTable = () => {
     setIsCancelModalOpen(true);
   };
 
-  const onCancelBooking = (booking: Booking) => {
+  const onCancelBooking = async (booking: Booking) => {
     if (!["CRIADA", "CHECK-IN"].includes(booking.estado)) {
       alert(
         "Apenas reservas nos estados CRIADA ou CHECK-IN podem ser canceladas."
@@ -34,22 +35,26 @@ const useBookingsTable = () => {
       return;
     }
 
-    const newBookingList = bookingList.map((b) => {
-      if (b.codigo === booking.codigo) {
-        return { ...b, estado: statusBookingEnum.CANCELADA };
-      }
-      return b;
-    });
-    setBookingList(newBookingList);
+    const cancelResponse = await bookingService.cancelBooking(booking.codigo);
 
-    const updatedMilesBalance =
-      (userData?.usuario.saldo_milhas ?? 0) + booking.milhas_utilizadas;
+    if (!cancelResponse) {
+      alert("Erro ao cancelar reserva. Tente novamente mais tarde.");
+      return;
+    }
 
-    updateMilesBalance(updatedMilesBalance);
+    updateMilesBalance(cancelResponse.saldo_cliente);
 
-    alert(
-      `Reserva ${booking.codigo} cancelada. ${booking.milhas_utilizadas} milhas foram devolvidas ao seu saldo.`
+    const updatedBookingList = bookingList.map((b) =>
+      b.codigo === cancelResponse.codigo
+        ? {
+            ...cancelResponse,
+            valor: b.valor,
+            voo_codigo: b.voo_codigo,
+          }
+        : b
     );
+
+    setBookingList(updatedBookingList);
 
     setIsCancelModalOpen(false);
     setSelectedBooking(null);
@@ -93,7 +98,7 @@ const useBookingsTable = () => {
         text: "Ver Reserva",
         type: "PRIMARY",
         onClick: (row: Booking) => {
-          router.push(`/client/booking/${row.codigo}`)
+          router.push(`/client/booking/${row.codigo}`);
         },
         size: "SMALL",
       },

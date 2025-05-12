@@ -1,6 +1,8 @@
 "use client";
-import { createContext, useContext, useMemo, useState } from "react";
-import { Aeroporto, Flight, statusFlightEnum } from "../types/FlightTypes";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Aeroporto, Flight } from "../types/FlightTypes";
+import flightServices from "../services/flightServices";
+import { useAuthContext } from "./auth";
 
 type FlightContextType = {
   flightList: Flight[];
@@ -19,7 +21,7 @@ export const FlightContext = createContext<FlightContextType>(
 export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const aeroportos: Aeroporto[] = [
+  /* const aeroportos: Aeroporto[] = [
     {
       codigo: "GRU",
       nome: "Aeroporto Internacional de São Paulo/Guarulhos",
@@ -68,8 +70,9 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
       cidade: "Curitiba",
       uf: "PR",
     },
-  ];
-  const [flightList, setFlightList] = useState<Flight[]>([
+  ]; */
+
+  /*  [
     // Voo confirmado, com assentos disponíveis, para teste de reserva
     {
       codigo: "FL001",
@@ -136,10 +139,33 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
       aeroporto_origem: aeroportos.find((aeroporto) => aeroporto.codigo === "GRU")!,
       aeroporto_destino: aeroportos.find((aeroporto) => aeroporto.codigo === "GIG")!,
     },
-  ]);
-
+  ] */
+  const [flightList, setFlightList] = useState<Flight[]>([]);
   const [flightListLoading, setFlightListLoading] = useState<boolean>(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+  const [aeroportos, setAeroportos] = useState<Aeroporto[]>([]);
+
+  const { userData } = useAuthContext();
+
+  const fetchInformation = async () => {
+    try {
+      setFlightListLoading(true);
+      const airports = await flightServices.getAirports();
+      setAeroportos(airports);
+
+      const flights = await flightServices.getFlights();
+      console.log("Flights:", flights);
+      setFlightList(flights);
+    } catch (error) {
+      console.error("Error fetching flight data:", error);
+    } finally {
+      setFlightListLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInformation();
+  }, []);
 
   const contextValue = useMemo(
     () => ({
