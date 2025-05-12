@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RestController
 import utils.dto.ReservaInputDTO
 import utils.dto.ReservaOutputDTO
 import java.net.URI
+import org.springframework.beans.factory.annotation.Value
 
-@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("v1/reservas")
+@CrossOrigin(origins = ["\${gateway.url}"])
 class ReservaController(private val sagaCriar: CriarReservaSaga, private val sagaCancelar: CancelarReservaSaga) {
 
     @PostMapping

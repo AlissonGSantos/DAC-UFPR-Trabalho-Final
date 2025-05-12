@@ -25,6 +25,8 @@ spring:
             required: true
           ssl:
             trust: smtp.gmail.com
+gateway:
+  url: ${GATEWAY_URL:http://localhost:3030}
 api:
   security:
     token:
