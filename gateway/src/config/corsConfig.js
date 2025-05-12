@@ -1,6 +1,6 @@
 const cors = require('cors');
 
-const ALLOWED_ORIGINS = ['*'];
+const ALLOWED_ORIGINS = ['http://localhost:3000'];
 const corsMappings = {
     '/login': { methods: ['POST'] },
     '/logout': { methods: ['POST'] },

@@ -18,6 +18,6 @@ export const EmployeeSchema = z.object({
   nome: z
     .string()
     .nonempty({ message: 'O nome é obrigatório' }),
-  telefone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, "Formato inválido").nonempty({ message: 'O telefone é obrigatório' }),
+  telefone: z.string().regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Formato inválido").nonempty({ message: 'O telefone é obrigatório' }),
   ativo: z.boolean(),
 });
