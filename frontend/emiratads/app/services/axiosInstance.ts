@@ -1,5 +1,3 @@
-//create an axios instance with the base url and interceptors
-
 import axios from "axios";
 import { getFromCookies } from "../contexts/auth";
 const apiUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -30,7 +28,7 @@ axiosInstance.interceptors.response.use(
         console.error("Unauthorized access - redirecting to login");
       }
     }
-    return Promise.reject(error);
+    return Promise.reject(error instanceof Error ? error : new Error(String(error)));
   }
 );
 

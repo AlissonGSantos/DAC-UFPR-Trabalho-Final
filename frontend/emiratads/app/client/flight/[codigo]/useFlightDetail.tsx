@@ -63,8 +63,17 @@ const useFlightDetail = (codigo: string) => {
   );
 
   const reservedSeats = useMemo(() => {
-    const reserved = new Set<number>();
-    while (reserved.size < (flight?.quantidade_poltronas_ocupadas ?? 0)) {
+    // Ensure reserved is always a Set<number>
+    const reserved: Set<number> =
+      flight && typeof flight.quantidade_poltronas_ocupadas !== "number"
+        ? (flight.quantidade_poltronas_ocupadas as Set<number>)
+        : new Set<number>();
+    while (
+      reserved.size <
+      (typeof flight?.quantidade_poltronas_ocupadas === "number"
+        ? flight.quantidade_poltronas_ocupadas
+        : 0)
+    ) {
       const randomIndex = Math.floor(Math.random() * totalSeats);
       reserved.add(randomIndex);
     }
@@ -160,7 +169,7 @@ const useFlightDetail = (codigo: string) => {
 
       updateMilesBalance(newMilesBalance);
 
-      setFlight(updatedFlight);
+      setFlight(createBookingResponse.voo);
       setFlightList(updatedFlightList);
 
       setSitsQuantity(0);
@@ -169,7 +178,9 @@ const useFlightDetail = (codigo: string) => {
 
       setIsConfirmModalOpen(false);
 
-      window.location.href = "/client/home";
+      if (createBookingResponse) {
+        window.location.href = "/client/home";
+      }
     } catch (error) {
       console.error(error);
     }

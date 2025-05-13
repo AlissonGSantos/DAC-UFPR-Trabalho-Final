@@ -1,36 +1,8 @@
 import axiosInstance from "@/app/services/axiosInstance";
 import apiRoutes from "@/app/utils/apiRoutes";
-import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
-import { Flight } from "@/app/types/FlightTypes";
+import { Booking } from "@/app/types/BookingTypes";
 import axios from "axios";
-
-export interface ReservaInputDTO {
-  valor: number;
-  milhas_utilizadas: number;
-  quantidade_poltronas: number;
-  poltronas_reservadas?: number[];
-  codigo_cliente: number;
-  codigo_voo: string;
-}
-
-export interface AlternaEstadoDTO {
-  estado: string;
-}
-
-export interface PoltronasOcupadasDTO {
-  poltronasReservadas: number[];
-}
-
-export interface BookingReturnDTO {
-  codigo: string;
-  data: string;
-  estado: statusBookingEnum;
-  quantidade_milhas: number;
-  codigo_cliente: number;
-  saldo_cliente: number;
-  poltronas_reservadas: number[];
-  voo: Flight;
-}
+import { ReservaInputDTO, BookingReturnDTO, AlternaEstadoDTO, PoltronasOcupadasDTO } from "./bookingServiceModel";
 
 const bookingService = {
   getBooking: async (id: string): Promise<Booking> => {
@@ -42,7 +14,7 @@ const bookingService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao buscar dados da reserva"
+          error.response?.data?.erro ?? "Erro ao buscar dados da reserva"
         );
       }
       throw new Error("Erro ao buscar dados da reserva");
@@ -58,7 +30,7 @@ const bookingService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.erro || "Erro ao criar reserva");
+        throw new Error(error.response?.data?.erro ?? "Erro ao criar reserva");
       }
       throw new Error("Erro ao criar reserva");
     }
@@ -73,7 +45,7 @@ const bookingService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao cancelar reserva"
+          error.response?.data?.erro ?? "Erro ao cancelar reserva"
         );
       }
       throw new Error("Erro ao cancelar reserva");
@@ -93,7 +65,7 @@ const bookingService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao atualizar estado da reserva"
+          error.response?.data?.erro ?? "Erro ao atualizar estado da reserva"
         );
       }
       throw new Error("Erro ao atualizar estado da reserva");
@@ -109,7 +81,7 @@ const bookingService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao buscar poltronas reservadas"
+          error.response?.data?.erro ?? "Erro ao buscar poltronas reservadas"
         );
       }
       throw new Error("Erro ao buscar poltronas reservadas");
@@ -125,7 +97,7 @@ const bookingService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao buscar reservas do cliente"
+          error.response?.data?.erro ?? "Erro ao buscar reservas do cliente"
         );
       }
       throw new Error("Erro ao buscar reservas do cliente");
@@ -139,7 +111,7 @@ const bookingService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao realizar check-in"
+          error.response?.data?.erro ?? "Erro ao realizar check-in"
         );
       }
       throw new Error("Erro ao realizar check-in");
@@ -153,7 +125,7 @@ const bookingService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao embarcar passageiro"
+          error.response?.data?.erro ?? "Erro ao embarcar passageiro"
         );
       }
       throw new Error("Erro ao embarcar passageiro");

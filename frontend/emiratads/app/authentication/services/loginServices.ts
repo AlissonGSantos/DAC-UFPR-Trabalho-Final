@@ -1,4 +1,3 @@
-import axios from "axios";
 import { LoginRequest, UserAuth } from "@/app/types/AuthTypes";
 import apiRoutes from "@/app/utils/apiRoutes";
 import axiosInstance from "@/app/services/axiosInstance";

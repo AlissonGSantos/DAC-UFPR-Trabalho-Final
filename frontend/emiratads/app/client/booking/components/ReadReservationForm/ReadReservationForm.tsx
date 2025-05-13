@@ -5,7 +5,8 @@ import Input from "@/app/components/Input/Input";
 import useReadReservationForm from "./useReadReservationForm";
 import { Booking } from "@/app/types/BookingTypes";
 import CancelBookingModal from "@/app/components/CancelBookingModal/CancelBookingModal";
-import Loader from "@/app/components/Loader/Loader";
+import CheckinModal from "@/app/client/checkin/components/CheckinModal/CheckinModal";
+import CheckinSuccessModal from "@/app/client/checkin/components/CheckinSuccessModal/CheckinSuccessModal";
 
 interface ReadReservationFormProps {
   reservation: Booking;
@@ -24,6 +25,11 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
     canCheckIn,
     isCancelModalOpen,
     setIsCancelModalOpen,
+    onPerformCheckIn,
+    checkinModalOpen,
+    setCheckinModalOpen,
+    onDismissSuccessModal,
+    isSuccessModalOpen,
   } = useReadReservationForm({
     reservation,
   });
@@ -184,11 +190,23 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
             </div>
           </div>
         </form>
+        <CheckinModal
+          booking={reservation}
+          isOpen={checkinModalOpen}
+          onClose={() => setCheckinModalOpen(false)}
+          onConfirm={onPerformCheckIn}
+        />
         <CancelBookingModal
           booking={reservation}
           isOpen={isCancelModalOpen}
           onClose={() => setIsCancelModalOpen(false)}
           onCancel={onCancel}
+        />
+        <CheckinSuccessModal
+          isOpen={isSuccessModalOpen}
+          onClose={onDismissSuccessModal}
+          message="Check-in realizado com sucesso!"
+          subtitle="Seu voo está confirmado."
         />
       </div>
     </div>

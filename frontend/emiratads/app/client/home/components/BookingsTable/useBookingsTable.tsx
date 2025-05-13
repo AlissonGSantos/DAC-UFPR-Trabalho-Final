@@ -2,14 +2,14 @@ import { ButtonProps } from "@/app/components/Button/Button";
 import { useAuthContext } from "@/app/contexts/auth";
 import useBookingContext from "@/app/contexts/booking";
 import { useRouter } from "next/navigation";
-import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
+import { Booking } from "@/app/types/BookingTypes";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import bookingService from "@/app/client/services/bookingService";
 
 const useBookingsTable = () => {
   const { bookingList, setBookingList } = useBookingContext();
-  const { userData, updateMilesBalance } = useAuthContext();
+  const { updateMilesBalance } = useAuthContext();
 
   const router = useRouter();
 
@@ -118,7 +118,7 @@ const useBookingsTable = () => {
   useEffect(() => {
     const list = bookingList.filter((booking) => booking.estado === "CRIADA");
 
-    setBookings(list.length > 0 ? list : bookingList);
+    setBookings(list.length > 0 ? list : []);
   }, [bookingList]);
 
   return {

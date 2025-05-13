@@ -3,32 +3,33 @@ import { ButtonProps } from "@/app/components/Button/Button";
 import useBookingContext from "@/app/contexts/booking";
 import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 const useCheckinTable = () => {
   const { bookingList, setBookingList } = useBookingContext();
-
-  const [bookingListActive, setBookingListActive] =
-    useState<Booking[]>(bookingList);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isCheckinModalOpen, setIsCheckinModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [eligibleBookings, setEligibleBookings] = useState<Booking[]>([]);
 
-  const eligibleBookings = useMemo(() => {
+  useEffect(() => {
     const now = new Date();
     const in48Hours = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
-    return bookingListActive.filter((booking) => {
+    const newBookingList = bookingList.filter((booking) => {
       const bookingDateStr = booking?.voo?.data;
       if (!bookingDateStr) return false;
       const bookingDate = new Date(bookingDateStr);
+
       return (
         booking.estado === statusBookingEnum.CRIADA &&
         bookingDate >= now &&
         bookingDate <= in48Hours
       );
     });
-  }, [bookingListActive]);
+
+    setEligibleBookings(newBookingList);
+  }, [bookingList]);
 
   const onDismissCheckinModal = () => {
     setIsCheckinModalOpen(false);
@@ -44,15 +45,17 @@ const useCheckinTable = () => {
     setIsSuccessModalOpen(false);
   };
 
+  useEffect(() => {
+    console.log("Booking List:", bookingList);
+  }, [bookingList]);
+
   const onPerformCheckin = async (booking: Booking) => {
     if (booking.estado !== statusBookingEnum.CRIADA) {
       alert("Apenas reservas no estado CRIADA podem receber check-in.");
       return;
     }
 
-    const response = await bookingService.updateBookingStatus(booking.codigo, {
-      estado: statusBookingEnum.CHECK_IN,
-    });
+    const response = await bookingService.checkInBooking(booking.codigo);
 
     console.log("Check-in response:", response);
 
@@ -68,7 +71,6 @@ const useCheckinTable = () => {
       return b;
     });
 
-    setBookingListActive(newBookingList);
     setBookingList(newBookingList);
 
     setIsCheckinModalOpen(false);

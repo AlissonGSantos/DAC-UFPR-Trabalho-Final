@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
 import { Booking } from "@/app/types/BookingTypes";
 import { maskCurrency } from "@/app/utils/currencyMask";
+import bookingService from "@/app/client/services/bookingService";
 
 type ReadReservationFormData = z.infer<typeof ReadReservationSchema>;
 
@@ -18,6 +19,8 @@ const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
+  const [checkinModalOpen, setCheckinModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const {
     register,
@@ -43,15 +46,38 @@ const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
     },
   });
 
-  const onSubmit = (data: ReadReservationFormData) => {
-    console.log("Form", data);
-    alert("Reserva check-in realizada com sucesso!");
+  const onSubmit = async (data: ReadReservationFormData) => {
+    if (data.CodeReservation) {
+      setCheckinModalOpen(true);
+    }
+  };
+
+  const onPerformCheckIn = async () => {
+    try {
+      const checkinResponse = await bookingService.checkInBooking(
+        reservation.codigo
+      );
+
+      if (checkinResponse) {
+        setShowSuccess(true);
+        setCheckinModalOpen(false);
+        setIsSuccessModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Error checking in:", error);
+    } finally {
+      setCheckinModalOpen(false);
+    }
   };
 
   useEffect(() => {
     const canCheckIn = verifyDateCheckIn(reservation.data);
     setCanCheckIn(canCheckIn);
   }, [reservation]);
+
+  const onDismissSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+  };
 
   const verifyDateCheckIn = (bookingDate: string) => {
     const today = new Date();
@@ -71,6 +97,11 @@ const useReadReservationForm = ({ reservation }: ReadReservationFormProps) => {
     canCheckIn,
     isCancelModalOpen,
     setIsCancelModalOpen,
+    onPerformCheckIn,
+    checkinModalOpen,
+    setCheckinModalOpen,
+    onDismissSuccessModal,
+    isSuccessModalOpen,
   };
 };
 
