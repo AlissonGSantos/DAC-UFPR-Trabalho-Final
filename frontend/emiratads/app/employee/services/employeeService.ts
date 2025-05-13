@@ -1,4 +1,3 @@
-import { Invoice } from "@/app/types/InvoiceTypes";
 import { Employee } from "@/app/types/EmployeeTypes";
 import axios from "axios";
 import apiRoutes from "@/app/utils/apiRoutes";
@@ -6,9 +5,9 @@ import { maskCPF } from "@/app/utils/cpfMask";
 import { phoneMask } from "@/app/utils/phoneMask";
 
 const employeeServices = {
-    getEmployee: async (employeeId: string): Promise<Invoice> => {
+    getEmployee: async (employeeId: string): Promise<Employee> => {
         const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
-        const res = await axios.get<Invoice>(`${process.env.NEXT_PUBLIC_API_URL}${apiRoutes.employees.employee(employeeId)}`, {
+        const res = await axios.get<Employee>(`${process.env.NEXT_PUBLIC_API_URL}${apiRoutes.employees.employee(employeeId)}`, {
             headers: {
                 Authorization: `Authorization ${token}`,
             }

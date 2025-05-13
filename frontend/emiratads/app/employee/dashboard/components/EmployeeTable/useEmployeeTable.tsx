@@ -127,12 +127,7 @@ const useEmployeeTable = () => {
     {
       accessorKey: "ativo",
       header: "Ativo",
-      cell: (info) =>
-        info.getValue() ? (
-          <span className="text-green-500 font-bold">Sim</span>
-        ) : (
-          <span className="text-red-500 font-bold">Não</span>
-        ),
+      cell: () => <span className="text-green-500 font-bold">Sim</span>
     },
   ];
 
