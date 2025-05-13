@@ -1,6 +1,5 @@
 import { Invoice } from "@/app/types/InvoiceTypes";
 import { Client } from "@/app/types/AuthTypes";
-import axios from "axios";
 import apiRoutes from "@/app/utils/apiRoutes";
 import axiosInstance from "@/app/services/axiosInstance";
 

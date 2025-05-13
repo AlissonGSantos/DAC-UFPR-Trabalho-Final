@@ -1,25 +1,28 @@
-import React from 'react';
-import useConfirmBoardForm from './useConfirmBoardForm';
-import Input from '@/app/components/Input/Input';
-import Button from '@/app/components/Button/Button';
+import React from "react";
+import useConfirmBoardForm from "./useConfirmBoardForm";
+import Input from "@/app/components/Input/Input";
+import Button from "@/app/components/Button/Button";
 
 export interface ConfirmBoardFormProps {
-    code?: string;
-    onChange?: (code: String) => void;
-    onSubmit: (code: String) => void;
-    onClose: () => void;
-    onError?: (error: boolean) => void;
+  code?: string;
+  onChange?: (code: string) => void;
+  onSubmit: (code: string) => void;
+  onClose: () => void;
 }
 
-export const ConfirmBoardForm: React.FC<ConfirmBoardFormProps> = (props) => {
+export const ConfirmBoardForm: React.FC<ConfirmBoardFormProps> = ({
+  code,
+  onClose,
+  onChange,
+  onSubmit,
+}) => {
   const {
     inputValue,
     errors,
     handleSubmit,
     handleInputChange,
     handleButtonClick,
-    onClose
-  } = useConfirmBoardForm(props);
+  } = useConfirmBoardForm({ code, onChange, onSubmit });
 
   return (
     <form className="flex w-full flex-col gap-3" onSubmit={handleSubmit}>
@@ -28,13 +31,13 @@ export const ConfirmBoardForm: React.FC<ConfirmBoardFormProps> = (props) => {
           type="text"
           label="Código de Embarque do passageiro:"
           value={inputValue}
-          onChange={(e) => handleInputChange('code', e.target.value)}
+          onChange={(e) => handleInputChange("code", e.target.value)}
           error={
             errors.code
               ? [{ hasError: true, message: errors.code.message ?? "" }]
               : []
           }
-          extraClasses=''
+          extraClasses=""
         />
         <div className="my-4 flex flex-row w-full justify-between mb-4">
           <Button
@@ -54,6 +57,6 @@ export const ConfirmBoardForm: React.FC<ConfirmBoardFormProps> = (props) => {
       </div>
     </form>
   );
-}
+};
 
 export default ConfirmBoardForm;

@@ -7,6 +7,7 @@ import TransactionCard from "./components/transaction/transactionCard";
 import DataTable from "@/app/components/DataTable/DataTable";
 import Button from "@/app/components/Button/Button";
 import SelectInput from "@/app/components/SelectInput/SelectInput";
+import { FilterOptions } from "@/app/types/InvoiceTypes";
 
 const Invoice = () => {
   const {
@@ -26,7 +27,7 @@ const Invoice = () => {
     { value: "lastMonth", label: "Último mês" },
     { value: "lastYear", label: "Último ano" },
   ];
-  
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col p-10">
@@ -55,7 +56,7 @@ const Invoice = () => {
           <SelectInput
             options={filterOptions}
             value={filterOptions.find((opt) => opt.value === filter)?.value}
-            onChange={(e) => setFilter(e.target.value as any)}
+            onChange={(e) => setFilter(e.target.value as FilterOptions)}
             label="Filtrar por data"
           />
         </div>

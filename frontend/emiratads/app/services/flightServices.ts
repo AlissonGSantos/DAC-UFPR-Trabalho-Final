@@ -1,7 +1,7 @@
 import apiRoutes from "@/app/utils/apiRoutes";
 import { Aeroporto, Flight } from "../types/FlightTypes";
 import axiosInstance from "./axiosInstance";
-import { FlightsResponse } from "./flightServiceModels";
+import { CreateFlightRequest, FlightsResponse } from "./flightServiceModels";
 const apiUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const flightServices = {
@@ -21,7 +21,7 @@ const flightServices = {
     return data;
   },
 
-  createFlight: async (data: any): Promise<Flight> => {
+  createFlight: async (data: CreateFlightRequest): Promise<Flight> => {
     const res = await axiosInstance.post<Flight>(
       `${apiUrl}${apiRoutes.flight.flights}`,
       data
