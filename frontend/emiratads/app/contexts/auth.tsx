@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { EmployeeEnum, UserAuth } from "../types/AuthTypes";
+import loginServices from "../authentication/services/loginServices";
 
 export const getFromCookies = (key: string): string | null => {
   const cookies = document.cookie
@@ -56,9 +57,14 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     saveToCookies("user", JSON.stringify(data));
   };
 
-  const logout = () => {
+  const logout = async () => {
     setIsLogged(false);
     setUserData(null);
+    if (userData) {
+      await loginServices.logout({
+        login: userData.usuario.email,
+      });
+    }
     document.cookie = "token=; path=/; max-age=0";
     document.cookie = "user=; path=/; max-age=0";
     window.location.href = "/authentication/login";

@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Aeroporto, Flight } from "../types/FlightTypes";
 import flightServices from "../services/flightServices";
+import { useAuthContext } from "./auth";
 
 type FlightContextType = {
   flightList: Flight[];
@@ -25,8 +26,11 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [aeroportos, setAeroportos] = useState<Aeroporto[]>([]);
 
+  const { userData } = useAuthContext();
+
   const fetchInformation = async () => {
     try {
+      if (!userData?.usuario.codigo) return;
       setFlightListLoading(true);
       const airports = await flightServices.getAirports();
       setAeroportos(airports);
@@ -43,7 +47,7 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchInformation();
-  }, []);
+  }, [userData?.usuario.codigo]);
 
   const contextValue = useMemo(
     () => ({

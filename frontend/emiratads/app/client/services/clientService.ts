@@ -31,7 +31,7 @@ const clientService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao buscar dados do cliente"
+          error.response?.data?.erro ?? "Erro ao buscar dados do cliente"
         );
       }
       throw new Error("Erro ao buscar dados do cliente");
@@ -47,7 +47,7 @@ const clientService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(
-          error.response?.data?.erro || "Erro ao buscar reservas do cliente"
+          error.response?.data?.erro ?? "Erro ao buscar reservas do cliente"
         );
       }
       throw new Error("Erro ao buscar reservas do cliente");
