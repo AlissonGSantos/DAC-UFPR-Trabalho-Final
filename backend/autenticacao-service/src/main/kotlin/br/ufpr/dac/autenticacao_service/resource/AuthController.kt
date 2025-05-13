@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.beans.factory.annotation.Value
 
-@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1/auth")
-class AuthController (val authService: AuthService) {
+@CrossOrigin(origins = ["\${gateway.url}"])
+class AuthController(val authService: AuthService) {
 
     @PostMapping("/login")
-    @CrossOrigin
     fun login(@RequestBody @Valid usuario: loginInputDTO): ResponseEntity<loginOutputDTO> {
         val auth = authService.login(usuario)
         return ResponseEntity.ok().body(auth)

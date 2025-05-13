@@ -1,6 +1,7 @@
 const cors = require('cors');
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-const ALLOWED_ORIGINS = ['http://localhost:3000'];
+const ALLOWED_ORIGINS = [FRONTEND_URL];
 const corsMappings = {
     '/login': { methods: ['POST'] },
     '/logout': { methods: ['POST'] },

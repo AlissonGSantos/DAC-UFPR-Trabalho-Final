@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const BASE_URL = "http://localhost:8081/v1/auth";
+const BASE_URL = process.env.AUTH_SERVICE_URL;
 
 async function login(credentials) {
   const response = await axios.post(`${BASE_URL}/login`, credentials);

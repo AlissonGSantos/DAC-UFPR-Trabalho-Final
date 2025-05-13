@@ -6,9 +6,8 @@ async function createReserva(req, res) {
     res.status(201).json(novaReserva);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao criar reserva"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao criar reserva"
     });
   }
 }
@@ -19,9 +18,8 @@ async function deleteReserva(req, res) {
     res.status(200).json(reservaDeletada);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao excluir reserva"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao excluir reserva"
     });
   }
 }
@@ -32,9 +30,8 @@ async function getReservaById(req, res) {
     res.status(200).json(reserva);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Reserva não encontrada"
+      erro: error.response?.message || error.response?.data?.message || "Reserva não encontrada"
     });
   }
 }
@@ -45,9 +42,8 @@ async function updateReservaEstado(req, res) {
     res.status(200).json(reservaAtualizada);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao atualizar estado da reserva"
+      erro: error.response?.message || error.response?.data?.message || "Erro ao atualizar estado da reserva"
     });
   }
 }

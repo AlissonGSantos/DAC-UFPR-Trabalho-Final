@@ -1,7 +1,7 @@
 const axios = require("axios");
-
-const BASE_URL = "http://localhost:8085/v1";
-const SAGA_URL = "http://localhost:8080/v1";
+const BASE_URL = process.env.VOO_SERVICE_URL;
+const SAGA_URL = process.env.SAGA_ORCHESTRATOR_URL;
+const RESERVA_SERVICE_URL = process.env.RESERVA_SERVICE_URL;
 
 async function getAllVoos(queryParams) {
   const response = await axios.get(`${BASE_URL}/voos`, { params: queryParams });
@@ -10,7 +10,7 @@ async function getAllVoos(queryParams) {
 
 async function getVooById(id) {
   const vooResponse = await axios.get(`${BASE_URL}/voos/${id}`);
-  const poltronasResponse = await axios.get(`http://localhost:8084/v1/reservas/poltronas/${id}`);
+  const poltronasResponse = await axios.get(`${RESERVA_SERVICE_URL}/reservas/poltronas/${id}`);
   return { ...vooResponse.data, poltronas_ocupadas: poltronasResponse.data.poltronasReservadas };
 }
 

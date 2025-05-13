@@ -7,10 +7,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import utils.dto.AlternaEstadoDTO
 import utils.dto.VooOutputDTO
+import org.springframework.beans.factory.annotation.Value
 
-@CrossOrigin(origins = ["http://localhost:3030"])
 @RestController
 @RequestMapping("/v1/voos")
+@CrossOrigin(origins = ["\${gateway.url}"])
 class VooController(
     private val cancelarVoo: CancelarVooSaga,
     private val realizarVoo: RealizarVooSaga
@@ -19,9 +20,11 @@ class VooController(
     @PatchMapping("/{codigo}/estado")
     fun alterarEstado(@PathVariable codigo: String, @RequestBody estado: AlternaEstadoDTO): ResponseEntity<VooOutputDTO> {
         val voo = runBlocking {
-            realizarVoo.executeSaga(codigo, estado)
+            if(estado.estado == "CANCELADO")
+                 cancelarVoo.executeSaga(codigo)
+            else
+                realizarVoo.executeSaga(codigo, estado)
         }
-
         return ResponseEntity.ok(voo)
     }
 

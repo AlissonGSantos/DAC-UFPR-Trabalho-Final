@@ -7,9 +7,8 @@ async function getAllClientes(req, res) {
     res.status(200).json(clientes);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao buscar clientes",
+      erro: error.response?.message || error.response?.data?.message || "Erro ao buscar clientes",
     });
   }
 }
@@ -20,9 +19,8 @@ async function getClienteById(req, res) {
     res.status(200).json(cliente);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Cliente não encontrado",
+      erro: error.response?.message || error.response?.data?.message || "Cliente não encontrado",
     });
   }
 }
@@ -33,9 +31,8 @@ async function createCliente(req, res) {
     res.status(201).json(novoCliente);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao criar cliente",
+      erro: error.response?.message || error.response?.data?.message || "Erro ao criar cliente",
     });
   }
 }
@@ -49,9 +46,8 @@ async function updateClienteMilhas(req, res) {
     res.status(200).json(clienteMilhas);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao atualizar milhas do cliente",
+      erro: error.response?.message || error.response?.data?.message || "Erro ao atualizar milhas do cliente",
     });
   }
 }
@@ -62,9 +58,8 @@ async function getClienteMilhas(req, res) {
     res.status(200).json(milhas);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao buscar milhas do cliente",
+      erro: error.response?.message || error.response?.data?.message || "Erro ao buscar milhas do cliente",
     });
   }
 }
@@ -79,9 +74,8 @@ async function getClienteReservas(req, res) {
     res.status(200).json(reservas);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      error: true,
       status: error.response?.status || 500,
-      message: error.response?.message || error.response?.data?.message || "Erro ao buscar reservas do cliente",
+      erro: error.response?.message || error.response?.data?.message || "Erro ao buscar reservas do cliente",
     });
   }
 }
