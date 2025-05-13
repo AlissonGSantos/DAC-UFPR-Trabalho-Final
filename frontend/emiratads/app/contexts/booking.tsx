@@ -30,7 +30,7 @@ export const BookingContextProvider: React.FC<{
   const { userData } = useAuthContext();
 
   const fetchBookings = async () => {
-    if (userData?.usuario.codigo) {
+    if (userData?.usuario.codigo && userData?.usuario.tipo === "CLIENTE") {
       try {
         const bookings = await clientService.getBookings(
           userData.usuario.codigo
@@ -44,7 +44,7 @@ export const BookingContextProvider: React.FC<{
 
   useEffect(() => {
     fetchBookings();
-  }, [userData?.usuario.codigo]);
+  }, [userData?.usuario.codigo, userData?.usuario.tipo]);
 
   const contextValue = useMemo(
     () => ({

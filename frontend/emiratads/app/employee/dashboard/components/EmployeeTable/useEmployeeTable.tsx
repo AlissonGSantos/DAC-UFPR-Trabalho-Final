@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect, useCallback } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Employee } from "@/app/types/EmployeeTypes";
-import EmployeeService from "@/app/employee/services/employeeService";
+import employeeServices from "@/app/employee/services/employeeService";
 import { maskCPF } from "@/app/utils/cpfMask";
 import { phoneMask } from "@/app/utils/phoneMask";
 
@@ -13,27 +14,35 @@ const useEmployeeTable = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [data, setData] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const sortEmployeesByName = (employees: Employee[]) => {
-    return employees.sort((a, b) => a.nome.localeCompare(b.nome));
+    return [...employees].sort((a, b) => a.nome.localeCompare(b.nome));
   };
 
-  useState(() => {
-    const fetchData = async () => {
-      try {
-        const employees = await EmployeeService.getAllEmployees();
-        employees.forEach((employee) => {
-          employee.cpf = maskCPF(employee.cpf);
-          employee.telefone = phoneMask(employee.telefone)
-        });
-        setData(sortEmployeesByName(employees));
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-        setData([]);
-      }
-    };
-    fetchData();
-  });
+  const fetchEmployees = useCallback(async () => {
+    try {
+      setLoading(true);
+      const employees = await employeeServices.getAllEmployees();
+      console.log("Fetched employees:", employees);
+      const formattedEmployees = employees.map((employee) => ({
+        ...employee,
+        cpf: maskCPF(employee.cpf),
+        telefone: phoneMask(employee.telefone),
+      }));
+
+      setData(sortEmployeesByName(formattedEmployees));
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEmployees();
+  }, [fetchEmployees]);
 
   const handleEdit = (employee: Employee) => {
     setEmployeeValue(employee);
@@ -54,23 +63,25 @@ const useEmployeeTable = () => {
 
   const onSubmit = async (employee: Employee) => {
     try {
-      if (isEditing) {
-        const updatedEmployee = await EmployeeService.updateEmployee(
-          String(employeeValue?.codigo),
+      setLoading(true);
+
+      if (isEditing && employeeValue) {
+        const updatedEmployee = await employeeServices.updateEmployee(
+          String(employeeValue.codigo),
           employee
         );
+
         setData((prevData) =>
           sortEmployeesByName(
-            prevData.map((emp) => {
-              if (emp.codigo === updatedEmployee.codigo) {
-                return { ...updatedEmployee, ativo: emp.ativo };
-              }
-              return emp;
-            })
+            prevData.map((emp) =>
+              emp.codigo === updatedEmployee.codigo
+                ? { ...updatedEmployee, ativo: emp.ativo }
+                : emp
+            )
           )
         );
       } else {
-        const newEmployee = await EmployeeService.createEmployee(employee);
+        const newEmployee = await employeeServices.createEmployee(employee);
         setData((prevData) =>
           sortEmployeesByName([...prevData, { ...newEmployee, ativo: true }])
         );
@@ -81,20 +92,27 @@ const useEmployeeTable = () => {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setHasError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
   const onDelete = async () => {
+    if (!employeeValue) return;
+
     try {
-      if (employeeValue) {
-        await EmployeeService.deleteEmployee(String(employeeValue.codigo));
-        setData((prevData) =>
-          prevData.filter((emp) => emp.codigo !== employeeValue.codigo)
-        );
-      }
+      setLoading(true);
+      await employeeServices.deleteEmployee(String(employeeValue.codigo));
+      setData((prevData) =>
+        prevData.filter((emp) => emp.codigo !== employeeValue.codigo)
+      );
       setDeleteModalOpen(false);
     } catch (error) {
       console.error("Error deleting employee:", error);
+      setHasError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,14 +145,19 @@ const useEmployeeTable = () => {
     {
       accessorKey: "ativo",
       header: "Ativo",
-      cell: () => <span className="text-green-500 font-bold">Sim</span>
+      cell: (info) =>
+        info.getValue() ? (
+          <span className="text-green-500 font-bold">Sim</span>
+        ) : (
+          <span className="text-red-500 font-bold">Não</span>
+        ),
     },
   ];
 
   return {
     data,
     columns,
-    setData,
+    loading,
     employeeValue,
     setEmployeeValue,
     isModalOpen,
@@ -142,13 +165,14 @@ const useEmployeeTable = () => {
     handleDelete,
     handleEdit,
     deleteModalOpen,
+    setDeleteModalOpen,
     handleRegisterClick,
     onSubmit,
     isEditing,
     hasError,
     setHasError,
-    setDeleteModalOpen,
     onDelete,
+    refreshData: fetchEmployees,
   };
 };
 
