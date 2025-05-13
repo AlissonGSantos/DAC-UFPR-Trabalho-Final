@@ -22,7 +22,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
   onChange,
   onSubmit,
   onClose,
-  onError,
   isEditing,
 }) => {
   const { register, handleSubmit, errors, setValue } = useEmployeeForm({

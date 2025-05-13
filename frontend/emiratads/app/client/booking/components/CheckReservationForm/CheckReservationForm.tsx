@@ -5,6 +5,7 @@ import Input from "@/app/components/Input/Input";
 import useCheckReservationForm from "./useCheckReservationForm";
 import { robotoFont } from "@/app/assets/fontsSetup";
 import ReadReservationForm from "../ReadReservationForm/ReadReservationForm";
+import Loader from "@/app/components/Loader/Loader";
 
 const CheckReservationForm = () => {
   const {
@@ -15,8 +16,10 @@ const CheckReservationForm = () => {
     showSuccess,
     selectedBooking,
     onCancel,
+    loading,
   } = useCheckReservationForm();
 
+  if (loading) return <Loader loading />;
   return (
     <div className="flex flex-col w-full justify-center py-2">
       <h1

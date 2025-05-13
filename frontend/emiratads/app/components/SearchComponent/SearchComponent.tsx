@@ -31,11 +31,17 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ fromHome }) => {
           />
         </div>
       </div>
-      {showFlightTable && (
-        <div className="flex flex-col p-4 rounded-lg gap-6 my-8">
-          <FlightsTable flights={activeFlightList} />
-        </div>
-      )}
+      {fromHome
+        ? activeFlightList.length > 0 && (
+            <div className="flex flex-col p-4 rounded-lg gap-6 my-8">
+              <FlightsTable flights={activeFlightList} />
+            </div>
+          )
+        : showFlightTable && (
+            <div className="flex flex-col p-4 rounded-lg gap-6 my-8">
+              <FlightsTable flights={activeFlightList} />
+            </div>
+          )}
     </>
   );
 };

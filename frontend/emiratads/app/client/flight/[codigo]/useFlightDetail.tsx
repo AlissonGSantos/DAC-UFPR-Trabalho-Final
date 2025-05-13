@@ -9,6 +9,8 @@ import {
   UsePointsData,
   validateMilesInput,
 } from "./schema/schema";
+import flightServices from "@/app/services/flightServices";
+import bookingService from "../../services/bookingService";
 
 const useFlightDetail = (codigo: string) => {
   const { flightList, setFlightList } = useFlightContext();
@@ -41,7 +43,7 @@ const useFlightDetail = (codigo: string) => {
 
   const fetchFlight = async () => {
     try {
-      const flightData = flightList.find((flight) => flight.codigo === codigo);
+      const flightData = await flightServices.getFlight(codigo);
       if (flightData) {
         setFlight(flightData);
       } else {
@@ -61,8 +63,17 @@ const useFlightDetail = (codigo: string) => {
   );
 
   const reservedSeats = useMemo(() => {
-    const reserved = new Set<number>();
-    while (reserved.size < (flight?.quantidade_poltronas_ocupadas ?? 0)) {
+    // Ensure reserved is always a Set<number>
+    const reserved: Set<number> =
+      flight && typeof flight.quantidade_poltronas_ocupadas !== "number"
+        ? (flight.quantidade_poltronas_ocupadas as Set<number>)
+        : new Set<number>();
+    while (
+      reserved.size <
+      (typeof flight?.quantidade_poltronas_ocupadas === "number"
+        ? flight.quantidade_poltronas_ocupadas
+        : 0)
+    ) {
       const randomIndex = Math.floor(Math.random() * totalSeats);
       reserved.add(randomIndex);
     }
@@ -142,16 +153,23 @@ const useFlightDetail = (codigo: string) => {
       );
 
       const newMilesBalance = userMilesBalance - milesToUse + milesTotal;
-      console.log({
-        userMilesBalance,
-        milesToUse,
-        milesTotal,
-        newMilesBalance,
-      })
-      console.log(newMilesBalance)
+
+      const createBookingResponse = await bookingService.createBooking({
+        valor: totalPrice,
+        milhas_utilizadas: milesToUse,
+        quantidade_poltronas: sitsQuantity,
+        poltronas_reservadas: selectedSits,
+        codigo_voo: flight.codigo,
+        codigo_cliente: Number(userData?.usuario.codigo),
+      });
+
+      if (!createBookingResponse) {
+        throw new Error("Erro ao criar reserva");
+      }
+
       updateMilesBalance(newMilesBalance);
 
-      setFlight(updatedFlight);
+      setFlight(createBookingResponse.voo);
       setFlightList(updatedFlightList);
 
       setSitsQuantity(0);
@@ -160,7 +178,9 @@ const useFlightDetail = (codigo: string) => {
 
       setIsConfirmModalOpen(false);
 
-      window.location.href = "/client/home";
+      if (createBookingResponse) {
+        window.location.href = "/client/home";
+      }
     } catch (error) {
       console.error(error);
     }

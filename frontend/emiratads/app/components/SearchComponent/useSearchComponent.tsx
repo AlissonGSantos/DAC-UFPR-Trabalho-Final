@@ -1,5 +1,6 @@
 import { Aeroporto, Flight, statusFlightEnum } from "@/app/types/FlightTypes";
 import { useState } from "react";
+import useBookingContext from "@/app/contexts/booking";
 
 const useSearchComponent = (fromHome: boolean) => {
   const [activeFlightList, setActiveFlightList] = useState<Flight[]>([]);
@@ -10,6 +11,8 @@ const useSearchComponent = (fromHome: boolean) => {
   const [destinationAirport, setDestinationAirport] = useState<Aeroporto>(
     {} as Aeroporto
   );
+
+  const { bookingList } = useBookingContext();
   const redirectToSearchFlight = () => {
     window.location.href = `/client/searchFlight?origin=${originAirport?.codigo}&destination=${destinationAirport?.codigo}`;
   };
@@ -26,9 +29,9 @@ const useSearchComponent = (fromHome: boolean) => {
     let filteredFlights = flights;
 
     if (fromHome) {
-      filteredFlights = flights.filter(
-        (flight) => flight.estado != statusFlightEnum.CONFIRMADO
-      );
+      filteredFlights = bookingList
+        .filter((booking) => booking.voo.estado !== statusFlightEnum.CONFIRMADO)
+        .map((booking) => booking.voo);
     }
     setActiveFlightList(filteredFlights);
     setShowFlightTable(true);

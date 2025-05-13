@@ -1,23 +1,23 @@
+"use client";
+
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { CheckReservationSchema } from "../../schema/schema";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import useBookingContext from "@/app/contexts/booking";
 import { Booking } from "@/app/types/BookingTypes";
+import bookingService from "@/app/client/services/bookingService";
 
 type CheckReservationFormData = z.infer<typeof CheckReservationSchema>;
 
 const useCheckReservationForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const { getBookingById } = useBookingContext();
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<CheckReservationFormData>({
     resolver: zodResolver(CheckReservationSchema),
@@ -26,36 +26,35 @@ const useCheckReservationForm = () => {
     },
   });
 
-  const onSubmit = (data: CheckReservationFormData) => {
+  const onSubmit = async (data: CheckReservationFormData) => {
     try {
-      const booking = getBookingById(data.CodeReservation);
-      if (!booking) {
-        alert("Reserva não encontrada!");
-        return;
-      }
+      setLoading(true);
+      const booking = await bookingService.getBooking(data.CodeReservation);
       setSelectedBooking(booking);
+      setShowSuccess(true);
     } catch (error) {
-      alert("Erro ao buscar reserva: " + error);
-      setHasError(true);
+      console.error("Error fetching booking:", error);
+      alert("Erro ao buscar reserva. Verifique o código e tente novamente.");
     } finally {
-      if (!hasError) {
-        setValue("CodeReservation", "");
-        setShowSuccess(true);
-      }
+      setLoading(false);
     }
   };
 
-  const onCancel = () => {
-    if (selectedBooking != null && !["CRIADA", "CHECK-IN"].includes(selectedBooking.estado)) {
-      alert(
-        "Apenas reservas nos estados CRIADA ou CHECK-IN podem ser canceladas."
-      );
-      return;
-    }
+  const onCancel = async () => {
+    if (!selectedBooking) return;
 
-    setShowSuccess(false);
-    setValue("CodeReservation", "");
-    setSelectedBooking(null);
+    try {
+      setLoading(true);
+      await bookingService.cancelBooking(selectedBooking.codigo);
+      alert(`Reserva ${selectedBooking.codigo} cancelada com sucesso!`);
+      setSelectedBooking(null);
+      setShowSuccess(false);
+    } catch (error) {
+      console.error("Error canceling booking:", error);
+      alert("Erro ao cancelar reserva. Tente novamente mais tarde.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
@@ -64,7 +63,9 @@ const useCheckReservationForm = () => {
     errors,
     onSubmit,
     showSuccess,
+    setShowSuccess,
     selectedBooking,
+    loading,
     onCancel,
   };
 };

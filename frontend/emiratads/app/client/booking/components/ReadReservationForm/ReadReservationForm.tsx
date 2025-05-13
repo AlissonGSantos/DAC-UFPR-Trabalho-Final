@@ -5,6 +5,8 @@ import Input from "@/app/components/Input/Input";
 import useReadReservationForm from "./useReadReservationForm";
 import { Booking } from "@/app/types/BookingTypes";
 import CancelBookingModal from "@/app/components/CancelBookingModal/CancelBookingModal";
+import CheckinModal from "@/app/client/checkin/components/CheckinModal/CheckinModal";
+import CheckinSuccessModal from "@/app/client/checkin/components/CheckinSuccessModal/CheckinSuccessModal";
 
 interface ReadReservationFormProps {
   reservation: Booking;
@@ -15,10 +17,22 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
   reservation,
   onCancel,
 }) => {
-  const { register, handleSubmit, errors, onSubmit, canCheckIn,isCancelModalOpen, setIsCancelModalOpen } =
-    useReadReservationForm({
-      reservation,
-    });
+  const {
+    register,
+    handleSubmit,
+    errors,
+    onSubmit,
+    canCheckIn,
+    isCancelModalOpen,
+    setIsCancelModalOpen,
+    onPerformCheckIn,
+    checkinModalOpen,
+    setCheckinModalOpen,
+    onDismissSuccessModal,
+    isSuccessModalOpen,
+  } = useReadReservationForm({
+    reservation,
+  });
 
   return (
     <div className="flex flex-col w-full justify-center py-8 border-2 border-indigo-900 mt-6 bg-gray-800">
@@ -35,11 +49,11 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
               error={
                 errors.CodeReservation
                   ? [
-                    {
-                      hasError: true,
-                      message: errors.CodeReservation.message ?? "",
-                    },
-                  ]
+                      {
+                        hasError: true,
+                        message: errors.CodeReservation.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -52,11 +66,11 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
               error={
                 errors.dateTimeFlight
                   ? [
-                    {
-                      hasError: true,
-                      message: errors.dateTimeFlight.message ?? "",
-                    },
-                  ]
+                      {
+                        hasError: true,
+                        message: errors.dateTimeFlight.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -72,11 +86,11 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
               error={
                 errors.OriginAirport
                   ? [
-                    {
-                      hasError: true,
-                      message: errors.OriginAirport.message ?? "",
-                    },
-                  ]
+                      {
+                        hasError: true,
+                        message: errors.OriginAirport.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -89,11 +103,11 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
               error={
                 errors.DestinationAirport
                   ? [
-                    {
-                      hasError: true,
-                      message: errors.DestinationAirport.message ?? "",
-                    },
-                  ]
+                      {
+                        hasError: true,
+                        message: errors.DestinationAirport.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -109,11 +123,11 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
               error={
                 errors.ticketValue
                   ? [
-                    {
-                      hasError: true,
-                      message: errors.ticketValue.message ?? "",
-                    },
-                  ]
+                      {
+                        hasError: true,
+                        message: errors.ticketValue.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -141,11 +155,11 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
               error={
                 errors.flightStatus
                   ? [
-                    {
-                      hasError: true,
-                      message: errors.flightStatus.message ?? "",
-                    },
-                  ]
+                      {
+                        hasError: true,
+                        message: errors.flightStatus.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"
@@ -176,11 +190,23 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
             </div>
           </div>
         </form>
+        <CheckinModal
+          booking={reservation}
+          isOpen={checkinModalOpen}
+          onClose={() => setCheckinModalOpen(false)}
+          onConfirm={onPerformCheckIn}
+        />
         <CancelBookingModal
           booking={reservation}
           isOpen={isCancelModalOpen}
           onClose={() => setIsCancelModalOpen(false)}
           onCancel={onCancel}
+        />
+        <CheckinSuccessModal
+          isOpen={isSuccessModalOpen}
+          onClose={onDismissSuccessModal}
+          message="Check-in realizado com sucesso!"
+          subtitle="Seu voo está confirmado."
         />
       </div>
     </div>

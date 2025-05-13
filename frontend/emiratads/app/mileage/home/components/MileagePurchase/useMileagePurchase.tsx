@@ -9,7 +9,7 @@ import {
   MileagePurchaseSchema,
   MileagePurchaseFormData,
 } from "../../schema/schema";
-import milesServices from "@/app/authentication/services/milesServices";
+import milesServices from "@/app/mileage/services/milesServices";
 
 const useMileagePurchase = () => {
   const fixedPrice = 5.0;

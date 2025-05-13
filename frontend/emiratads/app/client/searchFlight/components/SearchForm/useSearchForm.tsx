@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import {
   SearchFlightSchema,
@@ -25,7 +25,8 @@ const useSearchForm = ({
   origin,
   onRedirect,
 }: UseSearchFormProps) => {
-  const { aeroportos, flightList } = useFlightContext();
+  const { aeroportos, flightList, flightListLoading } = useFlightContext();
+  const initialFilterComplete = useRef(false);
 
   const getAirportsByParams = () => {
     const destinationSelected = aeroportos.find(
@@ -139,16 +140,28 @@ const useSearchForm = ({
       return onRedirect();
     }
 
-    filterFlights(
-      flightList,
-      data.OriginAirport,
-      data.DestinationAirport
-    );
+    filterFlights(flightList, data.OriginAirport, data.DestinationAirport);
   };
 
   useEffect(() => {
-    filterFlights(flightList, originAirport?.codigo, destinationAirport?.codigo)
-  }, []);
+    if (
+      flightList.length > 0 &&
+      !initialFilterComplete.current &&
+      !flightListLoading
+    ) {
+      filterFlights(
+        flightList,
+        originAirport?.codigo,
+        destinationAirport?.codigo
+      );
+      initialFilterComplete.current = true;
+    }
+  }, [
+    flightList,
+    flightListLoading,
+    originAirport?.codigo,
+    destinationAirport?.codigo,
+  ]);
 
   return {
     aeroportos,
