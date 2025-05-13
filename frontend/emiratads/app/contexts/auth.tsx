@@ -7,6 +7,18 @@ import React, {
   useState,
 } from "react";
 import { EmployeeEnum, UserAuth } from "../types/AuthTypes";
+import loginServices from "../authentication/services/loginServices";
+
+export const getFromCookies = (key: string): string | null => {
+  const cookies = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${key}=`));
+  return cookies ? cookies.split("=")[1] : null;
+};
+
+export const saveToCookies = async (key: string, value: string) => {
+  document.cookie = `${key}=${value}; path=/; max-age=3600; secure; samesite=strict`;
+};
 
 type AuthContextType = {
   userData: UserAuth | undefined | null;
@@ -27,10 +39,6 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userData, setUserData] = useState<UserAuth | undefined | null>(null);
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
-  const saveToCookies = async (key: string, value: string) => {
-    document.cookie = `${key}=${value}; path=/; max-age=3600; secure; samesite=strict`;
-  };
-
   const updateMilesBalance = (miles: number) => {
     if (userData) {
       const updatedUserData: UserAuth = {
@@ -42,13 +50,6 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const getFromCookies = (key: string): string | null => {
-    const cookies = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith(`${key}=`));
-    return cookies ? cookies.split("=")[1] : null;
-  };
-
   const login = (data: UserAuth) => {
     setIsLogged(true);
     setUserData(data);
@@ -56,9 +57,14 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     saveToCookies("user", JSON.stringify(data));
   };
 
-  const logout = () => {
+  const logout = async () => {
     setIsLogged(false);
     setUserData(null);
+    if (userData) {
+      await loginServices.logout({
+        login: userData.usuario.email,
+      });
+    }
     document.cookie = "token=; path=/; max-age=0";
     document.cookie = "user=; path=/; max-age=0";
     window.location.href = "/authentication/login";
