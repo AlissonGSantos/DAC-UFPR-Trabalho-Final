@@ -54,6 +54,10 @@ const BookingDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
                   label: "Poltronas",
                   value: booking?.poltronas_reservadas.length.toString() ?? "0",
                 },
+                {
+                  label: "Poltronas Reservadas",
+                  value: booking?.poltronas_reservadas.join(", "),
+                },
                 { label: "Status", value: booking.estado },
               ]}
             />
