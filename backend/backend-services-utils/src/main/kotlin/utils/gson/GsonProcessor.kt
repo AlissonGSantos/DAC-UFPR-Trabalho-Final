@@ -27,10 +27,11 @@ class GsonProcessor {
             ResourceNotFoundException::class,
             ConstraintViolationException::class
         )
-        inline fun <reified T> parseJson(json: String): T {
+        inline fun <reified T> parseJson(json: String, failover: () -> Unit = {}): T {
             val type = object : TypeToken<RabbitMessageDTO<T>>() {}.type
             val message: RabbitMessageDTO<T> = gson.fromJson(json, type)
             if (!message.success) {
+                failover()
                 message.exception?.let {
                     val exceptionClass =
                         knownExceptions[it] ?: throw ClassNotFoundException("Exceção desconhecida \\o/")
