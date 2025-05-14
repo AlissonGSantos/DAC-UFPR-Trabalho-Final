@@ -1,7 +1,15 @@
 const reservaService = require("../services/reservaService.js");
+const { getUserId } = require("../middlewares/tokenJWTService.js");
 
 async function createReserva(req, res) {
   try {
+    const userID = getUserId(req);
+    if (req.body["codigo_cliente"] !== userID.userId) {
+      return res.status(400).json({
+        status: 400,
+        erro: "Código do cliente não corresponde ao usuário autenticado"
+      });
+    }
     const novaReserva = await reservaService.createReserva(req.body);
     res.status(201).json(novaReserva);
   } catch (error) {
@@ -26,7 +34,14 @@ async function deleteReserva(req, res) {
 
 async function getReservaById(req, res) {
   try {
+    const userID = getUserId(req);
     const reserva = await reservaService.getReservaById(req.params.id);
+    if (reserva["codigo_cliente"] !== userID.userId && userID.userProfile !== "FUNCIONARIO") {
+      return res.status(404).json({
+        status: 404,
+        erro: "Reserva não encontrada"
+      });
+    }
     res.status(200).json(reserva);
   } catch (error) {
     res.status(error.response?.status || 500).json({

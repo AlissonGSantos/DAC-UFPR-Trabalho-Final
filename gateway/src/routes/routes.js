@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const funcionarioController = require("../controllers/funcionarioController.js");
-const clienteController = require("../controllers/clienteController.js");
 const autenticacaoController = require("../controllers/autenticacaoController.js");
-const verifyJWT = require("../middlewares/verifyJWT.js");
-const vooController = require("../controllers/vooController.js");
+const clienteController = require("../controllers/clienteController.js");
 const reservaController = require("../controllers/reservaController.js");
+const vooController = require("../controllers/vooController.js");
+const { verifyJWT } = require("../middlewares/tokenJWTService.js");
 
 // Rotas de autenticação
 router.post("/login", autenticacaoController.login);

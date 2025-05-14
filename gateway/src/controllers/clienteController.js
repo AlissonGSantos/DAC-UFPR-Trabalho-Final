@@ -1,5 +1,6 @@
 const clienteService = require("../services/clienteService.js");
 const reservaService = require("../services/reservaService.js");
+const { getUserId } = require("../middlewares/tokenJWTService.js");
 
 async function getAllClientes(req, res) {
   try {
@@ -39,6 +40,13 @@ async function createCliente(req, res) {
 
 async function updateClienteMilhas(req, res) {
   try {
+    const userID = getUserId(req);
+    if (userID.userId !== parseInt(req.params.id) && userID.userProfile !== "FUNCIONARIO") {
+      return res.status(403).json({
+        status: 403,
+        erro: "Acesso negado",
+      });
+    }
     const clienteMilhas = await clienteService.updateClienteMilhas(
       req.params.id,
       req.body
@@ -54,6 +62,13 @@ async function updateClienteMilhas(req, res) {
 
 async function getClienteMilhas(req, res) {
   try {
+    const userID = getUserId(req);
+    if (userID.userId !== parseInt(req.params.id) && userID.userProfile !== "FUNCIONARIO") {
+      return res.status(403).json({
+        status: 403,
+        erro: "Acesso negado",
+      });
+    }
     const milhas = await clienteService.getClienteMilhas(req.params.id);
     res.status(200).json(milhas);
   } catch (error) {
@@ -66,6 +81,13 @@ async function getClienteMilhas(req, res) {
 
 async function getClienteReservas(req, res) {
   try {
+    const userID = getUserId(req);
+    if (userID.userId !== parseInt(req.params.id) && userID.userProfile !== "FUNCIONARIO") {
+      return res.status(403).json({
+        status: 403,
+        erro: "Acesso negado",
+      });
+    }
     const reservas = await reservaService.getClienteReservas(req.params.id);
     if (!reservas || reservas.length === 0) {
       res.status(204).json({ message: "Nenhuma reserva encontrada para o cliente" });
