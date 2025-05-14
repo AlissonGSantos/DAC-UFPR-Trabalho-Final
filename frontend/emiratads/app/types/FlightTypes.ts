@@ -17,6 +17,7 @@ export interface Flight {
     valor_passagem: number;
     quantidade_poltronas_total: number;
     quantidade_poltronas_ocupadas: number;
+    poltronas_ocupadas: number[];
     estado: statusFlightEnum;
     aeroporto_origem: Aeroporto;
     aeroporto_destino: Aeroporto;

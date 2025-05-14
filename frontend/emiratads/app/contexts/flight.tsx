@@ -36,7 +36,6 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setAeroportos(airports);
 
       const flights = await flightServices.getFlights();
-      console.log("Flights:", flights);
       setFlightList(flights);
     } catch (error) {
       console.error("Error fetching flight data:", error);

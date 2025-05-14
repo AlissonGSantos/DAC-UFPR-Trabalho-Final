@@ -74,7 +74,8 @@ INSERT INTO emiratads_reserva_transaction.estado_reserva (sigla, descricao) VALU
 INSERT INTO emiratads_reserva_transaction.reserva (codigo, codigo_cliente, codigo_voo, estado_codigo, quantidade_milhas) VALUES
     ('RES0001', 1, 'TADS0001', 1, 200.00),
     ('RES0002', 2, 'TADS0002', 2, 90.00),
-    ('RES0003', 3, 'TADS0003', 3, 80.00);
+    ('RES0003', 3, 'TADS0003', 3, 80.00),
+    ('RESXXX', 0, 'TADSXXX', 1, 0.00);
 
 -- Inserts para a tabela reserva no schema emiratads_reserva_access
 INSERT INTO emiratads_reserva_access.reserva (codigo, codigo_cliente, codigo_voo, estado, data, poltrona, quantidade_milhas) VALUES
@@ -115,3 +116,37 @@ SET saldo_milhas = COALESCE((
     FROM emiratads_cliente.transacao t
     WHERE t.cliente_codigo = c.codigo
 ), 0);
+
+-- Adicionar poltronas reservadas aleatórias para cada voo, conforme quantidade de poltronas ocupadas
+DO $$
+DECLARE
+    v_codigo_voo TEXT;
+    v_qtd_ocupadas INT;
+    v_qtd_total INT;
+    v_i INT;
+    v_poltrona INT;
+    v_exists INT;
+BEGIN
+    FOR v_codigo_voo, v_qtd_ocupadas, v_qtd_total IN
+        SELECT codigo, quantidade_poltronas_ocupadas, quantidade_poltronas_total
+        FROM emiratads_voo.voo
+    LOOP
+        v_i := 1;
+        WHILE v_i <= v_qtd_ocupadas LOOP
+            -- Gera um número aleatório entre 1 e quantidade de poltronas total
+            v_poltrona := floor(random() * v_qtd_total + 1);
+
+            -- Verifica se já existe a combinação de poltrona e voo
+            SELECT COUNT(*) INTO v_exists
+            FROM emiratads_reserva_transaction.poltronas_reservadas
+            WHERE codigo = v_poltrona AND codigo_voo = v_codigo_voo;
+
+            IF v_exists = 0 THEN
+                INSERT INTO emiratads_reserva_transaction.poltronas_reservadas (codigo, codigo_voo, codigo_reserva, codigo_cliente)
+                VALUES (v_poltrona, v_codigo_voo, 'RESXXX', 0);
+                v_i := v_i + 1;
+            END IF;
+            -- Se já existe, não incrementa v_i, tenta novamente
+        END LOOP;
+    END LOOP;
+END $$;

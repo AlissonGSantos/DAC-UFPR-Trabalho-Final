@@ -28,4 +28,15 @@ function verifyJWT (requiredProfiles = []) {
     }
 }
 
-module.exports = verifyJWT
+function getUserId (req) {
+    const token = req.headers['authorization']?.split(' ')[1]
+    if (!token) {
+        return null
+    }
+    const decoded = jwt.verify(token, SECRET_KEY)
+    const userId = parseInt(decoded.sub)
+    const userProfile = decoded.profile
+    return { userId, userProfile }
+}
+
+module.exports = {verifyJWT, getUserId}

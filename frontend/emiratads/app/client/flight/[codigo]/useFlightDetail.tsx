@@ -63,22 +63,10 @@ const useFlightDetail = (codigo: string) => {
   );
 
   const reservedSeats = useMemo(() => {
-    // Ensure reserved is always a Set<number>
-    const reserved: Set<number> =
-      flight && typeof flight.quantidade_poltronas_ocupadas !== "number"
-        ? (flight.quantidade_poltronas_ocupadas as Set<number>)
-        : new Set<number>();
-    while (
-      reserved.size <
-      (typeof flight?.quantidade_poltronas_ocupadas === "number"
-        ? flight.quantidade_poltronas_ocupadas
-        : 0)
-    ) {
-      const randomIndex = Math.floor(Math.random() * totalSeats);
-      reserved.add(randomIndex);
-    }
-    return Array.from(reserved);
-  }, [flight?.quantidade_poltronas_ocupadas, totalSeats]);
+      return flight?.poltronas_ocupadas.map(
+        (sit) => sit - 1
+      ) ?? [];
+    }, [flight?.poltronas_ocupadas]);
 
   const onSelectSit = (index: number) => {
     if (selectedSits.includes(index)) {
@@ -158,7 +146,7 @@ const useFlightDetail = (codigo: string) => {
         valor: totalPrice,
         milhas_utilizadas: milesToUse,
         quantidade_poltronas: sitsQuantity,
-        poltronas_reservadas: selectedSits,
+        poltronas_reservadas: selectedSits.map((sit) => sit + 1),
         codigo_voo: flight.codigo,
         codigo_cliente: Number(userData?.usuario.codigo),
       });

@@ -57,6 +57,10 @@ class ReservaService(
             if (it.any { poltrona -> poltrona < 1 || poltrona > totalPoltronas }) {
                 throw ResourcesConflictException("Uma ou mais poltronas reservadas estão fora do intervalo permitido (1 a $totalPoltronas).")
             }
+            val poltronasOcupadas = listPoltronasOcupadas(reserva.voo.codigo)
+            if (it.any { poltrona -> poltronasOcupadas.contains(poltrona) }) {
+                throw ResourcesConflictException("Uma ou mais poltronas reservadas não estão disponíveis")
+            }
         } ?: run {
             val poltronasOcupadas = listPoltronasOcupadas(reserva.voo.codigo)
             val todasPoltronas = (1..reserva.voo.quantidade_poltronas_total).toList()
