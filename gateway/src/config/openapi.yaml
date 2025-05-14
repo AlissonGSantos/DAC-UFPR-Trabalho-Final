@@ -1,0 +1,1629 @@
+openapi: 3.0.0
+info:
+  title: API Gateway
+  version: "1.0.0"
+  description: Documentação do API Gateway
+servers:
+  - url: /api/v1
+paths:
+  /login:
+    post:
+      summary: Login do usuário
+      tags: [Autenticação]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - senha
+              properties:
+                login:
+                  type: string
+                  description: Login do usuário
+                  example: usuario123
+                senha:
+                  type: string
+                  description: Senha do usuário
+                  example: minhaSenhaSegura
+      responses:
+        200:
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access-token:
+                    type: string
+                    description: Token JWT de acesso
+                  token-type:
+                    type: string
+                    description: Tipo do token (ex: Bearer)
+                  tipo:
+                    type: string
+                    enum: [CLIENTE, FUNCIONARIO]
+                    description: Tipo de usuário autenticado
+                  usuario:
+                    oneOf:
+                      - $ref: '#/components/schemas/Cliente'
+                      - $ref: '#/components/schemas/Funcionario'
+                    description: Objeto do usuário autenticado (Cliente ou Funcionario)
+        401:
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Senha incorreta"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+        404:
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Usuário não encontrado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+  /logout:
+    post:
+      summary: Logout do usuário
+      tags: [Autenticação]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  description: Login do usuário
+                  example: usuario123
+      responses:
+        '200':
+          description: Logout realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+                    description: Login do usuário
+                    example: usuario123
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /clientes:
+    post:
+      summary: Cria um novo cliente
+      tags: [Clientes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cpf
+                - nome
+                - email
+                - endereco
+              properties:
+                cpf:
+                  type: string
+                  description: CPF do cliente
+                  example: 12345678900
+                nome:
+                  type: string
+                  description: Nome do cliente
+                  example: João Silva
+                email:
+                  type: string
+                  description: Email do cliente
+                  example: joao.silva@example.com
+                endereco:
+                  $ref: '#/components/schemas/Endereco'
+                  description: Endereço do cliente
+      responses:
+        '201':
+          description: Cliente criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '400':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Erro de validação"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 400
+        '409':
+          description: Conflito (ex: Usuário duplicado)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Usuário duplicado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 409
+    get:
+      summary: Lista todos os clientes
+      tags: [Clientes]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /clientes/{id}:
+    get:
+      summary: Busca cliente por ID
+      tags: [Clientes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /clientes/{id}/milhas:
+    put:
+      summary: Atualiza milhas do cliente (Compra de milhas)
+      tags: [Clientes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quantidade
+              properties:
+                quantidade:
+                  type: integer
+                  description: Quantidade de milhas a serem adicionadas
+                  example: 1000
+      responses:
+        '200':
+          description: Cliente com saldo de milhas atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+    get:
+      summary: Consulta extrato de milhas do cliente
+      tags: [Clientes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Extrato de milhas do cliente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  codigo: 
+                    type: integer
+                    description: ID do cliente
+                    example: 1
+                  saldo_milhas:
+                    type: integer
+                    description: Saldo de milhas do cliente
+                    example: 5000
+                  transacoes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transacao'
+                    description: Lista de transações do cliente
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /clientes/{id}/reservas:
+    get:
+      summary: Lista reservas do cliente
+      tags: [Clientes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de reservas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reserva'
+        '204':
+          description: Nenhuma reserva encontrada
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /voos:
+    get:
+      summary: Lista todos os voos
+      tags: [Voos]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      parameters:
+        - in: query
+          name: origem
+          schema:
+            type: string
+          required: false
+          description: Código do aeroporto de origem
+          example: "GRU"
+        - in: query
+          name: destino
+          schema:
+            type: string
+          required: false
+          description: Código do aeroporto de destino
+          example: "GIG"
+        - in: query
+          name: data
+          schema:
+            type: string
+            format: date-time
+          required: false
+          description: Data para buscar voos a partir dela
+          example: "2023-10-01T10:00:00Z"
+        - in: query
+          name: inicio
+          schema:
+            type: string
+            format: date
+          required: false
+          description: Data inicial do intervalo de busca (YYYY-MM-DD)
+        - in: query
+          name: fim
+          schema:
+            type: string
+            format: date
+          required: false
+          description: Data final do intervalo de busca (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Lista de voos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  voos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Voo'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+    post:
+      summary: Cria um novo voo
+      tags: [Voos]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+                - valor_passagem
+                - quantidade_poltronas_total
+                - codigo_aeroporto_origem
+                - codigo_aeroporto_destino
+              properties:
+                data:
+                  type: string
+                  format: date-time
+                  description: Data e hora do voo
+                  example: "2023-10-01T10:00:00Z"
+                valor_passagem:
+                  type: number
+                  format: float
+                  description: Valor da passagem
+                  example: 500.00
+                quantidade_poltronas_total:
+                  type: integer
+                  description: Quantidade total de poltronas no voo
+                  example: 100
+                codigo_aeroporto_origem:
+                  type: string
+                  description: Código do aeroporto de origem
+                  example: "GRU"
+                codigo_aeroporto_destino:
+                  type: string
+                  description: Código do aeroporto de destino
+                  example: "GIG"
+      responses:
+        '201':
+          description: Voo criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voo'
+        '400':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Erro de validação"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 400
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /voos/{id}:
+    get:
+      summary: Busca voo por ID
+      tags: [Voos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Voo encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voo'
+        '404':
+          description: Voo não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Voo não encontrado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+    delete:
+      summary: Cancela o voo
+      tags: [Voos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Voo Cancelado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voo'
+        '404':
+          description: Voo não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Voo não encontrado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /voos/{id}/estado:
+    patch:
+      summary: Atualiza estado do voo
+      tags: [Voos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - estado
+              properties:
+                estado:
+                  type: string
+                  enum: [CONFIRMADO, CANCELADO, REALIZADO]
+                  description: Novo estado do voo
+                  example: "CANCELADO"
+      responses:
+        '200':
+          description: Estado atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voo'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /aeroportos:
+    get:
+      summary: Lista todos os aeroportos
+      tags: [Voos]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de aeroportos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Aeroporto'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /reservas:
+    post:
+      summary: Cria uma nova reserva
+      tags: [Reservas]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - valor:
+                - milhas_utilizadas
+                - quantidade_poltronas
+                - poltronas_reservadas
+                - codigo_cliente
+                - codigo_voo
+              properties:
+                valor:
+                  type: number
+                  format: float
+                  description: Valor em reais utilizado na reserva
+                  example: 500.00
+                milhas_utilizadas:
+                  type: integer
+                  description: Quantidade de milhas utilizadas na reserva
+                  example: 1000
+                quantidade_poltronas:
+                  type: integer
+                  description: Quantidade de poltronas reservadas
+                  example: 2
+                poltronas_reservadas:
+                  type: array
+                  items:
+                    type: integer
+                    description: Número da poltrona reservada
+                    example: 10
+                codigo_cliente:
+                  type: integer
+                  description: ID do cliente associado à reserva
+                  example: 1
+                codigo_voo:
+                  type: string
+                  description: Código do voo associado à reserva
+                  example: "TADS1234"
+      responses:
+        '201':
+          description: Reserva criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reserva'
+        '400':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Erro de validação"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 400
+        '404':
+          description: Voo ou cliente não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Voo ou cliente não encontrado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '409':
+          description: Conflito (ex: Reserva já existente, poltrona já reservada, voo lotado)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Reserva já existente"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 409
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /reservas/{id}:
+    get:
+      summary: Busca reserva por ID
+      tags: [Reservas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reserva encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reserva'
+        '404':
+          description: Reserva não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Reserva não encontrada"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+    delete:
+      summary: Cancela reserva
+      tags: [Reservas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Reserva Cancelada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reserva'
+        '404':
+          description: Reserva não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Reserva não encontrada"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '400':
+          description: Condições de cancelamento não atendidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Uma reserva só pode ser cancelada nos estados CRIADA ou CHECK-IN"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 400
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /reservas/{id}/estado:
+    patch:
+      summary: Atualiza estado da reserva
+      tags: [Reservas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - estado
+              properties:
+                estado:
+                  type: string
+                  enum: [CRIADA, CHECK_IN, EMBARCADA, CANCELADA, CANCELADA VOO, REALIZADA, NAO REALIZADA]
+                  description: Novo estado da reserva
+                  example: "CANCELADA"
+      responses:
+        '200':
+          description: Estado atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reserva'
+        '404':
+          description: Reserva não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Reserva não encontrada"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /funcionarios:
+    get:
+      summary: Lista todos os funcionários
+      tags: [Funcionarios]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de funcionários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funcionario'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+    post:
+      summary: Cria um novo funcionário
+      tags: [Funcionarios]
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cpf
+                - nome
+                - email
+                - telefone
+              properties:
+                cpf:
+                  type: string
+                  description: CPF do funcionário
+                  example: 12345678900
+                nome:
+                  type: string
+                  description: Nome do funcionário
+                  example: Maria Oliveira
+                email:
+                  type: string
+                  description: Email do funcionário
+                  example:
+                telefone:
+                  type: string
+                  description: Telefone do funcionário
+                  example: (11) 91234-5678
+                senha: 
+                  type: string
+                  description: Senha do funcionário
+                  example: senha123
+      responses:
+        '201':
+          description: Funcionário criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '400':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Erro de validação"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 400
+        '409':
+          description: Conflito (ex: Funcionário duplicado)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Funcionário duplicado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 409
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+
+  /funcionarios/{id}:
+    get:
+      summary: Busca funcionário por ID
+      tags: [Funcionarios]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Funcionário encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '404':
+          description: Funcionário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Funcionário não encontrado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+    put:
+      summary: Atualiza funcionário
+      tags: [Funcionarios]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cpf
+                - nome
+                - email
+                - telefone
+                - ativo
+              properties:
+                cpf:
+                  type: string
+                  description: CPF do funcionário
+                  example: 12345678900
+                nome:
+                  type: string
+                  description: Nome do funcionário
+                  example: Maria Oliveira
+                email:
+                  type: string
+                  description: Email do funcionário
+                  example:
+                telefone:
+                  type: string
+                  description: Telefone do funcionário
+                  example: (11) 91234-5678
+                ativo:
+                  type: boolean
+                  description: Status do funcionário (ativo/inativo)
+                  example: true
+      responses:
+        '200':
+          description: Funcionário atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '400':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Erro de validação"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 400
+        '404':
+          description: Funcionário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Funcionário não encontrado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+    delete:
+      summary: Remove funcionário
+      tags: [Funcionarios]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      headers:
+        Authorization:
+          description: Token JWT de acesso
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Funcionário inativado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '404':
+          description: Funcionário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Funcionário não encontrado"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 404
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    description: Mensagem de erro
+                    example: "Token inválido"
+                  status:
+                    type: integer
+                    description: Código de status HTTP
+                    example: 401
+components:
+  schemas:
+    Endereco:
+      type: object
+      properties:
+        cep:
+          type: string
+          description: CEP do endereço
+          example: "12345-678"
+        uf:
+          type: string
+          description: Estado do endereço
+          example: "São Paulo"
+        cidade:
+          type: string
+          description: Cidade do endereço
+          example: "São Paulo"
+        bairro:
+          type: string
+          description: Bairro do endereço
+          example: "Centro"
+        rua:
+          type: string
+          description: Rua do endereço
+          example: "Avenida Paulista"
+        numero:
+          type: string
+          description: Número do endereço
+          example: "1000"
+        complemento:
+          type: string
+          description: Complemento do endereço
+          example: "Apto 101"
+
+    Cliente:
+      type: object
+      properties:
+        codigo:
+          type: integer
+          description: ID do cliente
+          example: 1
+        cpf: 
+          type: string
+          description: CPF do cliente
+          example: "12345678900"
+        nome:
+          type: string
+          description: Nome do cliente
+          example: "João Silva"
+        email:
+          type: string
+          description: Email do cliente
+          example: "joao.silva@example.com"
+        saldo_milhas:
+          type: integer
+          description: Quantidade de milhas do cliente
+          example: 5000
+        endereco:
+          $ref: '#/components/schemas/Endereco'
+          description: Endereço do cliente
+
+    Funcionario:
+      type: object
+      properties:
+        codigo:
+          type: integer
+          description: ID do funcionário
+          example: 1
+        cpf:
+          type: string
+          description: CPF do funcionário
+          example: "12345678900"
+        nome:
+          type: string
+          description: Nome do funcionário
+          example: "Maria Oliveira"
+        email:
+          type: string
+          description: Email do funcionário
+          example: "maria.oliveira@emiratads.com"
+        telefone:
+          type: string
+          description: Telefone do funcionário
+          example: "(11) 91234-5678"
+        ativo:
+          type: boolean
+          description: Status do funcionário (ativo/inativo)
+          example: true
+
+    Transacao:
+      type: object
+      properties:
+        data:
+          type: string
+          format: date-time
+          description: Data da transação
+          example: "2023-10-01T10:00:00Z"
+        codigo_reserva:
+          type: String
+          nullable: true
+          description: ID da reserva associada à transação (se existente)
+          example: "RES0001"
+        quantidade_milhas:
+          type: integer
+          description: Quantidade de milhas da transação
+          example: 1000
+        valor:
+          type: number
+          format: float
+          description: Valor em reais da transação
+          example: 100.00
+        descricao:
+          type: string
+          description: Descrição da transação
+          example: "COMPRA DE MILHAS"
+        tipo:
+          type: string
+          enum: [ENTRADA, SAIDA]
+          description: Tipo da transação (entrada ou saída)
+          example: "ENTRADA"
+
+    Aeroporto:
+      type: object
+      properties:
+        codigo:
+          type: string
+          description: Código do aeroporto
+          example: "GRU"
+        nome:
+          type: string
+          description: Nome do aeroporto
+          example: "Aeroporto Internacional de São Paulo/Guarulhos - Governador André Franco Montoro"
+        cidade:
+          type: string
+          description: Cidade onde o aeroporto está localizado
+          example: "São Paulo"
+        uf:
+          type: string
+          description: Unidade Federativa onde o aeroporto está localizado
+          example: "SP"
+
+    Voo: 
+      type: object
+      properties:
+        codigo:
+          type: string
+          description: Código do voo
+          example: "TADS1234"
+        data:
+          type: string
+          format: date-time
+          description: Data e hora do voo
+          example: "2023-10-01T10:00:00Z"
+        valor_passagem:
+          type: number
+          format: float
+          description: Valor da passagem
+          example: 500.00
+        quantidade_poltronas_total:
+          type: integer
+          description: Quantidade total de poltronas no voo
+          example: 100
+        quantidade_poltronas_ocupadas:
+          type: integer
+          description: Quantidade de poltronas ocupadas no voo
+          example: 50
+        poltronas_ocupadas:
+          type: array
+          nullable: true
+          items:
+            type: integer
+            description: Número da poltrona ocupada
+            example: 10
+        estado:
+          type: string
+          enum: [CONFIRMADO, CANCELADO, REALIZADO]
+          description: Estado do voo (Confirmado, Cancelado ou Realizado)
+          example: "CONFIRMADO"
+        aeroporto_origem:
+          $ref: '#/components/schemas/Aeroporto'
+          description: Aeroporto de origem do voo
+        aeroporto_destino:
+          $ref: '#/components/schemas/Aeroporto'
+          description: Aeroporto de destino do voo
+
+    Reserva:
+      type: object
+      properties:
+        codigo:
+          type: string
+          description: Código da reserva
+          example: "RES0001"
+        codigo_cliente:
+          type: integer
+          description: ID do cliente associado à reserva
+          example: 1
+        data:
+          type: string
+          format: date-time
+          description: Data e hora da última atualização da reserva
+          example: "2023-10-01T10:00:00Z"
+        voo:
+          $ref: '#/components/schemas/Voo'
+          description: Detalhes do voo associado à reserva
+        estado:
+          type: string
+          enum: [CRIADA, CHECKIN, EMBARCADA, CANCELADA, CANCELADA VOO, REALIZADA, NAO REALIZADA]
+          description: Estado da reserva (Criada, Check-in, Embarcada, Cancelada, Cancelada Voo, Realizada ou Não Realizada)
+          example: "CRIADA"
+        quantidade_milhas:
+          type: integer
+          description: Quantidade de milhas utilizadas na reserva
+          example: 1000
+        poltronas_reservadas:
+          type: array
+          items:
+            type: integer
+            description: Número da poltrona reservada
+            example: 10

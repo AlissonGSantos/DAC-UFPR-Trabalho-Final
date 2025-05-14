@@ -1,12 +1,17 @@
 require("dotenv").config();
 const cors = require("cors");
+const YAML = require('yamljs');
 const express = require("express");
 const getCorsOptions = require("./src/config/corsConfig.js");
 const routes = require("./src/routes/routes.js");
+const swaggerUi = require('swagger-ui-express');
 const BASE_URL = "/api/v1";
 
 const app = express();
 app.use(express.json());
+
+const swaggerFile = YAML.load('./src/config/openapi.yaml');
+app.use('/api-docs/v1', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use(BASE_URL, (req, res, next) => {
   try {
@@ -14,8 +19,8 @@ app.use(BASE_URL, (req, res, next) => {
     cors(corsOptions)(req, res, next);
   } catch (error) {
     res
-      .status(500)
-      .json({ message: "Erro ao configurar CORS " + error.message });
+    .status(500)
+    .json({ message: "Erro ao configurar CORS " + error.message });
   }
 });
 
