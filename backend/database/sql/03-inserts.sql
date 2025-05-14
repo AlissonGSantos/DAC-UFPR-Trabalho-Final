@@ -41,24 +41,24 @@ INSERT INTO emiratads_voo.estado_voo (sigla, descricao) VALUES
 
 -- Inserts para a tabela voo
 INSERT INTO emiratads_voo.voo (codigo, data, valor_passagem, quantidade_poltronas_total, quantidade_poltronas_ocupadas, estado_codigo, aeroporto_origem, aeroporto_destino) VALUES
-    ('TADS0001', '2025-08-10T10:30:00-03:00', 500.00, 150, 2, 1, 'POA', 'CWB'),
-    ('TADS0002', '2025-09-11T09:30:00-03:00', 450.00, 150, 1, 1, 'CWB', 'GIG'),
-    ('TADS0003', '2025-10-12T08:30:00-03:00', 400.00, 150, 1, 1, 'CWB', 'POA'),
-    ('TADS0004', '2025-11-01T14:00:00-03:00', 500.00, 180, 10, 1, 'GRU', 'GIG'),
-    ('TADS0005', '2025-11-02T15:30:00-03:00', 600.00, 200, 50, 1, 'GIG', 'CWB'),
-    ('TADS0006', '2025-11-03T16:45:00-03:00', 450.00, 150, 20, 1, 'CWB', 'BSB'),
-    ('TADS0007', '2025-11-04T18:00:00-03:00', 700.00, 220, 100, 1, 'BSB', 'REC'),
-    ('TADS0008', '2025-11-05T19:15:00-03:00', 800.00, 250, 240, 1, 'REC', 'SSA'),
-    ('TADS0009', '2025-11-06T20:30:00-03:00', 500.00, 180, 30, 1, 'SSA', 'CNF'),
-    ('TADS0010', '2025-11-07T21:45:00-03:00', 400.00, 150, 5, 1, 'CNF', 'POA'),
-    ('TADS0011', '2025-11-08T22:00:00-03:00', 650.00, 200, 80, 1, 'POA', 'GRU'),
-    ('TADS0012', '2025-11-09T23:15:00-03:00', 750.00, 220, 150, 1, 'GRU', 'BSB'),
-    ('TADS0013', '2025-11-10T08:00:00-03:00', 600.00, 200, 60, 1, 'BSB', 'CWB'),
-    ('TADS0014', '2025-11-11T09:30:00-03:00', 550.00, 180, 90, 1, 'CWB', 'REC'),
-    ('TADS0015', '2025-11-12T10:45:00-03:00', 500.00, 150, 40, 1, 'REC', 'GIG'),
-    ('TADS0016', '2025-11-13T12:00:00-03:00', 450.00, 150, 25, 1, 'GIG', 'SSA'),
-    ('TADS0017', '2025-11-14T13:15:00-03:00', 700.00, 220, 120, 1, 'SSA', 'CNF'),
-    ('TADS0018', '2025-11-15T14:30:00-03:00', 800.00, 250, 180, 1, 'CNF', 'POA');
+    ('TADS0001', '2025-05-16T10:30:00-03:00', 500.00, 150, 2, 1, 'POA', 'CWB'),
+    ('TADS0002', '2025-05-16T09:30:00-03:00', 450.00, 150, 1, 1, 'CWB', 'GIG'),
+    ('TADS0003', '2025-05-16T08:30:00-03:00', 400.00, 150, 1, 1, 'CWB', 'POA'),
+    ('TADS0004', '2025-05-16T14:00:00-03:00', 500.00, 180, 10, 1, 'GRU', 'GIG'),
+    ('TADS0005', '2025-05-16T15:30:00-03:00', 600.00, 200, 50, 1, 'GIG', 'CWB'),
+    ('TADS0006', '2025-05-16T16:45:00-03:00', 450.00, 150, 20, 1, 'CWB', 'BSB'),
+    ('TADS0007', '2025-05-16T18:00:00-03:00', 700.00, 220, 100, 1, 'BSB', 'REC'),
+    ('TADS0008', '2025-05-16T19:15:00-03:00', 800.00, 250, 240, 1, 'REC', 'SSA'),
+    ('TADS0009', '2025-05-16T20:30:00-03:00', 500.00, 180, 30, 1, 'SSA', 'CNF'),
+    ('TADS0010', '2025-05-16T21:45:00-03:00', 400.00, 150, 5, 1, 'CNF', 'POA'),
+    ('TADS0011', '2025-05-16T22:00:00-03:00', 650.00, 200, 80, 1, 'POA', 'GRU'),
+    ('TADS0012', '2025-05-16T23:15:00-03:00', 750.00, 220, 150, 1, 'GRU', 'BSB'),
+    ('TADS0013', '2025-05-17T08:00:00-03:00', 600.00, 200, 60, 1, 'BSB', 'CWB'),
+    ('TADS0014', '2025-05-17T09:30:00-03:00', 550.00, 180, 90, 1, 'CWB', 'REC'),
+    ('TADS0015', '2025-05-17T10:45:00-03:00', 500.00, 150, 40, 1, 'REC', 'GIG'),
+    ('TADS0016', '2025-05-17T12:00:00-03:00', 450.00, 150, 25, 1, 'GIG', 'SSA'),
+    ('TADS0017', '2025-05-17T13:15:00-03:00', 700.00, 220, 120, 1, 'SSA', 'CNF'),
+    ('TADS0018', '2025-05-17T14:30:00-03:00', 800.00, 250, 180, 1, 'CNF', 'POA');
 
 -- Inserts para a tabela estado_resera
 INSERT INTO emiratads_reserva_transaction.estado_reserva (sigla, descricao) VALUES
@@ -79,18 +79,18 @@ INSERT INTO emiratads_reserva_transaction.reserva (codigo, codigo_cliente, codig
 
 -- Inserts para a tabela reserva no schema emiratads_reserva_access
 INSERT INTO emiratads_reserva_access.reserva (codigo, codigo_cliente, codigo_voo, estado, data, poltrona, quantidade_milhas) VALUES
-    ('RES0001', 1, 'TADS0001', 'CRIADA', '2025-08-10T10:30:00-03:00', 1, 200.00),
-    ('RES0001', 1, 'TADS0001', 'CRIADA', '2025-08-10T10:30:00-03:00', 2, 200.00),
-    ('RES0002', 2, 'TADS0002', 'CHECK-IN', '2025-09-11T09:30:00-03:00', 2, 90.00),
-    ('RES0003', 3, 'TADS0003', 'CANCELADA', '2025-10-12T08:30:00-03:00', 3, 80.00);
+    ('RES0001', 1, 'TADS0001', 'CRIADA', '2024-08-10T10:30:00-03:00', 1, 200.00),
+    ('RES0001', 1, 'TADS0001', 'CRIADA', '2024-08-10T10:30:00-03:00', 2, 200.00),
+    ('RES0002', 2, 'TADS0002', 'CHECK-IN', '2024-09-11T09:30:00-03:00', 2, 90.00),
+    ('RES0003', 3, 'TADS0003', 'CANCELADA', '2024-10-12T08:30:00-03:00', 3, 80.00);
     
 -- Inserts para a tabela historico_reserva
 INSERT INTO emiratads_reserva_transaction.historico_reserva (data, reserva_codigo, estado_old, estado_new) VALUES
-    ('2025-08-09T10:00:00-03:00', 'RES0001', NULL, 1),
-    ('2025-09-09T09:00:00-03:00', 'RES0002', NULL, 1),
-    ('2025-09-10T09:00:00-03:00', 'RES0002', 1, 2),
-    ('2025-10-10T08:00:00-03:00', 'RES0003', NULL, 1),
-    ('2025-10-11T08:00:00-03:00', 'RES0003', 1, 3);
+    ('2024-08-09T10:00:00-03:00', 'RES0001', NULL, 1),
+    ('2024-09-09T09:00:00-03:00', 'RES0002', NULL, 1),
+    ('2024-09-10T09:00:00-03:00', 'RES0002', 1, 2),
+    ('2024-10-10T08:00:00-03:00', 'RES0003', NULL, 1),
+    ('2024-10-11T08:00:00-03:00', 'RES0003', 1, 3);
     
 -- Inserts para a tabela poltronas_reservadas
 INSERT INTO emiratads_reserva_transaction.poltronas_reservadas (codigo, codigo_voo, codigo_reserva, codigo_cliente) VALUES
@@ -101,13 +101,13 @@ INSERT INTO emiratads_reserva_transaction.poltronas_reservadas (codigo, codigo_v
 
 -- Inserts para a tabela de transacoes de milhas
 INSERT INTO emiratads_cliente.transacao (cliente_codigo, data, quantidade_milhas, valor, codigo_reserva, descricao, tipo) VALUES
-    (1, '2025-08-01T10:00:00-03:00', 500.00, 2500.00, NULL, 'COMPRA DE MILHAS', 'ENTRADA'),
-    (2, '2025-09-01T10:00:00-03:00', 150.00, 750.00, NULL, 'COMPRA DE MILHAS', 'ENTRADA'),
-    (3, '2025-10-01T10:00:00-03:00', 100.00, 500.00, NULL, 'COMPRA DE MILHAS', 'ENTRADA'),
-    (1, '2025-08-10T10:30:00-03:00', -200.00, 0.00, 'RES0001', 'POA->CWB', 'SAIDA'),
-    (2, '2025-09-11T09:30:00-03:00', -90.00, 0.00, 'RES0002', 'CWB->GIG', 'SAIDA'),
-    (3, '2025-10-12T08:30:00-03:00', -80.00, 0.00, 'RES0003', 'CWB->POA', 'SAIDA'),
-    (3, '2025-10-13T10:00:00-03:00', 80.00, 0.00, 'RES0003', 'REEMBOLSO', 'ENTRADA');
+    (1, '2024-08-01T10:00:00-03:00', 500.00, 2500.00, NULL, 'COMPRA DE MILHAS', 'ENTRADA'),
+    (2, '2024-09-01T10:00:00-03:00', 150.00, 750.00, NULL, 'COMPRA DE MILHAS', 'ENTRADA'),
+    (3, '2024-10-01T10:00:00-03:00', 100.00, 500.00, NULL, 'COMPRA DE MILHAS', 'ENTRADA'),
+    (1, '2024-08-10T10:30:00-03:00', -200.00, 0.00, 'RES0001', 'POA->CWB', 'SAIDA'),
+    (2, '2024-09-11T09:30:00-03:00', -90.00, 0.00, 'RES0002', 'CWB->GIG', 'SAIDA'),
+    (3, '2024-10-12T08:30:00-03:00', -80.00, 0.00, 'RES0003', 'CWB->POA', 'SAIDA'),
+    (3, '2024-10-13T10:00:00-03:00', 80.00, 0.00, 'RES0003', 'REEMBOLSO', 'ENTRADA');
 
 -- Atualizar o saldo_milhas na tabela cliente
 UPDATE emiratads_cliente.cliente c
