@@ -36,7 +36,7 @@ const useOfferSection = () => {
   useEffect(() => {
     const offersList = getOffers();
     setOffers(offersList);
-  }, [userData]);
+  }, [getOffers, userData, flightList]);
 
   return { getOffers, offers };
 };

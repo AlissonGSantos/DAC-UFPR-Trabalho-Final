@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Booking } from "@/app/types/BookingTypes";
 import bookingService from "../../services/bookingService";
 
 export default function useBooking(codigo: string) {
   const [booking, setBooking] = useState<Booking>({} as Booking);
   const [loading, setLoading] = useState(true);
-  const fetchBooking = async () => {
+  
+  const fetchBooking = useCallback(async () => {
     try {
       setLoading(true);
       const response = await bookingService.getBooking(codigo);
@@ -15,11 +16,11 @@ export default function useBooking(codigo: string) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [codigo]);
 
   useEffect(() => {
     fetchBooking();
-  }, [codigo]);
+  }, [codigo, fetchBooking]);
 
   return { booking, loading };
 }

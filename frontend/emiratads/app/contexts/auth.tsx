@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from "react";
 import { EmployeeEnum, UserAuth } from "../types/AuthTypes";
 import loginServices from "../authentication/services/loginServices";
@@ -39,16 +40,19 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userData, setUserData] = useState<UserAuth | undefined | null>(null);
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
-  const updateMilesBalance = (miles: number) => {
-    if (userData) {
-      const updatedUserData: UserAuth = {
-        ...userData,
-        usuario: { ...userData.usuario, saldo_milhas: miles },
-      };
-      setUserData(updatedUserData);
-      saveToCookies("user", JSON.stringify(updatedUserData));
-    }
-  };
+  const updateMilesBalance = useCallback(
+    (miles: number) => {
+      if (userData) {
+        const updatedUserData: UserAuth = {
+          ...userData,
+          usuario: { ...userData.usuario, saldo_milhas: miles },
+        };
+        setUserData(updatedUserData);
+        saveToCookies("user", JSON.stringify(updatedUserData));
+      }
+    },
+    [userData]
+  );
 
   const login = (data: UserAuth) => {
     setIsLogged(true);
@@ -57,7 +61,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     saveToCookies("user", JSON.stringify(data));
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     setIsLogged(false);
     setUserData(null);
     if (userData) {
@@ -68,14 +72,14 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     document.cookie = "token=; path=/; max-age=0";
     document.cookie = "user=; path=/; max-age=0";
     window.location.href = "/authentication/login";
-  };
+  }, [userData]);
 
-  const getUserType = (): EmployeeEnum | null => {
+  const getUserType = useCallback((): EmployeeEnum | null => {
     if (userData) {
       return userData.tipo;
     }
     return null;
-  };
+  }, [userData]);
 
   useEffect(() => {
     const token = getFromCookies("token");
@@ -90,6 +94,12 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (userData) {
+      saveToCookies("user", JSON.stringify(userData));
+    }
+  }, [userData]);
+
   const contextValue = useMemo(
     () => ({
       userData,
@@ -101,7 +111,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       updateMilesBalance,
       getUserType,
     }),
-    [userData, isLogged]
+    [userData, logout, isLogged, updateMilesBalance, getUserType]
   );
 
   return (
