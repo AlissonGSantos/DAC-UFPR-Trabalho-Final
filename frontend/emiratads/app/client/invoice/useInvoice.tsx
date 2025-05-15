@@ -5,7 +5,7 @@ import { Invoice, FilterOptions } from "@/app/types/InvoiceTypes";
 import milesServices from "@/app/mileage/services/milesServices";
 
 const useInvoice = () => {
-  const { userData } = useAuthContext();
+  const { userData, updateMilesBalance } = useAuthContext();
   const [invoice, setInvoice] = useState<Invoice>();
   const [isCardView, setIsCardView] = useState(true);
   const [filter, setFilter] = useState<FilterOptions>("all");
@@ -76,6 +76,7 @@ const useInvoice = () => {
       if (codigo) {
         const response = await milesServices.getMiles(codigo);
 
+        updateMilesBalance(response.saldo_milhas);
         setInvoice(response);
       }
     } catch (error) {
