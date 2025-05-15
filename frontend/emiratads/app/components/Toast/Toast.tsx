@@ -37,7 +37,7 @@ const Toast: React.FC<ToastProps> = ({
       }`}
     >
       <div className="flex items-center gap-2">
-        <div className="flex text-md uppercase">{message}</div>
+        <div className="flex text-md">{message}</div>
         <button
           onClick={onClose}
           className="text-white hover:text-gray-300 text-3xl cursor-pointer transition mb-2"

@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Aeroporto, Flight } from "../types/FlightTypes";
 import flightServices from "../services/flightServices";
 import { useAuthContext } from "./auth";
@@ -28,7 +28,7 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const { userData } = useAuthContext();
 
-  const fetchInformation = async () => {
+  const fetchInformation = useCallback(async () => {
     try {
       if (!userData?.usuario.codigo) return;
       setFlightListLoading(true);
@@ -42,11 +42,11 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setFlightListLoading(false);
     }
-  };
+  }, [userData?.usuario.codigo]);
 
   useEffect(() => {
     fetchInformation();
-  }, [userData?.usuario.codigo]);
+  }, [fetchInformation, userData?.usuario.codigo]);
 
   const contextValue = useMemo(
     () => ({
@@ -58,7 +58,7 @@ export const FlightContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setSelectedFlight,
       aeroportos,
     }),
-    [flightList, flightListLoading, selectedFlight]
+    [aeroportos, flightList, flightListLoading, selectedFlight]
   );
 
   return (

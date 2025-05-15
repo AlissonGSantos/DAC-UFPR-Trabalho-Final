@@ -6,6 +6,7 @@ import CancelFlightModal from "../CancelFlightModal/CancelFlightModal";
 import ConfirmBoardModal from "../ConfirmBoardModal/ConfirmBoardModal";
 import { Flight } from "@/app/types/FlightTypes";
 import FinishFlightModal from "../FinishFlightModal/FinishFlightModal";
+import Toast from "@/app/components/Toast/Toast";
 
 const FlightTable: React.FC = () => {
   const {
@@ -22,10 +23,21 @@ const FlightTable: React.FC = () => {
     setIsFinishModalOpen,
     onConfirmBoard,
     confirmFinishFlight,
+    isToastOpen,
+    setIsToastOpen,
   } = useFlightTable();
 
   return (
     <div className="flex w-full justify-center items-center gap-4">
+      <Toast
+        message={"Ocorreu um erro inesperado, tente novamente mais tarde."}
+        type={"ERROR"}
+        isOpen={isToastOpen}
+        onClose={() => {
+          setIsToastOpen(false);
+        }}
+        duration={3000}
+      />
       <DataTable data={data} columns={columns} controls={controls} />
       <ConfirmBoardModal
         onClose={closeConfirmBoard}
@@ -41,7 +53,6 @@ const FlightTable: React.FC = () => {
         onDelete={cancelFlight}
       />
       <FinishFlightModal
-        flight={selectedFlight ?? ({} as Flight)}
         isOpen={isFinishModalOpen}
         onClose={() => {
           setIsFinishModalOpen(false);

@@ -6,6 +6,7 @@ import useRegisterFlightForm from "./useRegisterFlightForm";
 import { maskCurrency } from "@/app/utils/currencyMask";
 import { robotoFont } from "@/app/assets/fontsSetup";
 import SelectInput from "@/app/components/SelectInput/SelectInput";
+import Toast from "@/app/components/Toast/Toast";
 
 const RegisterFlightForm = () => {
   const {
@@ -26,6 +27,13 @@ const RegisterFlightForm = () => {
         CADASTRO DE VOO
       </h1>
       <div className="flex w-3/4 flex-row mx-auto justify-center">
+        <Toast
+          message={"Ocorreu um erro inesperado, tente novamente mais tarde."}
+          type={"ERROR"}
+          isOpen={false}
+          onClose={() => {}}
+          duration={3000}
+        />
         <form
           className="flex w-full flex-col gap-3"
           onSubmit={handleSubmit(onSubmit)}
