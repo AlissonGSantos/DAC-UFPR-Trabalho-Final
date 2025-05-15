@@ -7,6 +7,8 @@ import { Flight, statusFlightEnum } from "@/app/types/FlightTypes";
 import { AirplaneLanding, Check, X } from "phosphor-react";
 import useFlightContext from "@/app/contexts/flight";
 import flightServices from "@/app/services/flightServices";
+import bookingService from "@/app/client/services/bookingService";
+import { statusBookingEnum } from "@/app/types/BookingTypes";
 
 const useFlightTable = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -16,6 +18,8 @@ const useFlightTable = () => {
   const { flightList, setFlightList } = useFlightContext();
   const [flightListState, setFlightListState] = useState<Flight[]>([]);
   const [isToastOpen, setIsToastOpen] = useState(false);
+  const [bookingCode, setBookingCode] = useState<string>("");
+  const [boardSuccessModalOpen, setBoardSuccessModalOpen] = useState(false);
 
   const columns: ColumnDef<Flight>[] = useMemo(
     () => [
@@ -129,17 +133,33 @@ const useFlightTable = () => {
     setSelectedFlight(flight);
   };
 
-  const confirmBoard = () => {
-    setIsBoardModalOpen(false);
-    const newFlight: Flight = {
-      ...selectedFlight!,
-      estado: statusFlightEnum.CONFIRMADO,
-    };
-    const newFlightList: Flight[] = flightList.map((f) =>
-      f.codigo === selectedFlight?.codigo ? newFlight : f
-    );
-    setFlightList(newFlightList);
-  };
+  const confirmBoard = useCallback(
+    async (bookingCode: string) => {
+      try {
+        setIsBoardModalOpen(false);
+
+        if (!selectedFlight?.codigo) {
+          throw new Error("Código do voo não encontrado");
+        }
+
+        const response = await bookingService.updateBookingStatus(bookingCode, {
+          estado: statusBookingEnum.EMBARCADA,
+        });
+
+        if (!response) {
+          throw new Error("Erro ao embarcar o cliente");
+        }
+
+        setBookingCode(bookingCode);
+
+        setBoardSuccessModalOpen(true);
+      } catch (error) {
+        console.error("Error confirming board:", error);
+        setIsToastOpen(true);
+      }
+    },
+    [selectedFlight]
+  );
 
   const confirmFinishFlight = useCallback(async () => {
     try {
@@ -202,6 +222,12 @@ const useFlightTable = () => {
     []
   );
 
+  const onCloseBoardSuccessModal = () => {
+    setBoardSuccessModalOpen(false);
+    setBookingCode("");
+    window.location.reload();
+  };
+
   return {
     data: flightListState,
     columns,
@@ -225,6 +251,9 @@ const useFlightTable = () => {
     handleFinishFlight,
     setIsToastOpen,
     isToastOpen,
+    bookingCode,
+    boardSuccessModalOpen,
+    onCloseBoardSuccessModal,
   };
 };
 
