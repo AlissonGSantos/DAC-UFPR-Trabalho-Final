@@ -1,7 +1,11 @@
 import apiRoutes from "@/app/utils/apiRoutes";
 import { Aeroporto, Flight } from "../types/FlightTypes";
 import axiosInstance from "./axiosInstance";
-import { CreateFlightRequest, FlightsResponse } from "./flightServiceModels";
+import {
+  CreateFlightRequest,
+  FlightsResponse,
+  PatchFlightStateDTO,
+} from "./flightServiceModels";
 const apiUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const flightServices = {
@@ -41,6 +45,18 @@ const flightServices = {
   getAirports: async (): Promise<Aeroporto[]> => {
     const res = await axiosInstance.get<Aeroporto[]>(
       `${apiUrl}${apiRoutes.flight.airports}`
+    );
+    const data = res.data;
+    return data;
+  },
+
+  patchFlightState: async (
+    flightId: string,
+    state: PatchFlightStateDTO
+  ): Promise<Flight> => {
+    const res = await axiosInstance.patch<Flight>(
+      `${apiUrl}${apiRoutes.flight.flight_status(flightId)}`,
+      state
     );
     const data = res.data;
     return data;

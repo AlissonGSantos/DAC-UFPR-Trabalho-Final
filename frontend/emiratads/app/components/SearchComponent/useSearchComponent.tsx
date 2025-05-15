@@ -29,6 +29,11 @@ const useSearchComponent = (fromHome: boolean) => {
     let filteredFlights = flights;
 
     if (fromHome) {
+      if (bookingList.length === 0) {
+        setActiveFlightList([]);
+        setShowFlightTable(false);
+        return;
+      }
       filteredFlights = bookingList
         .filter((booking) => booking.voo.estado !== statusFlightEnum.CONFIRMADO)
         .map((booking) => booking.voo);

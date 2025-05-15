@@ -1,39 +1,78 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-interface UseDataTableProps {
-  data: any[];
+interface UseDataTableProps<T> {
+  data: T[];
 }
 
-const useDataTable = ({ data: usedData }: UseDataTableProps) => {
-  const [data, setData] = useState(usedData);
+const useDataTable = <T extends object>({
+  data: usedData,
+}: UseDataTableProps<T>) => {
+  const [filteredData, setFilteredData] = useState<T[]>(usedData || []);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
 
-  const filterData = () => {
-    if (!searchTerm) return usedData;
-    return data.filter((item) => {
-      return Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase())
-      );
+  const filterData = useCallback(() => {
+    if (!searchTerm) {
+      return usedData || [];
+    }
+
+    if (!usedData || !Array.isArray(usedData)) {
+      return [];
+    }
+
+    const searchTermLower = searchTerm.toLowerCase().trim();
+
+    return usedData.filter((item) => {
+      if (!item) return false;
+
+      const searchInObject = (obj: any): boolean => {
+        for (const key in obj) {
+          const value = obj[key];
+
+          if (key.startsWith("_") || typeof value === "function") {
+            continue;
+          }
+
+          if (value === null || value === undefined) {
+            continue;
+          }
+
+          if (typeof value === "object") {
+            if (searchInObject(value)) {
+              return true;
+            }
+            continue;
+          }
+
+          const valueStr = String(value).toLowerCase();
+          if (valueStr.includes(searchTermLower)) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      return searchInObject(item);
     });
-  };
+  }, [searchTerm, usedData]);
 
   useEffect(() => {
-    const filteredData = filterData();
-    setData(filteredData);
-  }, [searchTerm]);
+    const result = filterData();
+    setFilteredData(result);
+  }, [searchTerm, filterData]);
 
   useEffect(() => {
-    setData(usedData);
-  },[usedData])
-  
+    const result = searchTerm ? filterData() : usedData || [];
+    setFilteredData(result);
+  }, [usedData, filterData, searchTerm]);
+
   return {
-    currentData: data,
+    currentData: filteredData,
     handleSearch,
-    filterData,
+    searchTerm,
   };
 };
 

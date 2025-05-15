@@ -1,6 +1,3 @@
-/* URL: viacep.com.br/ws/01001000/json/
- */
-
 import { CEPResponse } from "@/app/types/AuthTypes";
 import { RegisterFormData } from "../register/schema/schema";
 import apiRoutes from "@/app/utils/apiRoutes";
@@ -17,7 +14,7 @@ const registerServices = {
   registerUser: async (data: RegisterFormData) => {
     try {
       const res = await axiosInstance.post<RegisterFormData>(
-        `${process.env.NEXT_PUBLIC_API_URL}${apiRoutes.authentication.register}`,
+        `${apiRoutes.authentication.register}`,
         data
       );
       return res.data;

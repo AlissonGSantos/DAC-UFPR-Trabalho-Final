@@ -8,6 +8,7 @@ import Button from "@/app/components/Button/Button";
 import ConfirmBookModal from "./components/ConfirmBookModal/ConfirmBookModal";
 import Toast from "@/app/components/Toast/Toast";
 import Input from "@/app/components/Input/Input";
+import BookingCodeModal from "./components/BookingCodeModal/BookingCodeModal";
 
 const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
   const { codigo } = use(params);
@@ -36,6 +37,9 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
     errors,
     inputError,
     milesTotal,
+    showSuccessModal,
+    bookingCode,
+    onCloseBookingSuccessModal,
   } = useFlightDetail(codigo);
 
   if (!codigo) {
@@ -275,6 +279,22 @@ const FlightDetail = ({ params }: { params: Promise<{ codigo: string }> }) => {
         type={"ERROR"}
         duration={3000}
       />
+      <BookingCodeModal
+        title="Código de reserva"
+        bookingCode={bookingCode}
+        isOpen={showSuccessModal}
+        onClose={onCloseBookingSuccessModal}
+      >
+        <div className="flex flex-col w-full h-full text-slate-400">
+          <p>
+            Seu código de reserva é: <strong>{bookingCode}</strong>
+          </p>
+          <p>
+            Você pode usar esse código para acessar sua reserva em nosso
+            sistema.
+          </p>
+        </div>
+      </BookingCodeModal>
     </div>
   );
 };

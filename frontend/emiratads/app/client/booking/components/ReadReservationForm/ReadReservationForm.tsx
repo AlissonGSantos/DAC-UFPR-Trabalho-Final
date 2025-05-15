@@ -41,7 +41,7 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
           className="flex w-full flex-col gap-3"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row gap-8  justify-around">
             <Input
               type="text"
               label="Código de Reserva:"
@@ -78,7 +78,7 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
             />
           </div>
 
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row gap-8  justify-around">
             <Input
               type="text"
               label="Origem:"
@@ -115,7 +115,7 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
             />
           </div>
 
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row gap-8 justify-around">
             <Input
               type="text"
               label="Valor (R$):"
@@ -140,6 +140,26 @@ const ReadReservationForm: React.FC<ReadReservationFormProps> = ({
               error={
                 errors.miles
                   ? [{ hasError: true, message: errors.miles.message ?? "" }]
+                  : []
+              }
+              extraClasses="flex-1"
+              disabled
+            />
+          </div>
+
+          <div className="flex flex-row justify-around">
+            <Input
+              type="text"
+              label="Status da Reserva:"
+              {...register("bookingStatus")}
+              error={
+                errors.bookingStatus
+                  ? [
+                      {
+                        hasError: true,
+                        message: errors.bookingStatus.message ?? "",
+                      },
+                    ]
                   : []
               }
               extraClasses="flex-1"

@@ -24,7 +24,6 @@ const useEmployeeTable = () => {
     try {
       setLoading(true);
       const employees = await employeeServices.getAllEmployees();
-      console.log("Fetched employees:", employees);
       const formattedEmployees = employees.map((employee) => ({
         ...employee,
         cpf: maskCPF(employee.cpf),

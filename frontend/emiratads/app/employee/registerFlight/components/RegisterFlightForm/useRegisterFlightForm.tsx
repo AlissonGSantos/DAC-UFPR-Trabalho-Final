@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { RegisterFlightSchema } from "../../schema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useFlightContext from "@/app/contexts/flight";
-import { Aeroporto, Flight, statusFlightEnum } from "@/app/types/FlightTypes";
+import { Flight } from "@/app/types/FlightTypes";
 import { convertFromMaskToInteger } from "@/app/utils/currencyMask";
+import flightServices from "@/app/services/flightServices";
 
 type RegisterFlightFormData = z.infer<typeof RegisterFlightSchema>;
 
@@ -21,6 +22,8 @@ const useRegisterFlightForm = () => {
   >([]);
 
   const { aeroportos, setFlightList, flightList } = useFlightContext();
+
+  const [isToastOpen, setIsToastOpen] = useState(false);
 
   useEffect(() => {
     setOriginOptions(
@@ -36,7 +39,7 @@ const useRegisterFlightForm = () => {
         label: aeroporto.nome,
       }))
     );
-  }, []);
+  }, [aeroportos]);
 
   const {
     register,
@@ -80,28 +83,41 @@ const useRegisterFlightForm = () => {
     setDestinationOptions((prevOptions) =>
       prevOptions.filter((option) => option.value !== selectedOrigin)
     );
-  }, [watch("OriginAirport"), watch("DestinationAirport")]);
+  }, [watch, watch("OriginAirport"), watch("DestinationAirport")]);
 
-  const onSubmit = (data: RegisterFlightFormData) => {
-    const newFlight: Flight = {
-      codigo: Math.random().toString(36).substring(2, 9),
-      aeroporto_origem: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === data.OriginAirport
-      ) as Aeroporto,
-      aeroporto_destino: aeroportos.find(
-        (aeroporto) => aeroporto.codigo === data.DestinationAirport
-      ) as Aeroporto,
-      data: data.dateTimeFlight,
-      valor_passagem: parseFloat(data.ticketValue),
-      quantidade_poltronas_total: parseInt(data.seatsQuantity, 10),
-      quantidade_poltronas_ocupadas: 0,
-      estado: statusFlightEnum.CONFIRMADO,
-    };
+  const onSubmit = useCallback(
+    async (data: RegisterFlightFormData) => {
+      try {
+        const date = new Date(data.dateTimeFlight);
+        const isoString = date.toISOString().replace(/\.\d+Z$/, "-03:00");
 
-    setFlightList([...flightList, newFlight]);
+        const createFlightRequest = {
+          data: isoString,
+          valor_passagem: convertFromMaskToInteger(ticketValue),
+          quantidade_poltronas_total: parseInt(data.seatsQuantity, 10),
+          codigo_aeroporto_origem: data.OriginAirport,
+          codigo_aeroporto_destino: data.DestinationAirport,
+        };
 
-    setShowSuccess(true);
-  };
+        const response = await flightServices.createFlight(createFlightRequest);
+
+        if (!response) {
+          throw new Error("Failed to create flight");
+        }
+
+        const updatedFlight: Flight = response;
+
+        const updatedFlightList = [...flightList, updatedFlight];
+        setFlightList(updatedFlightList);
+
+        setShowSuccess(true);
+      } catch (error) {
+        console.error("Error creating flight:", error);
+        setIsToastOpen(true);
+      }
+    },
+    [flightList, setFlightList]
+  );
 
   return {
     register,
@@ -111,6 +127,8 @@ const useRegisterFlightForm = () => {
     showSuccess,
     originOptions,
     destinationOptions,
+    isToastOpen,
+    setIsToastOpen,
   };
 };
 

@@ -31,7 +31,7 @@ const useConfirmBoardForm = ({
     },
   });
 
-  const handleInputChange = (field: "code", value: any) => {
+  const handleInputChange = (field: "code", value: string) => {
     setInputValue(value);
     if (onChange && field === "code") {
       onChange(value as string);

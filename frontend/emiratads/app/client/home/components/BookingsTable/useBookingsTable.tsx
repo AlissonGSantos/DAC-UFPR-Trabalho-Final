@@ -116,20 +116,24 @@ const useBookingsTable = () => {
     ].filter(Boolean) as ButtonProps[];
 
   useEffect(() => {
-    const list = bookingList.filter((booking) => booking.estado === "CRIADA");
+    if (!bookingList || !Array.isArray(bookingList)) {
+      setBookings([]);
+      return;
+    }
 
-    setBookings(list.length > 0 ? list : []);
+    const list = bookingList.filter((booking) => booking.estado === "CRIADA");
+    setBookings(list.length > 0 ? list : bookingList);
   }, [bookingList]);
 
   return {
-    bookingList,
+    bookingList: bookingList || [],
     columns,
     controls,
     selectedBooking,
     isCancelModalOpen,
     onDismissCancelModal,
     onCancelBooking,
-    bookings,
+    bookings: bookings || [],
   };
 };
 

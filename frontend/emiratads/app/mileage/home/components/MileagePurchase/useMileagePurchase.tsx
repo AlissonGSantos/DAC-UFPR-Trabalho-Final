@@ -47,7 +47,6 @@ const useMileagePurchase = () => {
   const onConfirmBuy = async () => {
     try {
       const data = await fetchMileageService(miles);
-      console.log("Dados da compra:", data);
       if (!data) {
         throw new Error("Erro ao comprar milhas.");
       }

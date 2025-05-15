@@ -3,7 +3,7 @@ import { ButtonProps } from "@/app/components/Button/Button";
 import useBookingContext from "@/app/contexts/booking";
 import { Booking, statusBookingEnum } from "@/app/types/BookingTypes";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const useCheckinTable = () => {
   const { bookingList, setBookingList } = useBookingContext();
@@ -45,37 +45,34 @@ const useCheckinTable = () => {
     setIsSuccessModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log("Booking List:", bookingList);
-  }, [bookingList]);
-
-  const onPerformCheckin = async (booking: Booking) => {
-    if (booking.estado !== statusBookingEnum.CRIADA) {
-      alert("Apenas reservas no estado CRIADA podem receber check-in.");
-      return;
-    }
-
-    const response = await bookingService.checkInBooking(booking.codigo);
-
-    console.log("Check-in response:", response);
-
-    if (!response) {
-      alert("Erro ao realizar check-in. Tente novamente mais tarde.");
-      return;
-    }
-
-    const newBookingList = bookingList.map((b) => {
-      if (b.codigo === response.codigo) {
-        return { ...b, estado: statusBookingEnum.CHECK_IN };
+  const onPerformCheckin = useCallback(
+    async (booking: Booking) => {
+      if (booking.estado !== statusBookingEnum.CRIADA) {
+        alert("Apenas reservas no estado CRIADA podem receber check-in.");
+        return;
       }
-      return b;
-    });
 
-    setBookingList(newBookingList);
+      const response = await bookingService.checkInBooking(booking.codigo);
 
-    setIsCheckinModalOpen(false);
-    setIsSuccessModalOpen(true);
-  };
+      if (!response) {
+        alert("Erro ao realizar check-in. Tente novamente mais tarde.");
+        return;
+      }
+
+      const newBookingList = bookingList.map((b) => {
+        if (b.codigo === response.codigo) {
+          return { ...b, estado: statusBookingEnum.CHECK_IN };
+        }
+        return b;
+      });
+
+      setBookingList(newBookingList);
+
+      setIsCheckinModalOpen(false);
+      setIsSuccessModalOpen(true);
+    },
+    [bookingList, setBookingList]
+  );
 
   const columns: ColumnDef<Booking>[] = [
     {

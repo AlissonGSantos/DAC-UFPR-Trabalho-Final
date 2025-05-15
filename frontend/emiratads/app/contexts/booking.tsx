@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Booking } from "../types/BookingTypes";
 import clientService from "../client/services/clientService";
 import { useAuthContext } from "./auth";
@@ -23,14 +30,17 @@ export const BookingContextProvider: React.FC<{
   const [bookingList, setBookingList] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
-  const getBookingById = (id: string): Booking | undefined => {
-    return bookingList.find((booking) => booking.codigo === id);
-  };
+  const getBookingById = useCallback(
+    (id: string): Booking | undefined => {
+      return bookingList.find((booking) => booking.codigo === id);
+    },
+    [bookingList]
+  );
 
   const { userData } = useAuthContext();
 
-  const fetchBookings = async () => {
-    if (userData?.usuario.codigo && userData?.usuario.tipo === "CLIENTE") {
+  const fetchBookings = useCallback(async () => {
+    if (userData?.usuario.codigo && userData?.tipo === "CLIENTE") {
       try {
         const bookings = await clientService.getBookings(
           userData.usuario.codigo
@@ -40,11 +50,11 @@ export const BookingContextProvider: React.FC<{
         console.error("Error fetching bookings:", error);
       }
     }
-  };
+  }, [userData?.usuario.codigo, userData?.tipo]);
 
   useEffect(() => {
     fetchBookings();
-  }, [userData?.usuario.codigo, userData?.usuario.tipo]);
+  }, [userData?.usuario.codigo, userData?.tipo, fetchBookings]);
 
   const contextValue = useMemo(
     () => ({
@@ -54,7 +64,7 @@ export const BookingContextProvider: React.FC<{
       setSelectedBooking,
       getBookingById,
     }),
-    [bookingList, selectedBooking]
+    [bookingList, selectedBooking, getBookingById]
   );
 
   return (
