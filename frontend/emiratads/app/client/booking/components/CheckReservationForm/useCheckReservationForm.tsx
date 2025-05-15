@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Booking } from "@/app/types/BookingTypes";
 import bookingService from "@/app/client/services/bookingService";
+import { useAuthContext } from "@/app/contexts/auth";
 
 type CheckReservationFormData = z.infer<typeof CheckReservationSchema>;
 
@@ -14,6 +15,7 @@ const useCheckReservationForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(false);
+  const { userData, updateMilesBalance } = useAuthContext();
 
   const {
     register,
@@ -45,8 +47,15 @@ const useCheckReservationForm = () => {
 
     try {
       setLoading(true);
-      await bookingService.cancelBooking(selectedBooking.codigo);
+      const cancelResponse = await bookingService.cancelBooking(selectedBooking.codigo);
+
+      if (!cancelResponse) {
+        alert("Erro ao cancelar reserva. Tente novamente mais tarde.");
+        return;
+      }
+
       alert(`Reserva ${selectedBooking.codigo} cancelada com sucesso!`);
+      updateMilesBalance(cancelResponse.saldo_cliente);
       setSelectedBooking(null);
       setShowSuccess(false);
     } catch (error) {

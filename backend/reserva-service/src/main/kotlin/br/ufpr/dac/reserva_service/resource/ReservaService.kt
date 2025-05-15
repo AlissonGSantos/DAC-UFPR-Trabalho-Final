@@ -126,6 +126,7 @@ class ReservaService(
             throw IllegalArgumentException("Uma reserva só pode ser cancelada nos estados CRIADA ou CHECK-IN")
         }
 
+        poltronaRepository.deletePoltronasCanceladas(codigo)
         return atualizarEstadoReserva(reserva, EstadoReservaEnum.CANCELADA.codigo)
     }
 
@@ -146,16 +147,16 @@ class ReservaService(
     fun realizaVoo(voo: VooOutputDTO) {
         val reservas = repository.findByCodigoVoo(voo.codigo)
         reservas.forEach { res ->
-            val estado = if (res.estado.codigo == EstadoReservaEnum.EMBARCADA.codigo){
-                EstadoReservaEnum.REALIZADA
-            } else{
-                EstadoReservaEnum.NAO_REALIZADA
+            val estado = when (res.estado.codigo) {
+                EstadoReservaEnum.EMBARCADA.codigo -> EstadoReservaEnum.REALIZADA
+                EstadoReservaEnum.CANCELADA.codigo -> EstadoReservaEnum.CANCELADA
+                else -> EstadoReservaEnum.NAO_REALIZADA
             }
             atualizarEstadoReserva(res, estado.codigo)
         }
     }
 
-    private fun atualizarEstadoReserva( reserva: Reserva, codigo_estado: Long ): ReservaOutputDTO {
+    private fun atualizarEstadoReserva(reserva: Reserva, codigo_estado: Long): ReservaOutputDTO {
         val data = ZonedDateTime.now(ZoneOffset.of("-03:00"))
         val estadoAntigo = reserva.estado
         val estadoNovo = estadoReservaRepository.findById(codigo_estado).get()

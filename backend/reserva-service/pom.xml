@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>reserva-service</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>reserva-service</name>
 	<description>Módulo responsável pela manutenção das reservas feitas pelos clientes</description>
 

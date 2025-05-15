@@ -162,7 +162,7 @@ const useFlightDetail = (codigo: string) => {
         f.codigo === codigo ? updatedFlight : f
       );
 
-      const newMilesBalance = userMilesBalance - milesToUse + milesTotal;
+      const newMilesBalance = userMilesBalance - milesToUse;
 
       const createBookingResponse = await bookingService.createBooking({
         valor: totalPrice,
