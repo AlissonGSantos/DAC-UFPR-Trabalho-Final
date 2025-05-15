@@ -45,10 +45,6 @@ const useCheckinTable = () => {
     setIsSuccessModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log("Booking List:", bookingList);
-  }, [bookingList]);
-
   const onPerformCheckin = useCallback(
     async (booking: Booking) => {
       if (booking.estado !== statusBookingEnum.CRIADA) {
@@ -57,8 +53,6 @@ const useCheckinTable = () => {
       }
 
       const response = await bookingService.checkInBooking(booking.codigo);
-
-      console.log("Check-in response:", response);
 
       if (!response) {
         alert("Erro ao realizar check-in. Tente novamente mais tarde.");

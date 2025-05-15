@@ -79,9 +79,6 @@ const useFlightTable = () => {
       );
     });
 
-    console.log(flights);
-
-    console.log("Filtered Flights:", filteredFlights);
     return filteredFlights;
   };
 

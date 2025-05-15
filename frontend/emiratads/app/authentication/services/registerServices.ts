@@ -13,7 +13,6 @@ const registerServices = {
   },
   registerUser: async (data: RegisterFormData) => {
     try {
-      console.log(`${process.env.NEXT_PUBLIC_API_URL}${apiRoutes.authentication.register}`)
       const res = await axiosInstance.post<RegisterFormData>(
         `${apiRoutes.authentication.register}`,
         data
