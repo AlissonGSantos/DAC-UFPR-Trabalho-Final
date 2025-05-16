@@ -77,11 +77,17 @@ O frontend está em [frontend/emiratads](frontend/emiratads/README.md) e utiliza
 
 ## Como Executar o Projeto
 
-1. **Pré-requisitos**: Java 17, Node.js, Docker e Docker Compose, Maven.
+1. **Pré-requisitos**: Java 17, Node.js, Docker e Docker Compose, Maven, e Variáveis de ambiente configuradas.
 2. **Compilar os microsserviços**:
    ```bash
    cd backend/voo-service && mvn clean install
    # repita para cada serviço
+   ```
+   ou use o script `starter.sh` ou `starter.bat` para compilar todos os serviços de uma vez e subir o Docker Compose:
+   ```
+   ./starter.sh --build
+   # ou
+   starter.bat --build
    ```
 3. **Subir os serviços com Docker Compose**:
    ```bash
