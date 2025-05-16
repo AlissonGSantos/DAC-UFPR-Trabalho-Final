@@ -12,7 +12,8 @@ export const maskCurrency = (value: string | number): string => {
       });
 };
 
-export const convertFromMaskToInteger = (value: string): number => {
-  const numericValue = parseFloat(value.replace(/\D/g, ""));
-  return isNaN(numericValue) ? 0 : numericValue;
+export const convertFromMaskToInteger = (maskedValue: string): number => {
+  if (!maskedValue) return 0;
+  const onlyNumbers = maskedValue.replace(/\D/g, "");
+  return onlyNumbers ? parseFloat(onlyNumbers) / 100 : 0;
 };

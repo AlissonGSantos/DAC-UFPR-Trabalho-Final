@@ -65,8 +65,8 @@ const useRegisterFlightForm = () => {
     const value = convertFromMaskToInteger(ticketValue);
 
     if (!isNaN(value)) {
-      const calculatedMiles = Math.floor(value / 500).toString();
-      setValue("miles", calculatedMiles);
+      const calculatedMiles = Math.floor(value / 5); 
+      setValue("miles", calculatedMiles.toString());
     } else {
       setValue("miles", "");
     }
