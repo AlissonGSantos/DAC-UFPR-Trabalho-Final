@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 
 set BUILD=false
 
@@ -9,23 +10,19 @@ for %%A in (%*) do (
 )
 
 if "%BUILD%"=="true" (
-    echo Iniciando a execução do Maven clean install nos projetos...
-    cd backend
+    echo Iniciando a execucao do Maven clean install nos projetos...
     set SERVICES=backend-services-utils saga-orchestration-service autenticacao-service cliente-service reserva-service voo-service funcionario-service
 
-    for %%S in (%SERVICES%) do (
-        cd %%S
+    for %%S in (!SERVICES!) do (
         echo executando %%S
-        mvn clean install -q -DskipTests
-        if %errorlevel% neq 0 (
+        mvn clean install -q -DskipTests -f backend\%%S\pom.xml
+        if !errorlevel! neq 0 (
             echo Erro ao executar o Maven no %%S. Saindo...
-            exit /b %errorlevel%
+            exit /b !errorlevel!
         )
-        cd ..
     )
 
-    echo Maven clean install concluído com sucesso em todos os projetos.
-    cd ..
+    echo Maven clean install concluido com sucesso em todos os projetos.
 ) else (
     echo Flag --build ou -b não detectada. Pulando a etapa de Maven clean install.
 )
