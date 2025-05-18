@@ -15,7 +15,7 @@ const useCheckReservationForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(false);
-  const { userData, updateMilesBalance } = useAuthContext();
+  const { updateMilesBalance } = useAuthContext();
 
   const {
     register,

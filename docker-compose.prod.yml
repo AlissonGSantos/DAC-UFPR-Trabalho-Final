@@ -6,51 +6,34 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: senha0
-    ports:
-      - "5433:5432"
     networks:
-      - emiratads-network
+      - private-network
 
   mongodb:
     image: mongo
     restart: always
-    ports:
-      - "27017:27017"
     networks:
-      - emiratads-network
+      - private-network
 
   rabbitmq:
     image: rabbitmq
-    ports:
-      - "5672:5672"
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASSWORD: ${RABBITMQ_DEFAULT_PASSWORD}
     networks:
-      - emiratads-network
+      - private-network
 
   sagaorchestrator:
-    build:
-      context: ./backend/saga-orchestration-service
-      dockerfile: ../Dockerfile
-    ports:
-      - "8080:8080"
-      - "5004:5005"
+    image: salgado2004/dac-ufpr-emiratads-saga-orchestration-service
     environment:
       GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
       - rabbitmq
     networks:
-      - emiratads-network
+      - private-network
 
   autenticacaoservice:
-    platform: linux/amd64
-    build:
-      context: ./backend/autenticacao-service
-      dockerfile: ../Dockerfile
-    ports:
-      - "8081:8080"
-      - "5005:5005"
+    image: salgado2004/dac-ufpr-emiratads-autenticacao-service
     environment:
       GATEWAY_URL: ${GATEWAY_URL}
       EMAIL_APP_PASSWORD: ${EMAIL_APP_PASSWORD}
@@ -59,15 +42,10 @@ services:
       - mongodb
       - rabbitmq
     networks:
-      - emiratads-network
+      - private-network
 
   clienteservice:
-    build:
-      context: ./backend/cliente-service
-      dockerfile: ../Dockerfile
-    ports:
-      - "8082:8080"
-      - "5006:5005"
+    image: salgado2004/dac-ufpr-emiratads-cliente-service
     environment:
       GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
@@ -75,15 +53,10 @@ services:
       - dbdevelopment
       - rabbitmq
     networks:
-      - emiratads-network
+      - private-network
 
   funcionarioservice:
-    build:
-      context: ./backend/funcionario-service
-      dockerfile: ../Dockerfile
-    ports:
-      - "8083:8080"
-      - "5007:5005"
+    image: salgado2004/dac-ufpr-emiratads-funcionario-service
     environment:
       GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
@@ -91,15 +64,10 @@ services:
       - dbdevelopment
       - rabbitmq
     networks:
-      - emiratads-network
+      - private-network
 
   reservaservice:
-    build:
-      context: ./backend/reserva-service
-      dockerfile: ../Dockerfile
-    ports:
-      - "8084:8080"
-      - "5008:5005"
+    image: salgado2004/dac-ufpr-emiratads-reserva-service
     environment:
       GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
@@ -107,27 +75,20 @@ services:
       - dbdevelopment
       - rabbitmq
     networks:
-      - emiratads-network
+      - private-network
 
   vooservice:
-    build:
-      context: ./backend/voo-service
-      dockerfile: ../Dockerfile
-    ports:
-      - "8085:8080"
-      - "5009:5005"
+    image: salgado2004/dac-ufpr-emiratads-voo-service
     environment:
       GATEWAY_URL: ${GATEWAY_URL}
     depends_on:
       - autenticacaoservice
       - dbdevelopment
     networks:
-      - emiratads-network
+      - private-network
 
   apigateway:
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
+    image: salgado2004/dac-ufpr-emiratads-gateway
     ports:
       - "3030:3030"
     depends_on:
@@ -137,14 +98,13 @@ services:
       - reservaservice
       - vooservice
     networks:
-      - emiratads-network
+      - private-network
+      - public-network    
     env_file:
       - .env
 
   frontend:
-    build:
-      context: ./frontend/emiratads
-      dockerfile: Dockerfile
+    image: salgado2004/dac-ufpr-emiratads-frontend
     ports:
       - "3000:3000"
     depends_on:
@@ -152,8 +112,10 @@ services:
     environment:
       NEXT_PUBLIC_BASE_URL: ${GATEWAY_URL}/api/v1
     networks:
-      - emiratads-network
+      - public-network
 
 networks:
-  emiratads-network:
+  private-network:
+    driver: bridge
+  public-network:
     driver: bridge
