@@ -36,8 +36,7 @@ fi
 
 echo "Iniciando o Docker Compose..."
 docker compose down
-docker compose up --build -d
-docker compose up --build -d --force-recreate dbdevelopment
+docker compose -f docker-compose.prod.yml up -d
 if [ $? -ne 0 ]; then
     echo "Erro ao executar o Docker Compose. Saindo..."
     exit 1

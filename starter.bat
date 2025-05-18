@@ -34,15 +34,9 @@ if %errorlevel% neq 0 (
     exit /b %errorlevel%
 )
 
-docker compose up --build -d
+docker compose -f docker-compose.prod.yml up -d
 if %errorlevel% neq 0 (
     echo Erro ao executar o Docker Compose Up. Saindo...
-    exit /b %errorlevel%
-)
-
-docker compose up --build -d --force-recreate dbdevelopment
-if %errorlevel% neq 0 (
-    echo Erro ao recriar o serviço dbdevelopment. Saindo...
     exit /b %errorlevel%
 )
 
