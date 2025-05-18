@@ -57,7 +57,7 @@ const useSearchForm = ({
       onChangeDestination?.(destinationAirport as Aeroporto);
       onChangeOrigin?.(originAirport as Aeroporto);
     }
-  }, [originAirport, destinationAirport, origin, destination]);
+  }, [originAirport, destinationAirport, origin, destination, onChangeDestination, onChangeOrigin]);
 
   const {
     register,
@@ -159,6 +159,7 @@ const useSearchForm = ({
   }, [
     flightList,
     flightListLoading,
+    filterFlights,
     originAirport?.codigo,
     destinationAirport?.codigo,
   ]);

@@ -204,7 +204,6 @@ const useFlightDetail = (codigo: string) => {
     flight,
     flightList,
     milesToUse,
-    milesTotal,
     selectedSits,
     setFlightList,
     sitsQuantity,
