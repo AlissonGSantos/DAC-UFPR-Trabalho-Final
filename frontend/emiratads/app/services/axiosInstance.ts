@@ -13,6 +13,8 @@ axiosInstance.interceptors.request.use((config) => {
   if (token) {
     if (config.headers) {
       config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers["Accept"] = "application/json";
+      config.headers["Access-Control-Allow-Origin"] = "*";
     }
   }
   return config;
