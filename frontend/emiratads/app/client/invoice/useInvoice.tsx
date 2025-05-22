@@ -86,7 +86,7 @@ const useInvoice = () => {
 
   useEffect(() => {
     fetchInvoice();
-  }, [userData, fetchInvoice]);
+  }, [userData?.access_token]);
 
   return {
     invoice,
