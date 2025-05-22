@@ -149,8 +149,6 @@ services:
       - "3000:3000"
     depends_on:
       - apigateway
-    environment:
-      NEXT_PUBLIC_BASE_URL: ${GATEWAY_URL}/api/v1
     networks:
       - emiratads-network
 

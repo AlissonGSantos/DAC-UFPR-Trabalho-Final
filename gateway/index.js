@@ -19,8 +19,8 @@ app.use(BASE_URL, (req, res, next) => {
     cors(corsOptions)(req, res, next);
   } catch (error) {
     res
-    .status(500)
-    .json({ message: "Erro ao configurar CORS " + error.message });
+      .status(500)
+      .json({ message: "Erro ao configurar CORS " + error.message });
   }
 });
 

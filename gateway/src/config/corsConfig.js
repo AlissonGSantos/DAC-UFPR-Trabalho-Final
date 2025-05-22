@@ -3,26 +3,26 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 const ALLOWED_ORIGINS = [FRONTEND_URL];
 const corsMappings = {
-  "/login": { methods: ["POST"] },
-  "/logout": { methods: ["POST"] },
+  "/login": { methods: ["POST", "OPTIONS"] },
+  "/logout": { methods: ["POST", "OPTIONS"] },
 
-  "/funcionarios": { methods: ["GET", "POST"] },
-  "/funcionarios/:codigo": { methods: ["GET", "PUT", "DELETE"] },
+  "/funcionarios": { methods: ["GET", "POST", "OPTIONS"] },
+  "/funcionarios/:codigo": { methods: ["GET", "PUT", "DELETE", "OPTIONS"] },
 
-  "/clientes": { methods: ["GET", "POST"] },
-  "/clientes/:codigo": { methods: ["GET", "PUT"] },
-  "/clientes/:codigo/reservas": { methods: ["GET"] },
-  "/clientes/:codigo/milhas": { methods: ["GET", "PUT"] },
+  "/clientes": { methods: ["GET", "POST", "OPTIONS"] },
+  "/clientes/:codigo": { methods: ["GET", "PUT", "OPTIONS"] },
+  "/clientes/:codigo/reservas": { methods: ["GET", "OPTIONS"] },
+  "/clientes/:codigo/milhas": { methods: ["GET", "PUT", "OPTIONS"] },
 
-  "/voos": { methods: ["GET", "POST"] },
-  "/voos/:codigo": { methods: ["GET", "DELETE"] },
-  "/voos/:codigo/estado": { methods: ["PATCH"] },
+  "/voos": { methods: ["GET", "POST", "OPTIONS"] },
+  "/voos/:codigo": { methods: ["GET", "DELETE", "OPTIONS"] },
+  "/voos/:codigo/estado": { methods: ["PATCH", "OPTIONS"] },
 
-  "/reservas": { methods: ["POST"] },
-  "/reservas/:codigo": { methods: ["GET", "DELETE"] },
-  "/reservas/:codigo/estado": { methods: ["PATCH"] },
+  "/reservas": { methods: ["POST", "OPTIONS"] },
+  "/reservas/:codigo": { methods: ["GET", "DELETE", "OPTIONS"] },
+  "/reservas/:codigo/estado": { methods: ["PATCH", "OPTIONS"] },
 
-  "/aeroportos": { methods: ["GET"] },
+  "/aeroportos": { methods: ["GET", "OPTIONS"] },
 };
 
 function getCorsOptions(path) {
@@ -47,7 +47,7 @@ function getCorsOptions(path) {
   return {
     origin: ALLOWED_ORIGINS,
     methods: config.methods,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    /* allowedHeaders: ["Content-Type", "Authorization"], */
     credentials: true,
   };
 }
