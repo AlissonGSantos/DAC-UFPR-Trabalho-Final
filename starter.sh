@@ -36,7 +36,7 @@ fi
 
 echo "Iniciando o Docker Compose..."
 docker compose down
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.yml up -d --build
 if [ $? -ne 0 ]; then
     echo "Erro ao executar o Docker Compose. Saindo..."
     exit 1

@@ -34,7 +34,7 @@ if %errorlevel% neq 0 (
     exit /b %errorlevel%
 )
 
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.yml up -d --build
 if %errorlevel% neq 0 (
     echo Erro ao executar o Docker Compose Up. Saindo...
     exit /b %errorlevel%

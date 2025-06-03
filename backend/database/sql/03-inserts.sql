@@ -41,9 +41,9 @@ INSERT INTO emiratads_voo.estado_voo (sigla, descricao) VALUES
 
 -- Inserts para a tabela voo
 INSERT INTO emiratads_voo.voo (codigo, data, valor_passagem, quantidade_poltronas_total, quantidade_poltronas_ocupadas, estado_codigo, aeroporto_origem, aeroporto_destino) VALUES
-    ('TADS0001', '2025-08-10T10:30:00-03:00', 500.00, 150, 8, 1, 'POA', 'CWB'),
-    ('TADS0002', '2025-09-11T09:30:00-03:00', 450.00, 150, 8, 1, 'CWB', 'GIG'),
-    ('TADS0003', '2025-10-12T08:30:00-03:00', 400.00, 150, 8, 1, 'CWB', 'POA'),
+    ('TADS0001', '2025-06-3T10:30:00-03:00', 500.00, 150, 8, 1, 'POA', 'CWB'),
+    ('TADS0002', '2025-06-4T09:30:00-03:00', 450.00, 150, 8, 1, 'CWB', 'GIG'),
+    ('TADS0003', '2025-06-4T08:30:00-03:00', 400.00, 150, 8, 1, 'CWB', 'POA'),
     ('TADS0004', '2025-05-16T14:00:00-03:00', 500.00, 180, 10, 1, 'GRU', 'GIG'),
     ('TADS0005', '2025-05-16T15:30:00-03:00', 600.00, 200, 50, 1, 'GIG', 'CWB'),
     ('TADS0006', '2025-05-16T16:45:00-03:00', 450.00, 150, 20, 1, 'CWB', 'BSB'),
